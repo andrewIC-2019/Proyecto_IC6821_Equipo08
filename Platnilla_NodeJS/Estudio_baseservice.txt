@@ -1,0 +1,94 @@
+-------------
+BASESERVICE
+-------------
+
+common
+    ->  library:                    // aquí puedo guardar algunas clases, que sean requeridos en distintas partes
+            -article.ts:            // Objeto que es de uso común (puedo consultarlo desde varias partes)
+    ->  logger
+            -logger.ts              // logs/salidas en consola, con formato personalizado -- Podria Eliminarse --
+    
+    - index.ts:                     // es utilizado para facilitar los exports, de tal manera que cuando los necesite, 
+                                    // hago un export/import de la carpeta y no de cada archivo
+
+controllers:                        // se recurre desde el router,contiene la lógica necesaria para luego ir a los accesores de datos
+    -   articlescontroller.ts:      // cuenta con un patrón singelton, genero el acceso de datos   
+    -   index.ts:                   // para el export
+
+node_modules
+    =   "dependencias para el funcionamiento del servidor express" "se instalan al iniciar"
+
+repositories:                //almacena los accesores de datos, que se llaman desde los controllers
+    -   data_articles.ts:    //plantilla para devolver los datos de sql server
+
+routes			    // van los get, post, etc
+    -   articlesrouter.ts   // route con utiliza log
+    -   kindness.ts         // route básico, ejemplo de saludo -- Podria Eliminarse --
+    -   routes.ts           // route de routes, designa los /routes, destinoxyz
+
+.eslintrc.json: //informacion acerca de la configuracion (estructura) de un directorio y todos sus subdirectorios
+
+.gitignore: //indicar a git, que no controle node-modules, y *.js (en este caso)
+
+app.ts: //aplicación de servicio, cofigura express, middleware. Abre una ruta para /api
+
+index.ts:   //inicia el servicio en el puerto 5000, realiza export de app
+
+nodemon.json:   //nodemon monitorea el scipt durante de app en node js
+
+package-lock.json:  //más detalles de dependencias generado al construir
+
+package.json:   //dependencias e información básica del proyecto. Se puede definir explicitamente
+
+tsconfig.json:  //indica que el directorio es la raíz de un proyecto en TypeScript
+
+tslint.json:    //Contiene reglas básicas
+
+/*
+Notas:
+    Los modelos de mongo, irían al repository.
+
+    Desde el controller yo debería decirle al repository, que guarde algo
+    Para no usar el controller, con lo que debería en el repositorio
+
+    Un repositorio es cualquier cosa que guarde información. Uno desea
+    que la lógica use la información, pero no saber como ni de donde viene
+
+    La lógica del acceso de datos en el controller NO vá, mejor en el repositorio
+
+    Al darle npm start, los TypeScrypt son compilados, provocando la generación de los JavaScrypt
+
+    Se puede programar directamente en archivos JS sin embargo es mejor seguir la linea TS
+*/
+
+
+---------------------------
+Comandos npm
+---------------------------
+
+npm init: Crea
+
+npm install typescript --save
+
+npm tsc --init:crea ts-config.js
+
+npm install express --save
+
+npm install express @types/exprres -D
+
+npm start: levanta el servidor
+
+---------------------------
+Referencias Útiles
+---------------------------
+
+Instalación NodeJS y Prisma (Ignorar lo de Prisma):
+https://www.youtube.com/watch?v=FtBYwNq4fKc
+
+REST API con NodeJS | MongoDB y Mongoose
+https://www.youtube.com/watch?v=WDrU305J1yw
+
+Manejo de parametros en un request URL para express
+https://stackoverflow.com/questions/15128849/using-multiple-parameters-in-url-in-express
+
+
