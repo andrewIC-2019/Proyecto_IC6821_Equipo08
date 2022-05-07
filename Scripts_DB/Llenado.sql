@@ -57,6 +57,19 @@ INSERT INTO dbo.PermisosUsuario (permiso) VALUES
 ('GESTIONAR_USUARIOS'),
 ('GESTIONAR_ESTACIONAMIENTOS')
 
+
+DROP PROCEDURE IF EXISTS dbo.Permisos_Usuario
+
+CREATE PROCEDURE dbo.Permisos_Usuario
+	@usuarioId bigint,
+	@permisoUsuarioId int
+AS
+	INSERT INTO dbo.Permisos_Por_Usuario (permisoUsuarioId, usuarioId)
+	VALUES
+	(@usuarioId, @permisoUsuarioId)
+GO
+
+
 -- Tipo Vehiculos
 INSERT INTO dbo.tipoVehiculo (tipo) VALUES
 ('Particular'),
@@ -166,7 +179,7 @@ AS
 		COMMIT
 		SET @registradoComo = SELECT MAX(horarioId) FROM dbo.Horarios
 	END
-
+																	-- asocia al usuario con el horario
 	BEGIN TRANSACTION												-- para este punto el @registradoComo tiene el id del horario lo haya encontrado o creado
 		INSERT INTO dbo.Horarios_Por_Usuario (usuarioId, horarioId)
 		VALUES
@@ -239,7 +252,7 @@ AS
 	SET @Existe = SELECT MAX(vehiculoId) FROM dbo.Vehiculos
 	END
 
-	BEGIN TRANSACTION
+	BEGIN TRANSACTION						-- asocia al usuario con el vehiculo
 		INSERT INTO dbo.Vehiculos_Por_Usuario (usuarioId, vehiculoId)
 		VALUES
 		(@usuarioId, @Existe)
@@ -255,33 +268,59 @@ GO
 -- Usuarios
 INSERT INTO dbo.Usuarios (	tipoFuncionario, division, identificacion, 
 							nombre, apellido1, apellido2, telefono, correoInstitucional,
-							correo, notificarCorreoAlterno, deshabilitado, checksum, profilePhotoUrl, esAdministrador )
+							correo, notificarCorreoAlterno, [password])
 		VALUES
 
 --		Andres Arias: Administrativo
-						 (	2, 3, 818049752, 
+						 (	2, 3, '818049752', 
 							'Andrés', 'Arias', 'Siles', '42361203', 'aarias.19@itcr.ac.cr',
-							'aarias.19@email.cr', 1, 0, SHA256, 'somealmacenaje.cr/photo/aarias19', 0
+							'aarias.19@email.cr', 1, HASHBYTES('SHA2_256', 'aarias.19')
 						 ),
 
 --		Mauricio Campos: Administrativo - Admin de la plataforma
-						 (	2, 1, 965310025,
+						 (	2, 1, '965310025',
 							'Mauricio', 'Campos', 'Méndez', '19710601', 'mcampos.71@itcr.ac.cr',
-							NULL, 0, 0, SHA256, NULL, 1)
-						 
+							NULL, 0, HASHBYTES('SHA2_256', 'mcampos.71')
+						)
+
 
 -- SP Funcionarios
 
-CREATE PROCEDURE dbo.Registrar_Funcionario
-	@division 
-	@identificacion nvarchar(60)
-AS
+DROP PROCEDURE IF EXISTS dbo.Registrar_Funcionario
 
+CREATE PROCEDURE dbo.Registrar_Funcionario
+	@tipoFuncionario int,
+	@division int,
+	@identificacion nvarchar(60),
+	@nombre nvarchar(60),
+	@apellido1 nvarchar(60),
+	@apellido2 nvarchar(60),
+	@telefono nvarchar(40),
+	@correoInstitucional nvarchar(200),
+	@correo nvarchar(200),
+	@notificarCorreoAlterno bit,
+	@password nvarchar(100)
+AS
+	DECLARE @buscaUsuario INT = 0					-- busca si ya la placa esta registrada
+	SELECT @buscaUsuario = usuarioId FROM dbo.Usuarios WHERE correoInstitucional = @correoInstitucional OR identificacion = @identificacion;
+	
+	IF @buscaUsuario = 0 BEGIN
+		
+		INSERT INTO dbo.Usuarios
+		(tipoFuncionario, division, identificacion, 
+		nombre, apellido1, apellido2, telefono, correoInstitucional,
+		correo, notificarCorreoAlterno, [password])
+		VALUES
+		(@tipoFuncionario, @division, @identificacion, 
+		@nombre, @apellido1, @apellido2, @telefono, @correoInstitucional,
+		@correo, @notificarCorreoAlterno, HASHBYTES('SHA2_256', @password))
+
+	END
+	
 GO
 
 
-
-
+EXEC dbo.Registrar_Funcionario 2, 1, '965310025', 'Mauricio', 'Campos', 'Méndez', '19710601', 'mcampos.71@itcr.ac.cr', NULL, 0, 'mcampos.71'
 
 
 -- Ubicacion del Campus Tecnológico Local San José:
@@ -289,3 +328,69 @@ GO
 
 SELECT * FROM dbo.Usuarios
 SELECT tipoVehiculoId FROM dbo.tipoVehiculo WHERE tipo='Oficial'
+
+
+
+-- ---------------------
+--  SPs Vistas
+-- ---------------------
+
+
+-- Pantalla 1: login
+
+DROP PROCEDURE IF EXISTS dbo.sp_login
+
+CREATE PROCEDURE dbo.sp_login
+	@user nvarchar(200),
+	@pass nvarchar(200)
+AS
+	DECLARE @elUsuario INT = -1
+	DECLARE @continue INT = 0
+	
+	SELECT @elUsuario=usuarioId FROM dbo.Usuarios WHERE correoInstitucional = @user
+	SELECT @elUsuario
+
+	IF @elUsuario = -1 BEGIN
+		SELECT 0;
+	END ELSE BEGIN
+		DECLARE @temporal VARBINARY(256)
+		SELECT @temporal=[password] FROM dbo.Usuarios WHERE usuarioId = @elUsuario
+		IF @temporal = HASHBYTES('SHA2_256', @pass) BEGIN
+			SELECT 1
+		END ELSE BEGIN
+			SELECT 0
+		END
+	END
+GO
+
+EXEC dbo.sp_login 'mcampos.71@itcr.ac.cr', 'mcampos.71'
+
+
+-- Pantalla 2: Tarjetas Estacionamientos
+
+SELECT nombre, cantEspacios, telefono from dbo.Estacionamientos
+
+
+-- Pantalla 3: Informacion Estacionamiento
+SELECT nombre, descripcion, ubicacion, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosJefaturas, cantEspaciosVisitantes
+FROM dbo.Estacionamientos WHERE estacionamientoId = 1
+
+
+-- - - - - - - - - - - - - - - - -
+-- Informes
+-- - - - - - - - - - - - - - - - -
+
+-- Informe detallado de estacionamientos
+SELECT nombre, descripcion, ubicacion, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosJefaturas, cantEspaciosVisitantes
+FROM dbo.Estacionamientos
+
+-- Informe detallado de funcionarios
+SELECT identificacion, apellido1, apellido2, nombre, telefono
+FROM dbo.Usuarios ORDER BY apellido1
+
+-- Estadística de franjas horarias
+SELECT usuarioId, horarioId FROM dbo.Horarios_Por_Usuario WHERE deshabilitado = 0
+
+-- Consulta de un funcionario por identificacion
+SELECT identificacion, apellido1, apellido2, nombre, telefono
+FROM dbo.Usuarios WHERE identificacion = 965310025
