@@ -390,6 +390,15 @@ FROM dbo.Usuarios ORDER BY apellido1
 
 -- Estadística de franjas horarias
 SELECT usuarioId, horarioId FROM dbo.Horarios_Por_Usuario WHERE deshabilitado = 0
+SELECT horarioId, funcionarios = count(horarioId) FROM dbo.Horarios_Por_Usuario GROUP BY horarioId ORDER BY funcionarios DESC
+
+-- Usar este:
+SELECT dia, horaInicio, horaFinal, funcionarios FROM
+(SELECT horarioId, funcionarios = count(horarioId) FROM dbo.Horarios_Por_Usuario
+ WHERE deshabilitado=0 GROUP BY horarioId) hua 
+INNER JOIN dbo.Horarios h ON hua.horarioId = h.horarioId
+INNER JOIN dbo.Dias d ON h.diaSemana = d.dia
+ORDER BY funcionarios DESC
 
 -- Consulta de un funcionario por identificacion
 SELECT identificacion, apellido1, apellido2, nombre, telefono
