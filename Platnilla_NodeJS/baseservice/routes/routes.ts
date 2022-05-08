@@ -3,6 +3,7 @@ import * as bodyParser from 'body-parser';
 import { Logger } from '../common';
 import {weatherouter} from './weather';
 import {articlesrouter} from './articlesrouter';
+import {test} from './test';
 
 /*
 LUEGO DE LA APLICACION, CAE AL ENRUTADOR, ME LLEVA A LOS
@@ -33,6 +34,7 @@ class Routes {
     private routes(): void {
         this.express.use('/weather', weatherouter);
         this.express.use('/articles', articlesrouter);
+        this.express.use('/test', test);
         this.logger.info("Routes loaded");
     }
 }

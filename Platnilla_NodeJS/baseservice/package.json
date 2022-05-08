@@ -5,14 +5,15 @@
   "main": "index.ts",
   "scripts": {
     "checklint": "eslint ./*.ts --fix",
-    "start": "tsc index.ts && node index.js",
+    "start": "tsc index.ts --target es5 && node index.js",
     "dev": "npm run checklint && ./node_modules/nodemon/bin/nodemon.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "rnunez",
   "license": "ISC",
   "dependencies": {
-    "express": "4.17.1"
+    "express": "4.17.1",
+    "module-alias": "^2.2.2"
   },
   "devDependencies": {
     "@types/express": "4.17.8",
