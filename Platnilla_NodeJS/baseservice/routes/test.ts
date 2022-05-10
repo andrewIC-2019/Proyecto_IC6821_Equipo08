@@ -13,7 +13,6 @@ const log = new Logger();
 //promises (asincrona)
 //el controller (ex. articles controller...)
 app.get("/", (req, res,next) => {
-
     var v = new Vehiculo("dbo_666", TVehiculo.OFICIAL, false)
     console.log(v.placa)
     //v.placa = "otra"

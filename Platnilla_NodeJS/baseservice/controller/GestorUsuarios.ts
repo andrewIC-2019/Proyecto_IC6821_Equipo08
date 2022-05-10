@@ -1,9 +1,15 @@
 import { DAOUsuariosImpl } from "./DAO/DAOUsuariosImpl";
 import { DTOUsuario } from "./DTOUsuario";
+import * as express from "express";
 
 export class GestorUsuario {
   private dtoUsuario: DTOUsuario;
   private daoUsuario: DAOUsuariosImpl;
+
+  constructor() {
+    this.dtoUsuario = new DTOUsuario();
+    this.daoUsuario = new DAOUsuariosImpl();
+  }
 
   /**
    * Getter $dtoUsuario
@@ -35,5 +41,11 @@ export class GestorUsuario {
    */
   public set $daoUsuario(value: DAOUsuariosImpl) {
     this.daoUsuario = value;
+  }
+
+  //json reponse
+  public login(username: string, password: string): string {
+    let result = this.daoUsuario.getUser(username, password);
+    return result;
   }
 }
