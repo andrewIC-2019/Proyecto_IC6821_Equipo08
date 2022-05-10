@@ -46,8 +46,7 @@ var GestorUsuario = /** @class */ (function () {
     });
     //json reponse
     GestorUsuario.prototype.login = function (username, password) {
-        var result = this.daoUsuario.getUser(username, password);
-        return result;
+        return this.daoUsuario.getUser(username, password);
     };
     return GestorUsuario;
 }());

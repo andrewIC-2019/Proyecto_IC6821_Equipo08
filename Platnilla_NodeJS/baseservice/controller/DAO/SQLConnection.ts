@@ -42,14 +42,8 @@ export class SQLConnection implements DataSource {
     return this.instance;
   }
 
-  getUser(username: string, password: string): string {
-    let result: string;
-    executeLogin_test(username, password).then((data) => {
-      result = data;
-    });
-    console.log("a")
-    console.log(result)
-    return result;
+  async getUser(username: string, password: string): Promise<string>  {
+    return test()
   }
 }
 
@@ -69,6 +63,8 @@ async function executeLogin_test(
   });
    request.addParameter("correoInstitucional", TYPES.NVarChar, username);
   var result = "";
+  connection.execSql(request);
+  console.log("salio");
   await request.on("row", function (columns: any) {
     columns.forEach(function (column: any) {
       if (column.value === null) {
@@ -90,7 +86,23 @@ async function executeLogin_test(
   request.on("requestCompleted", function (rowCount: any, more: any) {
     connection.close();
   });
-  connection.execSql(request);
-  console.log("salio");
+
   return result;
+}
+
+
+const sql = require('mssql')
+
+async function test () : Promise<string>{
+    try {
+        // make sure that any items are correctly URL encoded in the connection string
+        await sql.connect('Server=localhost,1433;Database=parqueos;User Id=sa;Password=cer5a37Te9;Encrypt=false')
+        const result = await sql.query(`select * from Usuarios`)
+        console.dir(result)
+        console.log("***********todo bien*****************")
+        return result.recordset
+    } catch (err) {
+      console.log("***********entra en error*****************")
+        console.log(err)
+    }
 }

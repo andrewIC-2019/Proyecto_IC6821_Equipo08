@@ -6,7 +6,7 @@ const app = express();
 
 app.post("/login", login);
 
-function login(
+async function login(
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
@@ -24,7 +24,16 @@ function login(
   console.log(errMsg.length)
   console.log(errMsg.length==0)
   if (!errMsg && (errMsg.length == 0)){
-    result = Control.getInstance().$gestorUsuario.login(username, password)
+    await Control.getInstance().$gestorUsuario.login(username, password).then(
+      (data)=>{
+        console.log("***************")
+        console.log(data)
+        res.status(400).send(data)
+    }
+    ).catch((err:Error)=>{
+      res.json(err)
+      return "";
+  });
   }
   type struct = {
     errMsg: string;

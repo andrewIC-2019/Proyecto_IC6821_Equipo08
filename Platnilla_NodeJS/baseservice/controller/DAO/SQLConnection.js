@@ -71,13 +71,11 @@ var SQLConnection = /** @class */ (function () {
         return this.instance;
     };
     SQLConnection.prototype.getUser = function (username, password) {
-        var result;
-        executeLogin_test(username, password).then(function (data) {
-            result = data;
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, test()];
+            });
         });
-        console.log("a");
-        console.log(result);
-        return result;
     };
     return SQLConnection;
 }());
@@ -97,6 +95,8 @@ function executeLogin_test(username, password) {
                     });
                     request.addParameter("correoInstitucional", TYPES.NVarChar, username);
                     result = "";
+                    connection.execSql(request);
+                    console.log("salio");
                     return [4 /*yield*/, request.on("row", function (columns) {
                             columns.forEach(function (column) {
                                 if (column.value === null) {
@@ -119,9 +119,36 @@ function executeLogin_test(username, password) {
                     request.on("requestCompleted", function (rowCount, more) {
                         connection.close();
                     });
-                    connection.execSql(request);
-                    console.log("salio");
                     return [2 /*return*/, result];
+            }
+        });
+    });
+}
+var sql = require('mssql');
+function test() {
+    return __awaiter(this, void 0, void 0, function () {
+        var result, err_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    // make sure that any items are correctly URL encoded in the connection string
+                    return [4 /*yield*/, sql.connect('Server=localhost,1433;Database=parqueos;User Id=sa;Password=cer5a37Te9;Encrypt=false')];
+                case 1:
+                    // make sure that any items are correctly URL encoded in the connection string
+                    _a.sent();
+                    return [4 /*yield*/, sql.query("select * from Usuarios")];
+                case 2:
+                    result = _a.sent();
+                    console.dir(result);
+                    console.log("***********todo bien*****************");
+                    return [2 /*return*/, result.recordset];
+                case 3:
+                    err_1 = _a.sent();
+                    console.log("***********entra en error*****************");
+                    console.log(err_1);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });
