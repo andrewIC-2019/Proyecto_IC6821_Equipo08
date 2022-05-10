@@ -1,6 +1,6 @@
 USE [master]
 GO
-/****** Object:  Database [parqueos]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Database [parqueos]    Script Date: 10/5/2022 12:23:04 ******/
 CREATE DATABASE [parqueos]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -82,7 +82,7 @@ ALTER DATABASE [parqueos] SET QUERY_STORE = OFF
 GO
 USE [parqueos]
 GO
-/****** Object:  Table [dbo].[Cantones]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Cantones]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -97,7 +97,7 @@ CREATE TABLE [dbo].[Cantones](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Dias]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Dias]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -111,7 +111,7 @@ CREATE TABLE [dbo].[Dias](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Distritos]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Distritos]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -127,7 +127,7 @@ CREATE TABLE [dbo].[Distritos](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Divisiones]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Divisiones]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -142,7 +142,7 @@ CREATE TABLE [dbo].[Divisiones](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Espacios_Estacionamientos]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Espacios_Estacionamientos]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -160,7 +160,7 @@ CREATE TABLE [dbo].[Espacios_Estacionamientos](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Estacionamientos]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Estacionamientos]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -188,7 +188,7 @@ CREATE TABLE [dbo].[Estacionamientos](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Horarios]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Horarios]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -204,7 +204,19 @@ CREATE TABLE [dbo].[Horarios](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Horarios_Por_Usuario]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Horarios_Por_Estacionamiento]    Script Date: 10/5/2022 12:23:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Horarios_Por_Estacionamiento](
+	[estacionamientoId] [int] NOT NULL,
+	[horarioId] [bigint] NOT NULL,
+	[deshabilitado] [bit] NOT NULL,
+	[checksum] [varbinary](256) NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Horarios_Por_Usuario]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -216,7 +228,7 @@ CREATE TABLE [dbo].[Horarios_Por_Usuario](
 	[checksum] [varbinary](256) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Permisos_Por_Usuario]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Permisos_Por_Usuario]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -226,7 +238,7 @@ CREATE TABLE [dbo].[Permisos_Por_Usuario](
 	[usuarioId] [bigint] NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PermisosUsuario]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[PermisosUsuario]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -240,7 +252,7 @@ CREATE TABLE [dbo].[PermisosUsuario](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Provincias]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Provincias]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -254,7 +266,7 @@ CREATE TABLE [dbo].[Provincias](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Reservaciones]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Reservaciones]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -277,7 +289,7 @@ CREATE TABLE [dbo].[Reservaciones](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Sys_Logs]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Sys_Logs]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -295,7 +307,7 @@ CREATE TABLE [dbo].[Sys_Logs](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Tipos_Espacios]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Tipos_Espacios]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -309,7 +321,7 @@ CREATE TABLE [dbo].[Tipos_Espacios](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TiposEstacionamientos]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[TiposEstacionamientos]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -324,7 +336,7 @@ CREATE TABLE [dbo].[TiposEstacionamientos](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TiposFuncionarios]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[TiposFuncionarios]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -338,7 +350,7 @@ CREATE TABLE [dbo].[TiposFuncionarios](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[tipoVehiculo]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[tipoVehiculo]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -352,7 +364,7 @@ CREATE TABLE [dbo].[tipoVehiculo](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Ubicaciones]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Ubicaciones]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -365,14 +377,14 @@ CREATE TABLE [dbo].[Ubicaciones](
 	[direccionExacta] [nvarchar](500) NOT NULL,
 	[latitud] [geography] NULL,
 	[longitud] [geography] NULL,
-	[checksum] [varbinary](256) NOT NULL,
+	[checksum] [varbinary](256) NULL,
  CONSTRAINT [PK_Ubicaciones] PRIMARY KEY CLUSTERED 
 (
 	[ubicacionId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Usuarios]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Usuarios]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -400,7 +412,7 @@ CREATE TABLE [dbo].[Usuarios](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Vehiculos]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Vehiculos]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -416,7 +428,7 @@ CREATE TABLE [dbo].[Vehiculos](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Vehiculos_Por_Usuario]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  Table [dbo].[Vehiculos_Por_Usuario]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -425,7 +437,7 @@ CREATE TABLE [dbo].[Vehiculos_Por_Usuario](
 	[usuarioId] [bigint] NOT NULL,
 	[vehiculoId] [bigint] NOT NULL,
 	[deshabilitado] [bit] NOT NULL,
-	[timestamp] [datetime] NOT NULL,
+	[timestamp] [datetime] NULL,
 	[checksum] [nvarchar](256) NULL
 ) ON [PRIMARY]
 GO
@@ -434,6 +446,8 @@ GO
 ALTER TABLE [dbo].[Espacios_Estacionamientos] ADD  CONSTRAINT [DF_Espacios_Estacionamientos_deshabilitado]  DEFAULT ((0)) FOR [deshabilitado]
 GO
 ALTER TABLE [dbo].[Estacionamientos] ADD  CONSTRAINT [DF_Estacionamientos_deshabilitado]  DEFAULT ((0)) FOR [deshabilitado]
+GO
+ALTER TABLE [dbo].[Horarios_Por_Estacionamiento] ADD  CONSTRAINT [DF_Horarios_Por_Estacionamiento_deshabilitado]  DEFAULT ((0)) FOR [deshabilitado]
 GO
 ALTER TABLE [dbo].[Horarios_Por_Usuario] ADD  CONSTRAINT [DF_Horarios_Por_Usuario_deshabilitado]  DEFAULT ((0)) FOR [deshabilitado]
 GO
@@ -490,6 +504,16 @@ ALTER TABLE [dbo].[Horarios]  WITH CHECK ADD  CONSTRAINT [FK_Horarios_Dias_diaSe
 REFERENCES [dbo].[Dias] ([diaId])
 GO
 ALTER TABLE [dbo].[Horarios] CHECK CONSTRAINT [FK_Horarios_Dias_diaSemana]
+GO
+ALTER TABLE [dbo].[Horarios_Por_Estacionamiento]  WITH CHECK ADD  CONSTRAINT [FK_Horarios_Estacionamiento_horarioId] FOREIGN KEY([horarioId])
+REFERENCES [dbo].[Horarios] ([horarioId])
+GO
+ALTER TABLE [dbo].[Horarios_Por_Estacionamiento] CHECK CONSTRAINT [FK_Horarios_Estacionamiento_horarioId]
+GO
+ALTER TABLE [dbo].[Horarios_Por_Estacionamiento]  WITH CHECK ADD  CONSTRAINT [FK_Horarios_Estacionamientos_estacionamientoId] FOREIGN KEY([estacionamientoId])
+REFERENCES [dbo].[Estacionamientos] ([estacionamientoId])
+GO
+ALTER TABLE [dbo].[Horarios_Por_Estacionamiento] CHECK CONSTRAINT [FK_Horarios_Estacionamientos_estacionamientoId]
 GO
 ALTER TABLE [dbo].[Horarios_Por_Usuario]  WITH CHECK ADD  CONSTRAINT [FK_Horarios_Por_Usuario_horarioId] FOREIGN KEY([horarioId])
 REFERENCES [dbo].[Horarios] ([horarioId])
@@ -566,19 +590,102 @@ REFERENCES [dbo].[Vehiculos] ([vehiculoId])
 GO
 ALTER TABLE [dbo].[Vehiculos_Por_Usuario] CHECK CONSTRAINT [FK_Vehiculos_Por_Usuario_Vehiculos_vehiculoId]
 GO
-/****** Object:  StoredProcedure [dbo].[Insertar_Horario]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  StoredProcedure [dbo].[sp_consultaFuncionario]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+CREATE PROCEDURE [dbo].[sp_consultaFuncionario]
+	@identificacion nvarchar(60)
+AS 
 
-CREATE PROCEDURE [dbo].[Insertar_Horario]
+	DECLARE @usuarioId bigint = -1
+	SELECT @usuarioId = usuarioId FROM dbo.Usuarios WHERE identificacion = @identificacion
+
+	IF @usuarioId > 0 BEGIN
+		SELECT identificacion, apellido1, apellido2, nombre, telefono, correoInstitucional
+		FROM dbo.Usuarios WHERE identificacion = @identificacion FOR JSON AUTO
+
+		SELECT placa FROM dbo.Vehiculos_Por_Usuario vu 
+		INNER JOIN dbo.Vehiculos v ON vu.vehiculoId = v.vehiculoId 
+		WHERE usuarioId = @usuarioId FOR JSON AUTO
+
+		SELECT dia, horaInicio, horaFinal FROM dbo.Horarios_Por_Usuario hu 
+		INNER JOIN dbo.Horarios h ON hu.horarioId = h.horarioId
+		INNER JOIN dbo.Dias d ON h.diaSemana = d.dia
+		WHERE usuarioId = @usuarioId FOR JSON AUTO
+	END ELSE BEGIN
+		RETURN 0
+	END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_estacionamientoinfo]    Script Date: 10/5/2022 12:23:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_estacionamientoinfo] 
+	@estacionamientoId INT
+AS
+	SELECT nombre, descripcion, direccionExacta, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosOficiales, cantEspaciosVisitantes
+	FROM dbo.Estacionamientos e INNER JOIN dbo.Ubicaciones u ON e.ubicacion = u.ubicacionId WHERE estacionamientoId = @estacionamientoId FOR JSON PATH
+GO
+/****** Object:  StoredProcedure [dbo].[sp_franjasHorarias]    Script Date: 10/5/2022 12:23:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_franjasHorarias]
+
+AS
+	SELECT dia, horaInicio, horaFinal, funcionarios FROM
+	(SELECT horarioId, funcionarios = count(horarioId) FROM dbo.Horarios_Por_Usuario
+	 WHERE deshabilitado=0 GROUP BY horarioId) hua 
+	INNER JOIN dbo.Horarios h ON hua.horarioId = h.horarioId
+	INNER JOIN dbo.Dias d ON h.diaSemana = d.dia
+	ORDER BY funcionarios DESC
+GO
+/****** Object:  StoredProcedure [dbo].[sp_informeEstacionamientos]    Script Date: 10/5/2022 12:23:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_informeEstacionamientos]
+AS
+	SELECT nombre, correo, telefono, descripcion, direccionExacta, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosOficiales, cantEspaciosVisitantes
+	FROM dbo.Estacionamientos e INNER JOIN dbo.Ubicaciones u ON e.ubicacion = u.ubicacionId FOR JSON PATH
+GO
+/****** Object:  StoredProcedure [dbo].[sp_informeFuncionarios]    Script Date: 10/5/2022 12:23:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_informeFuncionarios]
+
+AS
+	SELECT identificacion, apellido1, apellido2, nombre, correoInstitucional, telefono
+	FROM dbo.Usuarios ORDER BY apellido1
+GO
+/****** Object:  StoredProcedure [dbo].[sp_inicio]    Script Date: 10/5/2022 12:23:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_inicio]
+AS
+	SELECT estacionamientoId, nombre, espaciosTotales = cantEspacios+cantEspaciosEspeciales+cantEspaciosJefaturas+cantEspaciosVisitantes+cantEspaciosOficiales, telefono from dbo.Estacionamientos FOR JSON PATH
+GO
+/****** Object:  StoredProcedure [dbo].[sp_InsertarHorario]    Script Date: 10/5/2022 12:23:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_InsertarHorario]
 	@diaSemana tinyint,					-- parametros
 	@horaInicio time(7),
 	@horaFinal time(7)
 AS
 
-	DECLARE @registradoComo INT	= 0					-- busca si ya la placa esta registrada
+	DECLARE @registradoComo INT	= 0					-- busca si ya el horario esta registrado
 	SELECT @registradoComo = horarioId FROM dbo.Horarios WHERE diaSemana = @diaSemana AND horaInicio = @horaInicio AND horaFinal = @horaFinal;
 
 	IF @registradoComo<1 BEGIN						-- si no esta resgistrada, lo inserta mediante transaccion
@@ -588,28 +695,27 @@ AS
 			VALUES
 			(@diaSemana, @horaInicio, @horaFinal)
 		COMMIT
-		
-		-- SELECT MAX(horarioId) FROM dbo.Horarios
-
+		SELECT @registradoComo = MAX(horarioId) FROM dbo.Horarios
 	END
 
+	RETURN @registradoComo
+
 GO
-/****** Object:  StoredProcedure [dbo].[Insertar_Vehiculo]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  StoredProcedure [dbo].[sp_InsertarVehiculo]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[Insertar_Vehiculo]
-	@placa NVARCHAR(20),
+
+CREATE PROCEDURE [dbo].[sp_InsertarVehiculo]
+	@placa NVARCHAR(20),					-- parametros
 	@tipoVehiculo SMALLINT
 AS
-	
-	DECLARE @Insertar INT = 0
 
-	DECLARE @Existe INT
+	DECLARE @Existe INT						-- busca si ya la placa esta registrada
 	SELECT @Existe = COUNT(vehiculoId) FROM dbo.Vehiculos WHERE placa = @placa AND tipoVehiculo = @tipoVehiculo;
 
-	IF @Existe<1 BEGIN
+	IF @Existe<1 BEGIN						-- si no esta resgistrada, lo inserta mediante transaccion
 
 		BEGIN TRANSACTION
 			INSERT INTO dbo.Vehiculos (placa, tipoVehiculo)
@@ -620,25 +726,98 @@ AS
 	END
 
 GO
-/****** Object:  StoredProcedure [dbo].[Permisos_Usuario]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  StoredProcedure [dbo].[sp_login]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[Permisos_Usuario]
+CREATE PROCEDURE [dbo].[sp_login]
+	@user nvarchar(200),
+	@pass nvarchar(200)
+AS
+	DECLARE @elUsuario INT = -1
+	DECLARE @continue INT = 0
+	
+	SELECT @elUsuario=usuarioId FROM dbo.Usuarios WHERE correoInstitucional = @user
+
+	IF @elUsuario = -1 BEGIN
+		RETURN 0
+	END ELSE BEGIN
+		DECLARE @temporal VARBINARY(256)
+		SELECT @temporal=[password] FROM dbo.Usuarios WHERE usuarioId = @elUsuario
+		IF @temporal = HASHBYTES('SHA2_256', @pass) BEGIN
+			SELECT usuarioId, apellido1, apellido2, nombre, esAdministrador, correo FROM dbo.Usuarios WHERE usuarioId = @elUsuario FOR JSON AUTO
+		END ELSE BEGIN
+			RETURN 0
+		END
+	END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_permisosUsuario]    Script Date: 10/5/2022 12:23:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_permisosUsuario]
 	@usuarioId bigint,
 	@permisoUsuarioId int
 AS
 	INSERT INTO dbo.Permisos_Por_Usuario (permisoUsuarioId, usuarioId)
 	VALUES
-	(@usuarioId, @permisoUsuarioId)
+	(@permisoUsuarioId, @usuarioId)
+
+	RETURN 1
 GO
-/****** Object:  StoredProcedure [dbo].[Registrar_Funcionario]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  StoredProcedure [dbo].[sp_registrarEstacionamiento]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[Registrar_Funcionario]
+CREATE PROCEDURE [dbo].[sp_registrarEstacionamiento]
+	@tipoEstacionamiento smallint,
+	@provincia tinyint, 
+	@canton smallint,
+	@distrito int,
+	@direccion nvarchar(500),
+	@nombre nvarchar(200),
+	@formaAcceso nvarchar(500),
+	@cantEspacios int,
+	@cantEspaciosEspeciales int,
+	@cantEspaciosJefaturas int,
+	@cantEspaciosVisitantes int,
+	@cantEspaciosOficiales int,
+	@correo nvarchar(200),
+	@telefono nvarchar(40),
+	@identificacion nvarchar(60),
+	@imageUrl nvarchar(128),
+	@descripcion nvarchar(250)
+AS
+	-- Registra la ubicacion
+	EXEC dbo.sp_ubicaciones @provincia, @canton, @distrito, @direccion
+
+	-- Obtiene la direccion de esa ubicacion recien registrada
+	DECLARE @ubicacion bigint 
+	SELECT @ubicacion = MAX(ubicacionId) FROM dbo.Ubicaciones
+
+	BEGIN TRANSACTION
+
+		INSERT INTO dbo.Estacionamientos 
+			(	tipoEstacionamiento, ubicacion, nombre, formaAcceso,
+				cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales,
+				correo, telefono, identificacion, imageUrl, descripcion	)
+		VALUES
+			(	@tipoEstacionamiento, @ubicacion, @nombre, @formaAcceso,
+				@cantEspacios, @cantEspaciosEspeciales, @cantEspaciosJefaturas, @cantEspaciosVisitantes, @cantEspaciosOficiales,
+				@correo, @telefono, @identificacion, @imageUrl, @descripcion	)
+	COMMIT
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_RegistrarFuncionario]    Script Date: 10/5/2022 12:23:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_RegistrarFuncionario]
 	@tipoFuncionario int,
 	@division int,
 	@identificacion nvarchar(60),
@@ -656,45 +835,69 @@ AS
 	
 	IF @buscaUsuario = 0 BEGIN
 		
-		INSERT INTO dbo.Usuarios
-		(tipoFuncionario, division, identificacion, 
-		nombre, apellido1, apellido2, telefono, correoInstitucional,
-		correo, notificarCorreoAlterno, [password])
-		VALUES
-		(@tipoFuncionario, @division, @identificacion, 
-		@nombre, @apellido1, @apellido2, @telefono, @correoInstitucional,
-		@correo, @notificarCorreoAlterno, HASHBYTES('SHA2_256', @password))
+		BEGIN TRANSACTION
+			INSERT INTO dbo.Usuarios
+			(tipoFuncionario, division, identificacion, 
+			nombre, apellido1, apellido2, telefono, correoInstitucional,
+			correo, notificarCorreoAlterno, [password])
+			VALUES
+			(@tipoFuncionario, @division, @identificacion, 
+			@nombre, @apellido1, @apellido2, @telefono, @correoInstitucional,
+			@correo, @notificarCorreoAlterno, HASHBYTES('SHA2_256', @password))
+		COMMIT
 
+		SELECT @buscaUsuario = MAX(usuarioId) FROM dbo.Usuarios
 	END
 	
 GO
-/****** Object:  StoredProcedure [dbo].[sp_login]    Script Date: 8/5/2022 08:41:29 ******/
+/****** Object:  StoredProcedure [dbo].[sp_RegistrarVehiculo]    Script Date: 10/5/2022 12:23:04 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[sp_login]
-	@user nvarchar(200),
-	@pass nvarchar(200)
+CREATE PROCEDURE [dbo].[sp_RegistrarVehiculo]
+	@usuarioId bigint,
+	@placa NVARCHAR(20),					-- parametros
+	@tipoVehiculo SMALLINT
 AS
-	DECLARE @elUsuario INT = -1
-	DECLARE @continue INT = 0
-	
-	SELECT @elUsuario=usuarioId FROM dbo.Usuarios WHERE correoInstitucional = @user
-	SELECT @elUsuario
 
-	IF @elUsuario = -1 BEGIN
-		SELECT 0;
-	END ELSE BEGIN
-		DECLARE @temporal VARBINARY(256)
-		SELECT @temporal=[password] FROM dbo.Usuarios WHERE usuarioId = @elUsuario
-		IF @temporal = HASHBYTES('SHA2_256', @pass) BEGIN
-			SELECT 1
-		END ELSE BEGIN
-			SELECT 0
-		END
+	DECLARE @Existe INT	= 0					-- busca si ya la placa esta registrada
+	SELECT @Existe = vehiculoId FROM dbo.Vehiculos WHERE placa = @placa AND tipoVehiculo = @tipoVehiculo;
+
+	IF @Existe<1 BEGIN						-- si no esta resgistrada, lo inserta mediante transaccion
+		BEGIN TRANSACTION
+			INSERT INTO dbo.Vehiculos (placa, tipoVehiculo)
+			VALUES
+			(@placa, @tipoVehiculo)
+		COMMIT
+		SELECT @Existe = MAX(vehiculoId) FROM dbo.Vehiculos
 	END
+
+	BEGIN TRANSACTION						-- asocia al usuario con el vehiculo
+		INSERT INTO dbo.Vehiculos_Por_Usuario (usuarioId, vehiculoId)
+		VALUES
+		(@usuarioId, @Existe)
+	COMMIT
+
+	RETURN @Existe
+GO
+/****** Object:  StoredProcedure [dbo].[sp_ubicaciones]    Script Date: 10/5/2022 12:23:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_ubicaciones]
+	@provincia tinyint, 
+	@canton smallint,
+	@distrito int,
+	@direccion nvarchar(500)
+AS
+	SELECT 'Im here'
+	INSERT INTO dbo.Ubicaciones (provincia, canton, distrito, direccionExacta) VALUES
+	(@provincia, @canton, @distrito, @direccion)
+
+	RETURN 1
 GO
 USE [master]
 GO
