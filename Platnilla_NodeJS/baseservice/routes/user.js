@@ -56,7 +56,9 @@ function login(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.login(username, password)
                             .then(function (data) {
-                            res.send(data);
+                            res.json({
+                                "validLogin": data
+                            });
                         })
                             .catch(function (err) {
                             log.error(err);

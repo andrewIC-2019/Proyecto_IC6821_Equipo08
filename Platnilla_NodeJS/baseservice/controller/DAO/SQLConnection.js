@@ -55,18 +55,19 @@ var SQLConnection = /** @class */ (function () {
         return this.instance;
     };
     SQLConnection.prototype.getUser = function (username, password) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, login(username, password)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
+        /* login(username, password).then((value)=> {
+         return value
+       }).catch((err)=>{
+         console.log(err)
+         return false
+       }); */
+        var res = login(username, password);
+        return res;
     };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+//this function is the same as test but without then and catch
 function login(username, password) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result;
@@ -84,7 +85,18 @@ function login(username, password) {
                     result = _a.sent();
                     console.log('test2');
                     console.log(result);
-                    return [2 /*return*/, result.recordsets];
+                    //find better way to return result
+                    console.log(result.recordsets[0]); //this one return id
+                    console.log(result.recordsets[1]); //this one return if is valid
+                    console.log(result.recordsets[1][0]);
+                    console.log(result.recordsets[1][0].STATUS);
+                    if (result.recordsets[1][0].STATUS == 1) {
+                        return [2 /*return*/, true];
+                    }
+                    else {
+                        return [2 /*return*/, false];
+                    }
+                    return [2 /*return*/];
             }
         });
     });

@@ -44,7 +44,7 @@ export class GestorUsuario {
   }
 
   //json reponse
-  public login(username: string, password: string): Promise<string> {
+  public login(username: string, password: string): Promise<boolean> {
     return this.daoUsuario.getUser(username, password);
   }
 }

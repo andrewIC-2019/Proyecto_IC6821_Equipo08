@@ -16,7 +16,7 @@ export class DAOUsuariosImpl implements DAOTransaccional {
     throw new Error("Method not implemented.");
   }
 
-  public getUser(username: string, password: string): Promise<string> {
+  public getUser(username: string, password: string): Promise<boolean> {
     return SQLConnection.getInstance().getUser(username, password);
   }
 }

@@ -27,12 +27,20 @@ export class SQLConnection implements DataSource {
     return this.instance;
   }
 
-  async getUser(username: string, password: string): Promise<string> {
-    return await login(username, password);
+  getUser(username: string, password: string): Promise<boolean>{
+     /* login(username, password).then((value)=> {
+      return value
+    }).catch((err)=>{
+      console.log(err)
+      return false
+    }); */
+
+    let res = login(username, password)
+    return res
   }
 }
 //this function is the same as test but without then and catch
-async function login(username: string, password: string): Promise<string> {
+async function login(username: string, password: string): Promise<boolean> {
   //do connection
   let pool = await new sql.connect(config);
   //do reques from pool, with parameters and execute sp
@@ -44,7 +52,17 @@ async function login(username: string, password: string): Promise<string> {
     console.log('test2')
     console.log(result)
     //find better way to return result
-    return result.recordsets
+    console.log( result.recordsets[0])//this one return id
+    console.log( result.recordsets[1])//this one return if is valid
+
+    console.log( result.recordsets[1][0])
+    console.log( result.recordsets[1][0].STATUS)
+
+    if(result.recordsets[1][0].STATUS == 1 ){
+      return true
+    } else {
+      return false
+    }
 }
 
 async function test(username: string, password: string): Promise<string> {

@@ -20,7 +20,10 @@ async function login(
   await Control.getInstance()
     .$gestorUsuario.login(username, password)
     .then((data) => {
-      res.send(data);
+      
+      res.json({
+        "validLogin": data
+      });
     })
     .catch((err) => {
       log.error(err);
