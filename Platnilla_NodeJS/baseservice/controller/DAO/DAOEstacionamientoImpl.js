@@ -21,6 +21,10 @@ var DAOEStacionamientoImpl = /** @class */ (function () {
         console.log("llega bien b");
         return SQLConnection_1.SQLConnection.getInstance().inicio();
     };
+    DAOEStacionamientoImpl.prototype.registrarEstacionamiento = function (tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion) {
+        console.log("llega bien A");
+        return SQLConnection_1.SQLConnection.getInstance().registrarEstacionamiento(tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion);
+    };
     return DAOEStacionamientoImpl;
 }());
 exports.DAOEStacionamientoImpl = DAOEStacionamientoImpl;

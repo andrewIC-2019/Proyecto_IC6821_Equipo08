@@ -48,6 +48,10 @@ var GestorEstacionamiento = /** @class */ (function () {
         console.log("llega bien A");
         return this.daoEstacionamiento.getAllEStacionamientos();
     };
+    GestorEstacionamiento.prototype.registrarEstacionamiento = function (tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion) {
+        console.log("llega bien A");
+        return this.daoEstacionamiento.registrarEstacionamiento(tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion);
+    };
     return GestorEstacionamiento;
 }());
 exports.GestorEstacionamiento = GestorEstacionamiento;

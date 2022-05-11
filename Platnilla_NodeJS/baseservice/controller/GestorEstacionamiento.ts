@@ -5,7 +5,6 @@ export class GestorEstacionamiento {
   private dtoEstacionamiento: DTOEstacionamiento;
   private daoEstacionamiento: DAOEStacionamientoImpl;
 
-
   constructor() {
     this.dtoEstacionamiento = new DTOEstacionamiento();
     this.daoEstacionamiento = new DAOEStacionamientoImpl();
@@ -42,8 +41,49 @@ export class GestorEstacionamiento {
     this.daoEstacionamiento = value;
   }
 
-  public inicio() : Promise<string> {
-    console.log("llega bien A")
-    return this.daoEstacionamiento.getAllEStacionamientos()
+  public inicio(): Promise<string> {
+    console.log("llega bien A");
+    return this.daoEstacionamiento.getAllEStacionamientos();
+  }
+
+  public registrarEstacionamiento(
+    tipoEstacionamiento: number,
+    provincia: number,
+    canton: string,
+    distrito: string,
+    direccion: string,
+    nombre: string,
+    formaAcceso: string,
+    cantEspacios: string,
+    cantEspaciosEspeciales: string,
+    cantEspaciosJefaturas: number,
+    cantEspaciosVisitantes: string,
+    cantEspaciosOficiales: string,
+    correo: string,
+    telefono: number,
+    identificacion: string,
+    imageUrl: number,
+    descripcion: string
+  ): Promise<string> {
+    console.log("llega bien A");
+    return this.daoEstacionamiento.registrarEstacionamiento(
+      tipoEstacionamiento,
+      provincia,
+      canton,
+      distrito,
+      direccion,
+      nombre,
+      formaAcceso,
+      cantEspacios,
+      cantEspaciosEspeciales,
+      cantEspaciosJefaturas,
+      cantEspaciosVisitantes,
+      cantEspaciosOficiales,
+      correo,
+      telefono,
+      identificacion,
+      imageUrl,
+      descripcion
+    );
   }
 }

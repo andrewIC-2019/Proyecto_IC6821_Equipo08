@@ -45,16 +45,79 @@ var app = express();
 exports.user = app;
 var log = new common_1.Logger();
 app.post("/login", login);
-app.post("/i", info);
-function info(req, res, next) {
+app.post("/registrarVehiculo", registrarVehiculo);
+app.post("/ubicaciones", ubicaciones);
+app.post("/registrarFuncionario", registrarFuncionario);
+function registrarFuncionario(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var username;
+        var tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    username = req.body.username;
+                    tipoFuncionario = req.body.tipoFuncionario;
+                    division = req.body.division;
+                    identificacion = req.body.identificacion;
+                    nombre = req.body.nombre;
+                    apellido1 = req.body.apellido1;
+                    apellido2 = req.body.apellido2;
+                    telefono = req.body.telefono;
+                    correoInstitucional = req.body.correoInstitucional;
+                    correo = req.body.correo;
+                    notificarCorreoAlterno = req.body.notificarCorreoAlterno;
+                    password = req.body.password;
                     return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorUsuario.info(username)
+                            .$gestorUsuario.registrarFuncionario(tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password)
+                            .then(function (data) {
+                            res.json(data);
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function ubicaciones(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var provincia, canton, distrito, direccion;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    provincia = req.body.provincia;
+                    canton = req.body.canton;
+                    distrito = req.body.distrito;
+                    direccion = req.body.direccion;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.ubicaciones(provincia, canton, distrito, direccion)
+                            .then(function (data) {
+                            res.json(data);
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function registrarVehiculo(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var usuarioId, placa, tipoVehiculo;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    usuarioId = req.body.usuarioId;
+                    placa = req.body.placa;
+                    tipoVehiculo = req.body.tipoVehiculo;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.registrarVehiculo(usuarioId, placa, tipoVehiculo)
                             .then(function (data) {
                             res.json(data);
                         })

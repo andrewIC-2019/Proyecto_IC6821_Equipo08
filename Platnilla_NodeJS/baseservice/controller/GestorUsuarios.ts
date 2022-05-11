@@ -49,7 +49,48 @@ export class GestorUsuario {
     return this.daoUsuario.login(username, password);
   }
 
-  public info(username: string) : Promise<Usuario> {
-    return this.daoUsuario.get(username)
+  public registrarVehiculo(
+    usuarioId: number,
+    placa: string,
+    tipoVehiculo: number
+  ): Promise<string> {
+    return this.daoUsuario.registrarVehiculo(usuarioId, placa, tipoVehiculo);
+  }
+
+  public ubicaciones(
+    provincia: number,
+    canton: number,
+    distrito: number,
+    direccion: string
+  ): Promise<string> {
+    return this.daoUsuario.ubicaciones(provincia, canton, distrito, direccion);
+  }
+
+  public registrarFuncionario(
+    tipoFuncionario: number,
+    division: number,
+    identificacion: string,
+    nombre: string,
+    apellido1: string,
+    apellido2: string,
+    telefono: string,
+    correoInstitucional: string,
+    correo: string,
+    notificarCorreoAlterno: number,
+    password: string
+  ): Promise<string> {
+    return this.daoUsuario.registrarFuncionario(
+      tipoFuncionario,
+      division,
+      identificacion,
+      nombre,
+      apellido1,
+      apellido2,
+      telefono,
+      correoInstitucional,
+      correo,
+      notificarCorreoAlterno,
+      password
+    );
   }
 }

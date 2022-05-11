@@ -48,8 +48,14 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.login = function (username, password) {
         return this.daoUsuario.login(username, password);
     };
-    GestorUsuario.prototype.info = function (username) {
-        return this.daoUsuario.get(username);
+    GestorUsuario.prototype.registrarVehiculo = function (usuarioId, placa, tipoVehiculo) {
+        return this.daoUsuario.registrarVehiculo(usuarioId, placa, tipoVehiculo);
+    };
+    GestorUsuario.prototype.ubicaciones = function (provincia, canton, distrito, direccion) {
+        return this.daoUsuario.ubicaciones(provincia, canton, distrito, direccion);
+    };
+    GestorUsuario.prototype.registrarFuncionario = function (tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password) {
+        return this.daoUsuario.registrarFuncionario(tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password);
     };
     return GestorUsuario;
 }());

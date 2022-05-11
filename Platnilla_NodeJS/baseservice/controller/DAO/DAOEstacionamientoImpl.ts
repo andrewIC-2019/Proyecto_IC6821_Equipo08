@@ -21,5 +21,46 @@ export class DAOEStacionamientoImpl implements DAOTransaccional{
 
         return SQLConnection.getInstance().inicio()
     }
+
+    public registrarEstacionamiento(
+        tipoEstacionamiento: number,
+        provincia: number,
+        canton: string,
+        distrito: string,
+        direccion: string,
+        nombre: string,
+        formaAcceso: string,
+        cantEspacios: string,
+        cantEspaciosEspeciales: string,
+        cantEspaciosJefaturas: number,
+        cantEspaciosVisitantes: string,
+        cantEspaciosOficiales: string,
+        correo: string,
+        telefono: number,
+        identificacion: string,
+        imageUrl: number,
+        descripcion: string
+      ): Promise<string> {
+        console.log("llega bien A");
+        return SQLConnection.getInstance().registrarEstacionamiento(
+          tipoEstacionamiento,
+          provincia,
+          canton,
+          distrito,
+          direccion,
+          nombre,
+          formaAcceso,
+          cantEspacios,
+          cantEspaciosEspeciales,
+          cantEspaciosJefaturas,
+          cantEspaciosVisitantes,
+          cantEspaciosOficiales,
+          correo,
+          telefono,
+          identificacion,
+          imageUrl,
+          descripcion
+        );
+      }
     
 }

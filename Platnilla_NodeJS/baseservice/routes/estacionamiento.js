@@ -45,6 +45,46 @@ var app = express();
 exports.estacionamiento = app;
 var log = new common_1.Logger();
 app.post("/inicio", inicio);
+app.post("/registrarEstacionamiento", registrarEstacionamiento);
+function registrarEstacionamiento(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    tipoEstacionamiento = req.body.tipoEstacionamiento;
+                    provincia = req.body.provincia;
+                    canton = req.body.canton;
+                    distrito = req.body.distrito;
+                    direccion = req.body.direccion;
+                    nombre = req.body.nombre;
+                    formaAcceso = req.body.formaAcceso;
+                    cantEspacios = req.body.cantEspacios;
+                    cantEspaciosEspeciales = req.body.cantEspaciosEspeciales;
+                    cantEspaciosJefaturas = req.body.cantEspaciosJefaturas;
+                    cantEspaciosVisitantes = req.body.cantEspaciosVisitantes;
+                    cantEspaciosOficiales = req.body.cantEspaciosOficiales;
+                    correo = req.body.correo;
+                    telefono = req.body.telefono;
+                    identificacion = req.body.identificacion;
+                    imageUrl = req.body.imageUrl;
+                    descripcion = req.body.descripcion;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorEstacionamiento.registrarEstacionamiento(tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion)
+                            .then(function (data) {
+                            res.json(data);
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function inicio(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
