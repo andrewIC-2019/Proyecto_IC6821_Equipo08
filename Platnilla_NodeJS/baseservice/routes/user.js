@@ -39,49 +39,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.user = void 0;
 var express = require("express");
 var controller_1 = require("../controller");
+var common_1 = require("../common");
 var router = express.Router();
 var app = express();
 exports.user = app;
+var log = new common_1.Logger();
 app.post("/login", login);
 function login(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var username, password, errMsg, result, respStruct;
+        var username, password;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     username = req.body.username;
                     password = req.body.password;
-                    errMsg = "";
-                    if (!username || username === "") {
-                        errMsg = "error: username is empty";
-                    }
-                    else if (!password || password === "") {
-                        errMsg = "error: password is empty";
-                    }
-                    result = "";
-                    console.log(errMsg);
-                    console.log(errMsg.length);
-                    console.log(errMsg.length == 0);
-                    if (!(!errMsg && (errMsg.length == 0))) return [3 /*break*/, 2];
-                    return [4 /*yield*/, controller_1.Control.getInstance().$gestorUsuario.login(username, password).then(function (data) {
-                            console.log("***************");
-                            console.log(data);
-                            res.status(400).send(data);
-                        }).catch(function (err) {
-                            res.json(err);
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.login(username, password)
+                            .then(function (data) {
+                            res.send(data);
+                        })
+                            .catch(function (err) {
+                            log.error(err);
                             return "";
                         })];
                 case 1:
                     _a.sent();
-                    _a.label = 2;
-                case 2:
-                    respStruct = {
-                        errMsg: errMsg,
-                        json: result
-                    };
-                    console.log(result);
-                    console.log(username, password);
-                    res.send(respStruct);
                     return [2 /*return*/];
             }
         });

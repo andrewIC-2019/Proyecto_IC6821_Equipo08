@@ -37,30 +37,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SQLConnection = void 0;
-var Connection = require("tedious").Connection;
+var sql = require("mssql");
+var connection = sql.connect("Server=localhost,1433;Database=parqueos;User Id=sa;Password=cer5a37Te9;Encrypt=false");
 var config = {
+    user: "sa",
+    password: "cer5a37Te9",
     server: "localhost",
-    authentication: {
-        type: "default",
-        options: {
-            userName: "sa",
-            password: "cer5a37Te9",
-        },
-    },
-    options: {
-        // If you are on Microsoft Azure, you need encryption:
-        encrypt: false,
-        database: "parqueos",
-        enableArithAbort: true,
-        trustServerCertificate: false,
-    },
+    database: "parqueos",
 };
-var connection = new Connection(config);
-connection.on("connect", function (err) {
-    // If no error, then good to proceed.
-    console.log("Connected");
-});
-connection.connect();
 var SQLConnection = /** @class */ (function () {
     function SQLConnection() {
     }
@@ -73,83 +57,85 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.getUser = function (username, password) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, test()];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, login(username, password)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
-var Request = require("tedious").Request;
-var TYPES = require("tedious").TYPES;
-function executeLogin_test(username, password) {
+function login(username, password) {
     return __awaiter(this, void 0, void 0, function () {
-        var request, result;
+        var pool, result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    request = new Request("EXEC login_test @correoInstitucional;", function (err) {
-                        if (err) {
-                            console.log(err);
-                        }
-                    });
-                    request.addParameter("correoInstitucional", TYPES.NVarChar, username);
-                    result = "";
-                    connection.execSql(request);
-                    console.log("salio");
-                    return [4 /*yield*/, request.on("row", function (columns) {
-                            columns.forEach(function (column) {
-                                if (column.value === null) {
-                                    console.log("NULL");
-                                }
-                                else {
-                                    result += column.value + " ";
-                                }
-                            });
-                            console.log("acá");
-                            console.log(result);
-                            console.log("acá");
-                        })];
+                case 0: return [4 /*yield*/, new sql.connect(config)];
                 case 1:
-                    _a.sent();
-                    request.on("done", function (rowCount, more) {
-                        console.log(rowCount + " rows returned");
-                    });
-                    // Close the connection after the final event emitted by the request, after the callback passes
-                    request.on("requestCompleted", function (rowCount, more) {
-                        connection.close();
-                    });
-                    return [2 /*return*/, result];
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("user", sql.NVarChar(200), username)
+                            .input("pass", sql.NVarChar(200), password)
+                            .execute("sp_login")];
+                case 2:
+                    result = _a.sent();
+                    console.log('test2');
+                    console.log(result);
+                    return [2 /*return*/, result.recordsets];
             }
         });
     });
 }
-var sql = require('mssql');
-function test() {
+function test(username, password) {
     return __awaiter(this, void 0, void 0, function () {
         var result, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 3, , 4]);
-                    // make sure that any items are correctly URL encoded in the connection string
-                    return [4 /*yield*/, sql.connect('Server=localhost,1433;Database=parqueos;User Id=sa;Password=cer5a37Te9;Encrypt=false')];
+                    _a.trys.push([0, 2, , 3]);
+                    result = void 0;
+                    console.log("***************");
+                    return [4 /*yield*/, sql
+                            .connect(config)
+                            .then(function (pool) {
+                            // Stored procedure
+                            console.log("dentro");
+                            return pool
+                                .request()
+                                .input("user", sql.NVarChar(200), username)
+                                .input("pass", sql.NVarChar(200), password)
+                                .execute("sp_login");
+                        })
+                            .then(function (result) {
+                            console.log("dentro BBB");
+                            console.dir(result);
+                        })
+                            .catch(function (err) {
+                            console.log(err);
+                        })];
                 case 1:
-                    // make sure that any items are correctly URL encoded in the connection string
                     _a.sent();
-                    return [4 /*yield*/, sql.query("select * from Usuarios")];
+                    return [2 /*return*/, result];
                 case 2:
-                    result = _a.sent();
-                    console.dir(result);
-                    console.log("***********todo bien*****************");
-                    return [2 /*return*/, result.recordset];
-                case 3:
                     err_1 = _a.sent();
-                    console.log("***********entra en error*****************");
                     console.log(err_1);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     });
 }
+/* async function test () : Promise<string>{
+  try {
+      // make sure that any items are correctly URL encoded in the connection string
+      await  sql.connect('Server=localhost,1433;Database=parqueos;User Id=sa;Password=cer5a37Te9;Encrypt=false')
+      const result = await sql.query(`select * from Usuarios`)
+     
+      return result.recordset
+  } catch (err) {
+      console.log(err)
+  }
+} */
