@@ -17,8 +17,8 @@ var DAOUsuariosImpl = /** @class */ (function () {
     DAOUsuariosImpl.prototype.update = function (obj) {
         throw new Error("Method not implemented.");
     };
-    DAOUsuariosImpl.prototype.getUser = function (username, password) {
-        return SQLConnection_1.SQLConnection.getInstance().getUser(username, password);
+    DAOUsuariosImpl.prototype.login = function (username, password) {
+        return SQLConnection_1.SQLConnection.getInstance().login(username, password);
     };
     return DAOUsuariosImpl;
 }());

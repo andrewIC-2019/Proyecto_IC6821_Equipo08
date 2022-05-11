@@ -1,5 +1,6 @@
 import { Estacionamiento } from "../../model";
 import { DAOTransaccional } from "./DAOTransaccional";
+import { SQLConnection } from "./SQLConnection";
 
 export class DAOEStacionamientoImpl implements DAOTransaccional{
     create(obj: Estacionamiento): boolean {
@@ -13,6 +14,12 @@ export class DAOEStacionamientoImpl implements DAOTransaccional{
     }
     update(obj: Estacionamiento): boolean {
         throw new Error("Method not implemented.");
+    }
+
+    public getAllEStacionamientos(): Promise<string> {
+        console.log("llega bien b")
+
+        return SQLConnection.getInstance().inicio()
     }
     
 }

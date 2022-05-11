@@ -46,7 +46,10 @@ var GestorUsuario = /** @class */ (function () {
     });
     //json reponse
     GestorUsuario.prototype.login = function (username, password) {
-        return this.daoUsuario.getUser(username, password);
+        return this.daoUsuario.login(username, password);
+    };
+    GestorUsuario.prototype.info = function (username) {
+        return this.daoUsuario.get(username);
     };
     return GestorUsuario;
 }());

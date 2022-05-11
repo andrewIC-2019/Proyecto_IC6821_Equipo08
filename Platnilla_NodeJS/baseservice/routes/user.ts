@@ -8,6 +8,28 @@ const app = express();
 const log = new Logger();
 
 app.post("/login", login);
+app.post("/i", info);
+
+
+async function info(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  let username: string = req.body.username;
+
+  await Control.getInstance()
+    .$gestorUsuario.info(username)
+    .then((data) => {
+      
+      res.json(data);
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
+
 
 async function login(
   req: express.Request,
@@ -21,9 +43,7 @@ async function login(
     .$gestorUsuario.login(username, password)
     .then((data) => {
       
-      res.json({
-        "validLogin": data
-      });
+      res.json(data);
     })
     .catch((err) => {
       log.error(err);

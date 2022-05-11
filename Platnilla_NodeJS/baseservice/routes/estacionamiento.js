@@ -36,56 +36,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.user = void 0;
+exports.estacionamiento = void 0;
 var express = require("express");
-var controller_1 = require("../controller");
 var common_1 = require("../common");
-var router = express.Router();
+var controller_1 = require("../controller");
+//a traves de un controller, y que ya cuenta con un logger
 var app = express();
-exports.user = app;
+exports.estacionamiento = app;
 var log = new common_1.Logger();
-app.post("/login", login);
-app.post("/i", info);
-function info(req, res, next) {
+app.post("/inicio", inicio);
+function inicio(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var username;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    username = req.body.username;
-                    return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorUsuario.info(username)
-                            .then(function (data) {
-                            res.json(data);
-                        })
-                            .catch(function (err) {
-                            log.error(err);
-                            return "";
-                        })];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-function login(req, res, next) {
-    return __awaiter(this, void 0, void 0, function () {
-        var username, password;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    username = req.body.username;
-                    password = req.body.password;
-                    return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorUsuario.login(username, password)
-                            .then(function (data) {
-                            res.json(data);
-                        })
-                            .catch(function (err) {
-                            log.error(err);
-                            return "";
-                        })];
+                case 0: return [4 /*yield*/, controller_1.Control.getInstance()
+                        .$gestorEstacionamiento.inicio()
+                        .then(function (data) {
+                        res.json(data);
+                    })
+                        .catch(function (err) {
+                        log.error(err);
+                        return "";
+                    })];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];

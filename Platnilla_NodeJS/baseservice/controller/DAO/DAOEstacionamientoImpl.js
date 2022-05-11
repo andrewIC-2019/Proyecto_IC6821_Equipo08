@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DAOEStacionamientoImpl = void 0;
+var SQLConnection_1 = require("./SQLConnection");
 var DAOEStacionamientoImpl = /** @class */ (function () {
     function DAOEStacionamientoImpl() {
     }
@@ -15,6 +16,10 @@ var DAOEStacionamientoImpl = /** @class */ (function () {
     };
     DAOEStacionamientoImpl.prototype.update = function (obj) {
         throw new Error("Method not implemented.");
+    };
+    DAOEStacionamientoImpl.prototype.getAllEStacionamientos = function () {
+        console.log("llega bien b");
+        return SQLConnection_1.SQLConnection.getInstance().inicio();
     };
     return DAOEStacionamientoImpl;
 }());

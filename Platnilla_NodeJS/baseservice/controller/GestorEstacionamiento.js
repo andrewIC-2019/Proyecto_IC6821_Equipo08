@@ -1,8 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GestorEstacionamiento = void 0;
+var DAOEstacionamientoImpl_1 = require("./DAO/DAOEstacionamientoImpl");
+var DTOEstacionamiento_1 = require("./DTOEstacionamiento");
 var GestorEstacionamiento = /** @class */ (function () {
     function GestorEstacionamiento() {
+        this.dtoEstacionamiento = new DTOEstacionamiento_1.DTOEstacionamiento();
+        this.daoEstacionamiento = new DAOEstacionamientoImpl_1.DAOEStacionamientoImpl();
     }
     Object.defineProperty(GestorEstacionamiento.prototype, "$dtoEstacionamiento", {
         /**
@@ -40,6 +44,10 @@ var GestorEstacionamiento = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    GestorEstacionamiento.prototype.inicio = function () {
+        console.log("llega bien A");
+        return this.daoEstacionamiento.getAllEStacionamientos();
+    };
     return GestorEstacionamiento;
 }());
 exports.GestorEstacionamiento = GestorEstacionamiento;

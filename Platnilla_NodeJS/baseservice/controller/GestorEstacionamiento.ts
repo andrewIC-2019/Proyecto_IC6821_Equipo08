@@ -5,6 +5,11 @@ export class GestorEstacionamiento {
   private dtoEstacionamiento: DTOEstacionamiento;
   private daoEstacionamiento: DAOEStacionamientoImpl;
 
+
+  constructor() {
+    this.dtoEstacionamiento = new DTOEstacionamiento();
+    this.daoEstacionamiento = new DAOEStacionamientoImpl();
+  }
   /**
    * Getter $dtoEstacionamiento
    * @return {DTOEstacionamiento}
@@ -35,5 +40,10 @@ export class GestorEstacionamiento {
    */
   public set $daoEstacionamiento(value: DAOEStacionamientoImpl) {
     this.daoEstacionamiento = value;
+  }
+
+  public inicio() : Promise<string> {
+    console.log("llega bien A")
+    return this.daoEstacionamiento.getAllEStacionamientos()
   }
 }

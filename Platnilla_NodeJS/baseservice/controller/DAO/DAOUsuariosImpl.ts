@@ -6,7 +6,7 @@ export class DAOUsuariosImpl implements DAOTransaccional {
   create(obj: Usuario): boolean {
     throw new Error("Method not implemented.");
   }
-  get(key: any): Usuario {
+  get(key: string): Promise<Usuario> {
     throw new Error("Method not implemented.");
   }
   getAll(): Usuario[] {
@@ -16,7 +16,7 @@ export class DAOUsuariosImpl implements DAOTransaccional {
     throw new Error("Method not implemented.");
   }
 
-  public getUser(username: string, password: string): Promise<boolean> {
-    return SQLConnection.getInstance().getUser(username, password);
+  public login(username: string, password: string): Promise<string> {
+    return SQLConnection.getInstance().login(username, password);
   }
 }

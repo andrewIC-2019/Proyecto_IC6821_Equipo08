@@ -54,23 +54,49 @@ var SQLConnection = /** @class */ (function () {
         }
         return this.instance;
     };
-    SQLConnection.prototype.getUser = function (username, password) {
+    SQLConnection.prototype.login = function (username, password) {
         /* login(username, password).then((value)=> {
-         return value
-       }).catch((err)=>{
-         console.log(err)
-         return false
-       }); */
+          return value
+        }).catch((err)=>{
+          console.log(err)
+          return false
+        }); */
         var res = login(username, password);
         return res;
+    };
+    SQLConnection.prototype.inicio = function () {
+        return inicio();
     };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
 //this function is the same as test but without then and catch
+function inicio() {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result, str, obj, key;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool.request().execute("sp_inicio")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_inicio");
+                    console.log(result);
+                    obj = result.recordsets[0][0];
+                    for (key in obj) {
+                        str = obj[key];
+                    }
+                    return [2 /*return*/, str];
+            }
+        });
+    });
+}
+//this function is the same as test but without then and catch
 function login(username, password) {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, result;
+        var pool, result, str, obj, key;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
@@ -83,18 +109,18 @@ function login(username, password) {
                             .execute("sp_login")];
                 case 2:
                     result = _a.sent();
-                    console.log('test2');
+                    console.log("sp_login");
                     console.log(result);
-                    //find better way to return result
-                    console.log(result.recordsets[0]); //this one return id
-                    console.log(result.recordsets[1]); //this one return if is valid
-                    console.log(result.recordsets[1][0]);
-                    console.log(result.recordsets[1][0].STATUS);
-                    if (result.recordsets[1][0].STATUS == 1) {
-                        return [2 /*return*/, true];
+                    if (result.returnValue == 0) {
+                        return [2 /*return*/, "{}"];
                     }
                     else {
-                        return [2 /*return*/, false];
+                        str = void 0;
+                        obj = result.recordsets[0][0];
+                        for (key in obj) {
+                            str = obj[key];
+                        }
+                        return [2 /*return*/, str];
                     }
                     return [2 /*return*/];
             }

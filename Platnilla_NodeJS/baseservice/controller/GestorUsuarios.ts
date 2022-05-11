@@ -1,6 +1,7 @@
 import { DAOUsuariosImpl } from "./DAO/DAOUsuariosImpl";
 import { DTOUsuario } from "./DTOUsuario";
 import * as express from "express";
+import { Usuario } from "../model/Usuario";
 
 export class GestorUsuario {
   private dtoUsuario: DTOUsuario;
@@ -44,7 +45,11 @@ export class GestorUsuario {
   }
 
   //json reponse
-  public login(username: string, password: string): Promise<boolean> {
-    return this.daoUsuario.getUser(username, password);
+  public login(username: string, password: string): Promise<string> {
+    return this.daoUsuario.login(username, password);
+  }
+
+  public info(username: string) : Promise<Usuario> {
+    return this.daoUsuario.get(username)
   }
 }
