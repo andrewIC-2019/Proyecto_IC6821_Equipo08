@@ -20,11 +20,11 @@ USE parqueos;
 
 -- Provincia
 INSERT INTO dbo.Provincias (provincia) 
-VALUES ('SAN_JOSÉ')
+VALUES ('SAN_JOSï¿½')
 
 -- Canton
 INSERT INTO dbo.Cantones (provinciaId, canton) 
-VALUES (1, 'San José')
+VALUES (1, 'San Josï¿½')
 
 -- Distritos
 INSERT INTO dbo.Distritos (provinciaId, cantonId, distrito) 
@@ -44,23 +44,23 @@ INSERT INTO dbo.Dias (dia) VALUES ('Lunes'), ('Martes'), ('Miercoles'), ('Jueves
 
 -- Divisiones
 INSERT INTO dbo.Divisiones (codigoDivision, descripcion) VALUES
-('DIR', 'Dirección'),
+('DIR', 'Direcciï¿½n'),
 ('AU', 'Arquitectura y Urbanismo'),
-('IC', 'Ingeniería en Computación'),
-('AE', 'Administración de Empresas'),
+('IC', 'Ingenierï¿½a en Computaciï¿½n'),
+('AE', 'Administraciï¿½n de Empresas'),
 ('UCU', 'Unidad de Cultura'),
 ('UDE', 'Unidad de Deporte'),
-('CCA', 'Casa Cultural Amón'),
-('UGA', 'Unidad de Gestión Administrativa'),
-('DAR', 'Departamento Admisión y Registro'),
-('DOP', 'Departamento Orientación y Psicología'),
-('OEG', 'Oficina Equidad y Género'),
-('TSR', 'Unidad de Tesorería'),
+('CCA', 'Casa Cultural Amï¿½n'),
+('UGA', 'Unidad de Gestiï¿½n Administrativa'),
+('DAR', 'Departamento Admisiï¿½n y Registro'),
+('DOP', 'Departamento Orientaciï¿½n y Psicologï¿½a'),
+('OEG', 'Oficina Equidad y Gï¿½nero'),
+('TSR', 'Unidad de Tesorerï¿½a'),
 ('UTS', 'Trabajo Social'),
-('BIB', 'Unidad de Gestión Bibliotecaria'),
-('CIS', 'Clínica Integral Salud'),
+('BIB', 'Unidad de Gestiï¿½n Bibliotecaria'),
+('CIS', 'Clï¿½nica Integral Salud'),
 ('USV', 'Seguridad'),
-('TI', 'Soporte Técnico'),
+('TI', 'Soporte Tï¿½cnico'),
 ('UMA', 'Mantenimiento')
 
 -- Permisos Usuario
@@ -96,6 +96,7 @@ INSERT INTO dbo.TiposFuncionarios(tipoFuncionario) VALUES
 
 -- Adicionalmente...
 
+/*
 INSERT INTO dbo.Horarios (diaSemana, horaInicio, horaFinal) VALUES
 (1, '07:30', '16:30'),
 (2, '07:30', '16:30'),
@@ -117,12 +118,13 @@ INSERT INTO dbo.Usuarios (	tipoFuncionario, division, identificacion,
 
 --		Andres Arias: Administrativo
 						 (	2, 3, '818049752', 
-							'Andrés', 'Arias', 'Siles', '42361203', 'aarias.19@itcr.ac.cr',
+							'Andrï¿½s', 'Arias', 'Siles', '42361203', 'aarias.19@itcr.ac.cr',
 							'aarias.19@email.cr', 1, HASHBYTES('SHA2_256', 'aarias.19')
 						 ),
 
 --		Mauricio Campos: Administrativo - Admin de la plataforma
 						 (	2, 1, '965310025',
-							'Mauricio', 'Campos', 'Méndez', '19710601', 'mcampos.71@itcr.ac.cr',
+							'Mauricio', 'Campos', 'Mï¿½ndez', '19710601', 'mcampos.71@itcr.ac.cr',
 							NULL, 0, HASHBYTES('SHA2_256', 'mcampos.71')
 						)
+*/

@@ -39,7 +39,6 @@ CREATE PROCEDURE dbo.sp_ubicaciones
 	@distrito int,
 	@direccion nvarchar(500)
 AS
-	SELECT 'Im here'
 	INSERT INTO dbo.Ubicaciones (provincia, canton, distrito, direccionExacta) VALUES
 	(@provincia, @canton, @distrito, @direccion)
 
@@ -104,6 +103,8 @@ SELECT * FROM dbo.Estacionamientos
 --		La idea seria buscar si ya está, si no, entonces crearlo
 --		Me devuelve el horarioId
 
+
+-- NO
 DROP PROCEDURE IF EXISTS dbo.sp_InsertarHorario
 
 CREATE PROCEDURE dbo.sp_InsertarHorario
@@ -139,19 +140,26 @@ GO
 
 -- xxxxxxxxxxxxxxxxxxxxxxxxx
 
--- SP Horarios y Usuario (INNECESARIO LO PODRIA LLAMAR A LA HORA DE REGISTRAR
+-- SP Horarios y Usuario 
 
-DROP PROCEDURE IF EXISTS dbo.Registrar_Horario
+DROP PROCEDURE IF EXISTS dbo.sp_registrarHorario
 
-CREATE PROCEDURE dbo.Registrar_Horario
+CREATE PROCEDURE dbo.sp_registrarHorario
 	@usuarioId bigint,
 	@diaSemana tinyint,					-- parametros
 	@horaInicio time(7),
 	@horaFinal time(7)
 AS
 
-	DECLARE @registradoComo INT	= 0					-- busca si ya la placa esta registrada
+	DECLARE @registradoComo INT	= 0					-- busca si ya el horario esta registrada
 	SELECT @registradoComo = horarioId FROM dbo.Horarios WHERE diaSemana = @diaSemana AND horaInicio = @horaInicio AND horaFinal = @horaFinal;
+
+	DECLARE @yaAsociado BIT = 0
+	SELECT @yaAsociado=1 FROM dbo.Horarios_Por_Usuario WHERE usuarioId = @usuarioId AND horarioId = @registradoComo AND deshabilitado = 0
+
+	IF @yaAsociado=1 BEGIN
+		RETURN 0					-- Si ya el usuario tenia ese carro, entonces no sigue el registro
+	END
 
 	IF @registradoComo<1 BEGIN						-- si no esta resgistrada, lo inserta mediante transaccion
 		BEGIN TRANSACTION
@@ -159,7 +167,7 @@ AS
 			VALUES
 			(@diaSemana, @horaInicio, @horaFinal)
 		COMMIT
-		SET @registradoComo = SELECT MAX(horarioId) FROM dbo.Horarios
+		SELECT @registradoComo = MAX(horarioId) FROM dbo.Horarios
 	END
 																	-- asocia al usuario con el horario
 	BEGIN TRANSACTION												-- para este punto el @registradoComo tiene el id del horario lo haya encontrado o creado
@@ -170,7 +178,7 @@ AS
 
 GO
 
-EXEC dbo.Registrar_Horario 1, 2, '17:00', '21:00'
+EXEC dbo.sp_registrarHorario 1, 3, '17:00', '21:00'
 GO
 
 SELECT * FROM dbo.Horarios_Por_Usuario
@@ -182,6 +190,8 @@ SELECT * FROM dbo.Horarios_Por_Usuario
 
 -- SP Vehiculo:
 --		Inserta un vehiculo
+
+-- NO
 
 DROP PROCEDURE IF EXISTS dbo.sp_InsertarVehiculo
 
@@ -222,6 +232,13 @@ AS
 	DECLARE @Existe INT	= 0					-- busca si ya la placa esta registrada
 	SELECT @Existe = vehiculoId FROM dbo.Vehiculos WHERE placa = @placa AND tipoVehiculo = @tipoVehiculo;
 
+	DECLARE @yaAsociado BIT = 0
+	SELECT @yaAsociado=1 FROM dbo.Vehiculos_Por_Usuario WHERE usuarioId = @usuarioId AND vehiculoId = @Existe AND deshabilitado = 0
+
+	IF @yaAsociado=1 BEGIN
+		RETURN 0					-- Si ya el usuario tenia ese carro, entonces no sigue el registro
+	END
+
 	IF @Existe<1 BEGIN						-- si no esta resgistrada, lo inserta mediante transaccion
 		BEGIN TRANSACTION
 			INSERT INTO dbo.Vehiculos (placa, tipoVehiculo)
@@ -241,9 +258,10 @@ AS
 
 GO
 
-EXEC dbo.sp_RegistrarVehiculo 1, 'ABC123', 1
+EXEC dbo.sp_RegistrarVehiculo 1, 'MRC152', 1
 GO
 
+SELECT * FROM dbo.Vehiculos_Por_Usuario
 -- ..............................................................................................
 -- Usuarios
 
@@ -297,7 +315,7 @@ SELECT * FROM dbo.Usuarios
 -- -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-
 
 
--- Pantalla 1: login
+-- Pantalla 0: login
 
 DROP PROCEDURE IF EXISTS dbo.sp_login
 
@@ -323,7 +341,7 @@ AS
 	END
 GO
 
-EXEC dbo.sp_login 'mcampos.71@itcr.ac.cr', 'mcampos.71'
+EXEC dbo.sp_login 'mcampos.71@itcr.ac.cr', 'hola'
 
 
 -- / / / / / / / / / / / / / / / 
@@ -440,3 +458,151 @@ EXEC dbo.sp_consultaFuncionario '965310025'
 
 -- FOR JSON PATH: Fijo
 -- FOR JSON AUTO: Hace anidacion
+
+-- °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+-- Nuevo
+-- °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+
+-- [] Modificar mi Informacion
+
+--		traer
+
+DROP PROCEDURE IF EXISTS dbo.sp_pintarEditarUsuario
+
+CREATE PROCEDURE dbo.sp_pintarEditarUsuario
+	@usuarioId bigint
+AS
+	SELECT correo, telefono, departamento = codigoDivision, notificarCorreoAlterno FROM dbo.Usuarios u
+	INNER JOIN dbo.Divisiones d ON u.division = d.divisionId
+	WHERE usuarioId = @usuarioId FOR JSON PATH
+
+	SELECT placa FROM dbo.Vehiculos_Por_Usuario vu 
+	INNER JOIN dbo.Vehiculos v ON vu.vehiculoId = v.vehiculoId
+	WHERE usuarioId = @usuarioId AND vu.deshabilitado = 0 FOR JSON AUTO
+
+	SELECT diaSemana, horaInicio, horaFinal FROM dbo.Horarios_Por_Usuario hu 
+	INNER JOIN dbo.Horarios h ON hu.horarioId = h.horarioId
+	INNER JOIN dbo.Dias d ON h.diaSemana = d.diaId
+	WHERE usuarioId = @usuarioId FOR JSON AUTO
+
+GO
+
+EXEC dbo.sp_pintarEditarUsuario 1
+
+--		guardar
+
+DROP PROCEDURE IF EXISTS dbo.sp_guardarEditarUsuario
+
+CREATE PROCEDURE dbo.sp_guardarEditarUsuario
+	@usuarioId bigint,
+	@correo nvarchar(200),
+	@password nvarchar(200),
+	@telefono nvarchar(40),
+	@departamento nvarchar(8),
+	@placa1 nvarchar(20),
+	@placa2 nvarchar(20),
+	@placa3 nvarchar(20),
+	@placa4 nvarchar(20),
+	@lunesA time(7),
+	@lunesB time(7),
+	@martesA time(7),
+	@martesB time(7),
+	@miercolesA time(7),
+	@miercolesB time(7),
+	@juevesA time(7),
+	@juevesB time(7),
+	@viernesA time(7),
+	@viernesB time(7),
+	@sabadoA time(7),
+	@sabadoB time(7),
+	@domingoA time(7),
+	@domingoB time(7),
+	@notificarCorreoAlterno bit
+AS
+	-- busqueda del Id de la division
+	DECLARE @divisionId INT
+	SELECT @divisionId = divisionId FROM dbo.Divisiones WHERE codigoDivision = @departamento OR descripcion = @departamento
+
+	-- actualiza informacion de la tabla de usuario
+	UPDATE dbo.Usuarios SET correo= @correo, [password]= HASHBYTES('SHA2_256', @password), telefono = @telefono, notificarCorreoAlterno = @notificarCorreoAlterno, division = @divisionId
+	WHERE usuarioId = @usuarioId
+
+
+	-- limpia las placas asociadas para poder insertar las nuevas
+
+	UPDATE dbo.Vehiculos_Por_Usuario SET deshabilitado=1 WHERE usuarioId = @usuarioId
+
+	-- busqueda o registro de las placas
+
+	IF @placa1 IS NOT NULL BEGIN
+		EXEC dbo.sp_RegistrarVehiculo @usuarioId, @placa1, 1
+	END
+
+	IF @placa2 IS NOT NULL BEGIN
+		EXEC dbo.sp_RegistrarVehiculo @usuarioId, @placa2, 1
+	END
+
+	IF @placa3 IS NOT NULL BEGIN
+		EXEC dbo.sp_RegistrarVehiculo @usuarioId, @placa3, 1
+	END
+
+	IF @placa4 IS NOT NULL BEGIN
+		EXEC dbo.sp_RegistrarVehiculo @usuarioId, @placa4, 1
+	END
+
+	-- actualizacion de los horarios
+
+	IF @lunesA IS NOT NULL AND @lunesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @usuarioId, 1, @lunesA, @lunesB
+	END
+
+	IF @martesA IS NOT NULL AND @martesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @usuarioId, 2, @martesA, @martesB
+	END
+
+	IF @miercolesA IS NOT NULL AND @miercolesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @usuarioId, 3, @miercolesA, @miercolesB
+	END
+
+	IF @juevesA IS NOT NULL AND @juevesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @usuarioId, 4, @juevesA, @juevesB
+	END
+
+	IF @viernesA IS NOT NULL AND @juevesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @usuarioId, 5, @viernesA, @viernesB
+	END
+
+	IF @sabadoA IS NOT NULL AND @sabadoB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @usuarioId, 6, @sabadoA, @sabadoB
+	END
+
+	IF @domingoA IS NOT NULL AND @domingoB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @usuarioId, 7, @domingoA, @domingoB
+	END
+
+GO
+
+EXEC dbo.sp_guardarEditarUsuario 1, 'correito@email.cr', 'actualizada', '15531105', 'AU', 'ABC123', 'NRC152', 'NVA156', NULL,
+NULL, NULL, '07:30', '16:30', '07:30', '16:30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1
+
+EXEC dbo.sp_pintarEditarUsuario 1
+
+SELECT * FROM dbo.Vehiculos_Por_Usuario
+SELECT * FROM dbo.Vehiculos
+SELECT * FROM dbo.Horarios_Por_Usuario
+
+EXEC dbo.sp_pintarEditarUsuario 1
+
+@usuarioId bigint,
+	@correo nvarchar(200),
+	@password nvarchar(200),
+	@telefono nvarchar(40),
+	@departamento nvarchar(8),
+	@placa1 nvarchar(20),
+	@placa2 nvarchar(20),
+	@placa3 nvarchar(20),
+	@placa4 nvarchar(20),
+	@lunesA time(7),
+	@lunesB time(7),
+	@notificarCorreoAlterno bit
+
