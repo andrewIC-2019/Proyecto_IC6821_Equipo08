@@ -615,7 +615,25 @@ async function pintarEditarUsuario(usuarioId: string): Promise<string> {
   console.log("sp_pintarEditarUsuario");
   console.log(result);
 
-  return result.recordsets[0];
+  let str: string = "{";
+  let json : any;
+  for (var i in result.recordsets) {
+    for (var key in result.recordsets[i][0]) {
+
+      let tmpStr: string = result.recordsets[i][0][key]
+      tmpStr = tmpStr.replace(new RegExp('"', 'g'), '\\"')
+      str += '"' + i + '": "' + tmpStr + '",'
+      let tmp: any = JSON.parse(result.recordsets[i][0][key])
+      
+
+
+  }
+  }
+  str = str.slice(0, -1)
+  str+= "}"
+  console.log("str****************")
+  console.log(str)
+  return str;
 }
 
 async function registrarHorario(

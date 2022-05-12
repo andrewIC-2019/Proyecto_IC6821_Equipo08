@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -312,7 +323,7 @@ function guardarEditarUsuario(usuarioId, correo, password, telefono, departament
 }
 function pintarEditarUsuario(usuarioId) {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, result;
+        var pool, result, str, json, i, key, tmpStr, tmp, key2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
@@ -326,7 +337,26 @@ function pintarEditarUsuario(usuarioId) {
                     result = _a.sent();
                     console.log("sp_pintarEditarUsuario");
                     console.log(result);
-                    return [2 /*return*/, result.recordsets[0]];
+                    str = "{";
+                    for (i in result.recordsets) {
+                        for (key in result.recordsets[i][0]) {
+                            tmpStr = result.recordsets[i][0][key];
+                            tmpStr = tmpStr.replace(new RegExp('"', 'g'), '\\"');
+                            str += '"' + i + '": "' + tmpStr + '",';
+                            tmp = JSON.parse(result.recordsets[i][0][key]);
+                            console.log(tmp);
+                            for (key2 in tmp) {
+                                json = __assign(__assign({}, json), tmp[key2]);
+                            }
+                            console.log("jsonnnn");
+                            console.log(json);
+                        }
+                    }
+                    str = str.slice(0, -1);
+                    str += "}";
+                    console.log("str****************");
+                    console.log(str);
+                    return [2 /*return*/, str];
             }
         });
     });
