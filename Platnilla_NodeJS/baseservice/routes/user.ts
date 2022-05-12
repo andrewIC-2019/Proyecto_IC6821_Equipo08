@@ -44,7 +44,7 @@ async function registrarFuncionario(
       password
     )
     .then((data) => {
-      res.json(data);
+      res.json(JSON.parse(data));
     })
     .catch((err) => {
       log.error(err);
@@ -65,7 +65,7 @@ async function ubicaciones(
   await Control.getInstance()
     .$gestorUsuario.ubicaciones(provincia, canton, distrito, direccion)
     .then((data) => {
-      res.json(data);
+      res.json(JSON.parse(data));
     })
     .catch((err) => {
       log.error(err);
@@ -85,7 +85,7 @@ async function registrarVehiculo(
   await Control.getInstance()
     .$gestorUsuario.registrarVehiculo(usuarioId, placa, tipoVehiculo)
     .then((data) => {
-      res.json(data);
+      res.json(JSON.parse(data));
     })
     .catch((err) => {
       log.error(err);

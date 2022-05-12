@@ -6,7 +6,7 @@ import { Control } from "../controller";
 const app = express();
 const log = new Logger();
 
-app.post("/inicio", inicio);
+app.get("/inicio", inicio);
 app.post("/registrarEstacionamiento", registrarEstacionamiento);
 
 async function registrarEstacionamiento(
@@ -53,7 +53,7 @@ async function registrarEstacionamiento(
         descripcion,
     )
     .then((data) => {
-      res.json(data);
+      res.json(JSON.parse(data));
     })
     .catch((err) => {
       log.error(err);
@@ -69,7 +69,7 @@ async function inicio(
   await Control.getInstance()
     .$gestorEstacionamiento.inicio()
     .then((data) => {
-      res.json(data);
+      res.json(JSON.parse(data));
     })
     .catch((err) => {
       log.error(err);

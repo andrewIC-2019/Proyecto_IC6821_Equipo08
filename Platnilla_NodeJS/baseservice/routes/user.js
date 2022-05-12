@@ -68,7 +68,7 @@ function registrarFuncionario(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.registrarFuncionario(tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password)
                             .then(function (data) {
-                            res.json(data);
+                            res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
                             log.error(err);
@@ -94,7 +94,7 @@ function ubicaciones(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.ubicaciones(provincia, canton, distrito, direccion)
                             .then(function (data) {
-                            res.json(data);
+                            res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
                             log.error(err);
@@ -119,7 +119,7 @@ function registrarVehiculo(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.registrarVehiculo(usuarioId, placa, tipoVehiculo)
                             .then(function (data) {
-                            res.json(data);
+                            res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
                             log.error(err);

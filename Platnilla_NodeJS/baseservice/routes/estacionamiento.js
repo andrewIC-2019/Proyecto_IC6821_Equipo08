@@ -44,7 +44,7 @@ var controller_1 = require("../controller");
 var app = express();
 exports.estacionamiento = app;
 var log = new common_1.Logger();
-app.post("/inicio", inicio);
+app.get("/inicio", inicio);
 app.post("/registrarEstacionamiento", registrarEstacionamiento);
 function registrarEstacionamiento(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
@@ -72,7 +72,7 @@ function registrarEstacionamiento(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorEstacionamiento.registrarEstacionamiento(tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion)
                             .then(function (data) {
-                            res.json(data);
+                            res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
                             log.error(err);
@@ -92,7 +92,7 @@ function inicio(req, res, next) {
                 case 0: return [4 /*yield*/, controller_1.Control.getInstance()
                         .$gestorEstacionamiento.inicio()
                         .then(function (data) {
-                        res.json(data);
+                        res.json(JSON.parse(data));
                     })
                         .catch(function (err) {
                         log.error(err);
