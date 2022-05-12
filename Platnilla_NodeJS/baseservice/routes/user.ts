@@ -108,7 +108,7 @@ async function login(
   await Control.getInstance()
     .$gestorUsuario.login(username, password)
     .then((data) => {
-      res.json(data);
+      res.json(JSON.parse(data));
     })
     .catch((err) => {
       log.error(err);

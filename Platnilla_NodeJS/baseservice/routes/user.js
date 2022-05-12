@@ -146,7 +146,7 @@ function login(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.login(username, password)
                             .then(function (data) {
-                            res.json(data);
+                            res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
                             log.error(err);
