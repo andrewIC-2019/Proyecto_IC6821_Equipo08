@@ -263,4 +263,8 @@ export class GestorUsuario {
       notificarCorreoAlterno
     );
   }
+
+  public eliminarUsuario(identificacion: string): Promise<string> {
+    return this.daoUsuario.eliminarUsuario(identificacion);
+  }
 }

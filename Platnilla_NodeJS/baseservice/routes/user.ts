@@ -22,57 +22,75 @@ app.post("/registrarHorario", registrarHorario);
 app.get("/pintarEditarUsuario", pintarEditarUsuario);
 app.post("/guardarEditarUsuario", guardarEditarUsuario);
 app.post("/registrarUsuarioTotal", registrarUsuarioTotal);
+app.post("/eliminarUsuario", eliminarUsuario);
 
+async function eliminarUsuario(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  let identificacion: string = req.body.identificacion;
+
+  await Control.getInstance()
+    .$gestorUsuario.eliminarUsuario(identificacion)
+    .then((data) => {
+      res.json(JSON.parse(data));
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function registrarUsuarioTotal(
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
 ) {
-  let  correoInstitucional: string = req.body.correoInstitucional 
-	let  identificacion: string = req.body.identificacion
-	let  correo: string = req.body.correo
-	let  password: string = req.body.password 
-	let  telefono: string = req.body.telefono 
-  let  nombre: string = req.body.nombre
-	let  apellido1: string = req.body.apellido1 
-	let  apellido2: string = req.body.apellido2 
-	let  departamento: string = req.body.departamento 
-	let  placa1: string = req.body.placa1 
-	let  placa2: string = req.body.placa2 
-	let  placa3: string = req.body.placa3 
-	let  placa4: string = req.body.placa4 
-	let  lunesA: string = req.body.lunesA
-	let  lunesB: string = req.body.lunesB
-	let  martesA: string = req.body.martesA
-	let  martesB: string = req.body.martesB
-	let  miercolesA: string = req.body.miercolesA
-	let  miercolesB: string = req.body.miercolesB
-	let  juevesA: string = req.body.juevesA
-	let  juevesB: string = req.body.juevesB
-	let  viernesA: string = req.body.viernesA
-	let  viernesB: string = req.body.viernesB
-	let  sabadoA: string = req.body.sabadoA
-	let  sabadoB: string = req.body.sabadoB
-	let  domingoA: string = req.body.domingoA
-	let  domingoB: string = req.body.domingoB
-	let  notificarCorreoAlterno: string = req.body.notificarCorreoAlterno
+  let correoInstitucional: string = req.body.correoInstitucional;
+  let identificacion: string = req.body.identificacion;
+  let correo: string = req.body.correo;
+  let password: string = req.body.password;
+  let telefono: string = req.body.telefono;
+  let nombre: string = req.body.nombre;
+  let apellido1: string = req.body.apellido1;
+  let apellido2: string = req.body.apellido2;
+  let departamento: string = req.body.departamento;
+  let placa1: string = req.body.placa1;
+  let placa2: string = req.body.placa2;
+  let placa3: string = req.body.placa3;
+  let placa4: string = req.body.placa4;
+  let lunesA: string = req.body.lunesA;
+  let lunesB: string = req.body.lunesB;
+  let martesA: string = req.body.martesA;
+  let martesB: string = req.body.martesB;
+  let miercolesA: string = req.body.miercolesA;
+  let miercolesB: string = req.body.miercolesB;
+  let juevesA: string = req.body.juevesA;
+  let juevesB: string = req.body.juevesB;
+  let viernesA: string = req.body.viernesA;
+  let viernesB: string = req.body.viernesB;
+  let sabadoA: string = req.body.sabadoA;
+  let sabadoB: string = req.body.sabadoB;
+  let domingoA: string = req.body.domingoA;
+  let domingoB: string = req.body.domingoB;
+  let notificarCorreoAlterno: string = req.body.notificarCorreoAlterno;
 
   await Control.getInstance()
     .$gestorUsuario.registrarUsuarioTotal(
       correoInstitucional,
       identificacion,
       correo,
-      password, 
-      telefono, 
+      password,
+      telefono,
       nombre,
       apellido1,
       apellido2,
-      departamento, 
-      placa1, 
-      placa2, 
-      placa3, 
-      placa4, 
+      departamento,
+      placa1,
+      placa2,
+      placa3,
+      placa4,
       lunesA,
       lunesB,
       martesA,
@@ -87,7 +105,7 @@ async function registrarUsuarioTotal(
       sabadoB,
       domingoA,
       domingoB,
-      notificarCorreoAlterno,
+      notificarCorreoAlterno
     )
     .then((data) => {
       res.json(JSON.parse(data));
@@ -102,42 +120,42 @@ async function guardarEditarUsuario(
   res: express.Response,
   next: express.NextFunction
 ) {
-  let  usuarioId: string = req.body.usuarioId 
-	let  correo: string = req.body.correo
-	let  password: string = req.body.password 
-	let  telefono: string = req.body.telefono 
-	let  departamento: string = req.body.departamento 
-	let  placa1: string = req.body.placa1 
-	let  placa2: string = req.body.placa2 
-	let  placa3: string = req.body.placa3 
-	let  placa4: string = req.body.placa4 
-	let  lunesA: string = req.body.lunesA
-	let  lunesB: string = req.body.lunesB
-	let  martesA: string = req.body.martesA
-	let  martesB: string = req.body.martesB
-	let  miercolesA: string = req.body.miercolesA
-	let  miercolesB: string = req.body.miercolesB
-	let  juevesA: string = req.body.juevesA
-	let  juevesB: string = req.body.juevesB
-	let  viernesA: string = req.body.viernesA
-	let  viernesB: string = req.body.viernesB
-	let  sabadoA: string = req.body.sabadoA
-	let  sabadoB: string = req.body.sabadoB
-	let  domingoA: string = req.body.domingoA
-	let  domingoB: string = req.body.domingoB
-	let  notificarCorreoAlterno: string = req.body.notificarCorreoAlterno
+  let usuarioId: string = req.body.usuarioId;
+  let correo: string = req.body.correo;
+  let password: string = req.body.password;
+  let telefono: string = req.body.telefono;
+  let departamento: string = req.body.departamento;
+  let placa1: string = req.body.placa1;
+  let placa2: string = req.body.placa2;
+  let placa3: string = req.body.placa3;
+  let placa4: string = req.body.placa4;
+  let lunesA: string = req.body.lunesA;
+  let lunesB: string = req.body.lunesB;
+  let martesA: string = req.body.martesA;
+  let martesB: string = req.body.martesB;
+  let miercolesA: string = req.body.miercolesA;
+  let miercolesB: string = req.body.miercolesB;
+  let juevesA: string = req.body.juevesA;
+  let juevesB: string = req.body.juevesB;
+  let viernesA: string = req.body.viernesA;
+  let viernesB: string = req.body.viernesB;
+  let sabadoA: string = req.body.sabadoA;
+  let sabadoB: string = req.body.sabadoB;
+  let domingoA: string = req.body.domingoA;
+  let domingoB: string = req.body.domingoB;
+  let notificarCorreoAlterno: string = req.body.notificarCorreoAlterno;
 
   await Control.getInstance()
     .$gestorUsuario.guardarEditarUsuario(
-      usuarioId, 
+      usuarioId,
       correo,
-      password, 
-      telefono, 
-      departamento, 
-      placa1, 
-      placa2, 
-      placa3, 
-      placa4, 
+      password,
+      telefono,
+      departamento,
+      placa1,
+      placa2,
+      placa3,
+      placa4,
       lunesA,
       lunesB,
       martesA,
@@ -152,7 +170,7 @@ async function guardarEditarUsuario(
       sabadoB,
       domingoA,
       domingoB,
-      notificarCorreoAlterno,
+      notificarCorreoAlterno
     )
     .then((data) => {
       res.json(JSON.parse(data));

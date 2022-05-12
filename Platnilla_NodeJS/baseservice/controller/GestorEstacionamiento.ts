@@ -92,4 +92,8 @@ export class GestorEstacionamiento {
     return this.daoEstacionamiento.estacionamientoInfo(estacionamientoId);
   }
 
+  public eliminarEstacionamiento(identificacion: string): Promise<string> {
+    return this.daoEstacionamiento.eliminarEstacionamiento(identificacion);
+  }
+
 }

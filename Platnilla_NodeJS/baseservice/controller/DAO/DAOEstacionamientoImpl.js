@@ -28,6 +28,9 @@ var DAOEStacionamientoImpl = /** @class */ (function () {
     DAOEStacionamientoImpl.prototype.estacionamientoInfo = function (estacionamientoId) {
         return SQLConnection_1.SQLConnection.getInstance().estacionamientoInfo(estacionamientoId);
     };
+    DAOEStacionamientoImpl.prototype.eliminarEstacionamiento = function (identificacion) {
+        return SQLConnection_1.SQLConnection.getInstance().eliminarEstacionamiento(identificacion);
+    };
     return DAOEStacionamientoImpl;
 }());
 exports.DAOEStacionamientoImpl = DAOEStacionamientoImpl;

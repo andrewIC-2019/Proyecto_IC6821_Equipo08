@@ -59,6 +59,30 @@ app.post("/registrarHorario", registrarHorario);
 app.get("/pintarEditarUsuario", pintarEditarUsuario);
 app.post("/guardarEditarUsuario", guardarEditarUsuario);
 app.post("/registrarUsuarioTotal", registrarUsuarioTotal);
+app.post("/eliminarUsuario", eliminarUsuario);
+function eliminarUsuario(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var identificacion;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    identificacion = req.body.identificacion;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.eliminarUsuario(identificacion)
+                            .then(function (data) {
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function registrarUsuarioTotal(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno;

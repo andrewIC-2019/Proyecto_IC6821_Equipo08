@@ -250,4 +250,8 @@ export class DAOUsuariosImpl implements DAOTransaccional {
       notificarCorreoAlterno
     );
   }
+
+  public eliminarUsuario(identificacion: string): Promise<string> {
+    return SQLConnection.getInstance().eliminarUsuario(identificacion);
+  }
 }

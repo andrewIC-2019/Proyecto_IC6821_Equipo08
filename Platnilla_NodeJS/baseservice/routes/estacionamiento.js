@@ -47,6 +47,30 @@ var log = new common_1.Logger();
 app.get("/inicio", inicio);
 app.post("/registrarEstacionamiento", registrarEstacionamiento);
 app.get("/estacionamientoInfo", estacionamientoInfo);
+app.post("/eliminarEstacionamiento", eliminarEstacionamiento);
+function eliminarEstacionamiento(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var identificacion;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    identificacion = req.body.identificacion;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorEstacionamiento.eliminarEstacionamiento(identificacion)
+                            .then(function (data) {
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function estacionamientoInfo(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var estacionamientoId;

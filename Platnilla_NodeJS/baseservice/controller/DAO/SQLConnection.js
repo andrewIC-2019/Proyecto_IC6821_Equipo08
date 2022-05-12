@@ -115,9 +115,57 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.registrarUsuarioTotal = function (correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno) {
         return registrarUsuarioTotal(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno);
     };
+    SQLConnection.prototype.eliminarUsuario = function (identificacion) {
+        return eliminarUsuario(identificacion);
+    };
+    SQLConnection.prototype.eliminarEstacionamiento = function (identificacion) {
+        return eliminarEstacionamiento(identificacion);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+function eliminarEstacionamiento(identificacion) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("identificacion", sql.nvarchar(60), identificacion)
+                            .execute("sp_eliminarEstacionamiento")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_eliminarEstacionamiento");
+                    console.log(result);
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
+function eliminarUsuario(identificacion) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("identificacion", sql.nvarchar(60), identificacion)
+                            .execute("sp_eliminarUsuario")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_eliminarUsuario");
+                    console.log(result);
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
 function registrarUsuarioTotal(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result;

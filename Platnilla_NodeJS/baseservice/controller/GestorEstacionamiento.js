@@ -55,6 +55,9 @@ var GestorEstacionamiento = /** @class */ (function () {
     GestorEstacionamiento.prototype.estacionamientoInfo = function (estacionamientoId) {
         return this.daoEstacionamiento.estacionamientoInfo(estacionamientoId);
     };
+    GestorEstacionamiento.prototype.eliminarEstacionamiento = function (identificacion) {
+        return this.daoEstacionamiento.eliminarEstacionamiento(identificacion);
+    };
     return GestorEstacionamiento;
 }());
 exports.GestorEstacionamiento = GestorEstacionamiento;

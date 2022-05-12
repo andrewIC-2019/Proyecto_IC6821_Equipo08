@@ -299,6 +299,42 @@ export class SQLConnection implements DataSource {
       notificarCorreoAlterno
     );
   }
+
+  eliminarUsuario(identificacion: string): Promise<string> {
+    return eliminarUsuario(identificacion);
+  }
+
+  eliminarEstacionamiento(identificacion: string): Promise<string> {
+    return eliminarEstacionamiento(identificacion);
+  }
+}
+
+async function eliminarEstacionamiento(identificacion: string): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("identificacion", sql.nvarchar(60), identificacion)
+    .execute("sp_eliminarEstacionamiento");
+  console.log("sp_eliminarEstacionamiento");
+  console.log(result);
+
+  return result.returnValue;
+}
+
+async function eliminarUsuario(identificacion: string): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("identificacion", sql.nvarchar(60), identificacion)
+    .execute("sp_eliminarUsuario");
+  console.log("sp_eliminarUsuario");
+  console.log(result);
+
+  return result.returnValue;
 }
 
 async function registrarUsuarioTotal(
