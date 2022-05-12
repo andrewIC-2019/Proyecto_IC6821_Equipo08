@@ -1,7 +1,7 @@
 
--- ===================================
--- ||		STORE PROCEDURES		||
--- ===================================
+-- ===============================================
+-- ||		STORE PROCEDURES UTILITARIOS		||
+-- ===============================================
 
 
 -- Permisos de Usuario:
@@ -20,16 +20,18 @@ AS
 	RETURN 1
 GO
 
-EXEC dbo.sp_permisosUsuario 1,1
-EXEC dbo.sp_permisosUsuario 1,2
-EXEC dbo.sp_permisosUsuario 1,3
-EXEC dbo.sp_permisosUsuario 1,4
+-- EXEC dbo.sp_permisosUsuario 1,1
+-- EXEC dbo.sp_permisosUsuario 1,2
+-- EXEC dbo.sp_permisosUsuario 1,3
+-- EXEC dbo.sp_permisosUsuario 1,4
 
 -- ..............................................................................................
 
 -- Ubicaciones:
 --		Inserta ubicaciones (provincia, canton, distrito y la direccion exacta)
 --		Por el momento es solo utilizado al momento de gestionar estacionamientos
+
+-- Se utiliza al registrarEstacionamiento
 
 DROP PROCEDURE IF EXISTS dbo.sp_ubicaciones
 
@@ -47,7 +49,9 @@ GO
 -- ..............................................................................................
 
 -- Estacionamiento:
---		Registra un nuevo estacionamiento
+--		Registra un nuevo estacionamiento (sin HORARIOS)
+
+-- Utilizado en dbo.sp_registrarEstacionamientoTotal
 
 DROP PROCEDURE IF EXISTS dbo.sp_registrarEstacionamiento
 
@@ -89,13 +93,18 @@ AS
 				@correo, @telefono, @identificacion, @imageUrl, @descripcion	)
 	COMMIT
 
+	DECLARE @nuevoId INT
+	SELECT @nuevoId = MAX(estacionamientoId) FROM dbo.Estacionamientos
+	RETURN @nuevoId
 GO
+
+/*
+-- Ejemplo de como se debe llamar
 
 EXEC dbo.sp_registrarEstacionamiento 1, 1, 1, 1, 'Sobre calle 5, Costado sur del edificio principal', 'Parqueo Principal CTLSJ',
 'Sobre Avenida 7 o 9, tomar calle 5, entrada al costado sur del edificio principal', 0, 2, 6, 0, 2, 'ctlsanjose@itcr.ac.cr', '2550 0001',
 NULL, NULL, 'Cuenta con espacios exclusivos para las jefaturas y vehiculos oficiales'
-				
-SELECT * FROM dbo.Estacionamientos
+*/
 
 -- ..............................................................................................
 
@@ -103,44 +112,7 @@ SELECT * FROM dbo.Estacionamientos
 --		La idea seria buscar si ya está, si no, entonces crearlo
 --		Me devuelve el horarioId
 
-
--- NO
-DROP PROCEDURE IF EXISTS dbo.sp_InsertarHorario
-
-CREATE PROCEDURE dbo.sp_InsertarHorario
-	@diaSemana tinyint,					-- parametros
-	@horaInicio time(7),
-	@horaFinal time(7)
-AS
-
-	DECLARE @registradoComo INT	= 0					-- busca si ya el horario esta registrado
-	SELECT @registradoComo = horarioId FROM dbo.Horarios WHERE diaSemana = @diaSemana AND horaInicio = @horaInicio AND horaFinal = @horaFinal;
-
-	IF @registradoComo<1 BEGIN						-- si no esta resgistrada, lo inserta mediante transaccion
-		
-		BEGIN TRANSACTION
-			INSERT INTO dbo.Horarios(diaSemana, horaInicio, horaFinal)
-			VALUES
-			(@diaSemana, @horaInicio, @horaFinal)
-		COMMIT
-		SELECT @registradoComo = MAX(horarioId) FROM dbo.Horarios
-	END
-
-	RETURN @registradoComo
-
-GO
-
-EXEC dbo.sp_InsertarHorario 1, '17:00', '21:00'
-
--- Ejemplo de obtencion del valor de retorno
-DECLARE @hola INT
-EXEC @hola = dbo.sp_InsertarHorario 1, '17:00', '21:00'
-SELECT @hola
-GO
-
--- xxxxxxxxxxxxxxxxxxxxxxxxx
-
--- SP Horarios y Usuario 
+-- SP Horarios y Usuario ASOCIA
 
 DROP PROCEDURE IF EXISTS dbo.sp_registrarHorario
 
@@ -178,45 +150,67 @@ AS
 
 GO
 
+/*
+
+-- Ejemplo de como se debe llamar
+
 EXEC dbo.sp_registrarHorario 1, 3, '17:00', '21:00'
 GO
 
-SELECT * FROM dbo.Horarios_Por_Usuario
+*/
 
--- xxxxxxxxxxxxxxxxxxxxxxxxx
+-- ..............................................................................................
+
+
+-- SP Horarios y Estacionamiento (ASOCIA) 
+
+DROP PROCEDURE IF EXISTS dbo.sp_registrarHorarioEstacionamiento
+
+CREATE PROCEDURE dbo.sp_registrarHorarioEstacionamiento
+	@estacionamientoId int,
+	@diaSemana tinyint,					-- parametros
+	@horaInicio time(7),
+	@horaFinal time(7)
+AS
+
+	DECLARE @registradoComo INT	= 0					-- busca si ya el horario esta registrada
+	SELECT @registradoComo = horarioId FROM dbo.Horarios WHERE diaSemana = @diaSemana AND horaInicio = @horaInicio AND horaFinal = @horaFinal;
+
+	DECLARE @yaAsociado BIT = 0
+	SELECT @yaAsociado=1 FROM dbo.Horarios_Por_Estacionamiento WHERE estacionamientoId = @estacionamientoId AND horarioId = @registradoComo AND deshabilitado = 0
+
+	IF @yaAsociado=1 BEGIN
+		RETURN 0									-- Si el parqueo tenia ese horario, entonces no sigue el registro
+	END
+
+	IF @registradoComo<1 BEGIN						-- si no esta resgistrada, lo inserta mediante transaccion
+		BEGIN TRANSACTION
+			INSERT INTO dbo.Horarios(diaSemana, horaInicio, horaFinal)
+			VALUES
+			(@diaSemana, @horaInicio, @horaFinal)
+		COMMIT
+		SELECT @registradoComo = MAX(horarioId) FROM dbo.Horarios
+	END
+																	-- asocia al usuario con el horario
+	BEGIN TRANSACTION												-- para este punto el @registradoComo tiene el id del horario lo haya encontrado o creado
+		INSERT INTO dbo.Horarios_Por_Estacionamiento(estacionamientoId, horarioId)
+		VALUES
+		(@estacionamientoId, @registradoComo)
+	COMMIT
+
+GO
+
+/*
+
+-- Ejemplo de como se debe llamar
+
+EXEC dbo.sp_registrarHorarioEstacionamiento 1, 1, '07:00', '22:00'
+GO
+
+*/
 
 -- ..............................................................................................
 -- Vehiculos
-
--- SP Vehiculo:
---		Inserta un vehiculo
-
--- NO
-
-DROP PROCEDURE IF EXISTS dbo.sp_InsertarVehiculo
-
-CREATE PROCEDURE dbo.sp_InsertarVehiculo
-	@placa NVARCHAR(20),					-- parametros
-	@tipoVehiculo SMALLINT
-AS
-
-	DECLARE @Existe INT						-- busca si ya la placa esta registrada
-	SELECT @Existe = COUNT(vehiculoId) FROM dbo.Vehiculos WHERE placa = @placa AND tipoVehiculo = @tipoVehiculo;
-
-	IF @Existe<1 BEGIN						-- si no esta resgistrada, lo inserta mediante transaccion
-
-		BEGIN TRANSACTION
-			INSERT INTO dbo.Vehiculos (placa, tipoVehiculo)
-			VALUES
-			(@placa, @tipoVehiculo)
-		COMMIT
-
-	END
-
-GO
-
-EXEC dbo.sp_InsertarVehiculo 'DFG235', 1
-GO
 
 -- SP Vehiculo y Usuario
 --		Asocia un vehiculo junto a un usuario
@@ -258,14 +252,20 @@ AS
 
 GO
 
+/*
+
+-- Ejemplo de como se deberia llamar
+
 EXEC dbo.sp_RegistrarVehiculo 1, 'MRC152', 1
 GO
 
-SELECT * FROM dbo.Vehiculos_Por_Usuario
+*/
+
 -- ..............................................................................................
 -- Usuarios
 
--- SP Funcionarios
+-- SP Funcionarios (SIN HORARIOS NI PLACAS)
+-- Utilizado en el SP completo
 
 DROP PROCEDURE IF EXISTS dbo.sp_RegistrarFuncionario
 
@@ -284,6 +284,7 @@ CREATE PROCEDURE dbo.sp_RegistrarFuncionario
 AS
 	DECLARE @buscaUsuario INT = 0					-- busca si ya la placa esta registrada
 	SELECT @buscaUsuario = usuarioId FROM dbo.Usuarios WHERE correoInstitucional = @correoInstitucional OR identificacion = @identificacion;
+
 	
 	IF @buscaUsuario = 0 BEGIN
 		
@@ -299,15 +300,47 @@ AS
 		COMMIT
 
 		SELECT @buscaUsuario = MAX(usuarioId) FROM dbo.Usuarios
+		RETURN @buscaUsuario
+	END ELSE BEGIN
+		RETURN 0
 	END
 	
 GO
 
+/*
 
-EXEC dbo.sp_RegistrarFuncionario 2, 1, '965310025', 'Mauricio', 'Campos', 'Méndez', '19710601', 'mcampos.71@itcr.ac.cr', NULL, 0, 'mcampos.71'
+Ejemplo de como podria llamarse, y salvar el id
+
+DECLARE @impreso INT
+EXEC @impreso = dbo.sp_RegistrarFuncionario NULL, 12, '741025896', 'Fabiola', 'Perez', 'Martinez', '30258756', 'fperez.92@itcr.ac.cr', 'fperez.92@email.cr', 1, 'fperez.92'
+SELECT @impreso
+
+*/
 
 
-SELECT * FROM dbo.Usuarios
+-- ==========================================================================================================================================================================
+-- ==========================================================================================================================================================================
+
+
+-- ==========================================================================================================================================================================
+--
+--
+-- ==========================================================================================================================================================================
+
+
+-- ==========================================================================================================================================================================
+-- ==========================================================================================================================================================================
+
+/*
+
+||::::::::::::::::::::::::::::::::::::::::::::::::::::::::::||
+||															||
+||			SPs para ser utilizados desde el				||
+||						API									||
+||															||
+||::::::::::::::::::::::::::::::::::::::::::::::::::::::::::||
+
+*/
 
 
 -- -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-
@@ -315,7 +348,7 @@ SELECT * FROM dbo.Usuarios
 -- -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-
 
 
--- Pantalla 0: login
+-- Pantalla 0: login (Inicio de Sesion)
 
 DROP PROCEDURE IF EXISTS dbo.sp_login
 
@@ -341,10 +374,16 @@ AS
 	END
 GO
 
+/*
+
+-- Ejemplo de ejecucion: correoInstitucional, password
+
 EXEC dbo.sp_login 'mcampos.71@itcr.ac.cr', 'hola'
 
+*/
 
--- / / / / / / / / / / / / / / / 
+-- *******************************************************************************************************************************
+
 -- Pantalla 2 (/inicio): 
 --		Tarjetas Estacionamientos
 
@@ -352,13 +391,19 @@ DROP PROCEDURE IF EXISTS dbo.sp_inicio
 
 CREATE PROCEDURE dbo.sp_inicio
 AS
-	SELECT estacionamientoId, nombre, espaciosTotales = cantEspacios+cantEspaciosEspeciales+cantEspaciosJefaturas+cantEspaciosVisitantes+cantEspaciosOficiales, telefono from dbo.Estacionamientos FOR JSON PATH
+	SELECT estacionamientoId, nombre, espaciosTotales = cantEspacios+cantEspaciosEspeciales+cantEspaciosJefaturas+cantEspaciosVisitantes+cantEspaciosOficiales, telefono, imageUrl from dbo.Estacionamientos FOR JSON PATH
 GO
+
+/*
+
+-- Ejemplo de ejecucion: (no recibe parametros, ya que solo pinta las tarjetas)
 
 EXEC dbo.sp_inicio
 
+*/
 
--- / / / / / / / / / / / / / / / 
+-- *******************************************************************************************************************************
+
 -- Pantalla 3 (/estacionamientoinfo): 
 --		Informacion Estacionamiento
 
@@ -367,15 +412,23 @@ DROP PROCEDURE IF EXISTS dbo.sp_estacionamientoinfo
 CREATE PROCEDURE dbo.sp_estacionamientoinfo 
 	@estacionamientoId INT
 AS
-	SELECT nombre, descripcion, direccionExacta, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosOficiales, cantEspaciosVisitantes
+	SELECT nombre, descripcion, direccionExacta, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosOficiales, cantEspaciosVisitantes, imageUrl
 	FROM dbo.Estacionamientos e INNER JOIN dbo.Ubicaciones u ON e.ubicacion = u.ubicacionId WHERE estacionamientoId = @estacionamientoId FOR JSON PATH
 GO
 
-EXEC dbo.sp_estacionamientoinfo 4
+/*
 
--- / / / / / / / / / / / / / / / 
+-- Ejemplo de ejecucion: estacionamientoId
+
+EXEC dbo.sp_estacionamientoinfo 8
+
+*/
+
+-- *******************************************************************************************************************************
+
+-- - - - - - - - - - - - -
 -- Pantalla (/informes)
-
+-- - - - - - - - - - - - - 
 
 -- [] Informe detallado de estacionamientos
 
@@ -387,8 +440,12 @@ AS
 	FROM dbo.Estacionamientos e INNER JOIN dbo.Ubicaciones u ON e.ubicacion = u.ubicacionId FOR JSON PATH
 GO
 
-EXEC dbo.sp_informeEstacionamientos
+/*
 
+-- Ejemplo de ejecucion: No recibe parametro alguno ya que es un detalle de todos
+
+EXEC dbo.sp_informeEstacionamientos
+*/
 
 -- [] Informe detallado de funcionarios
 
@@ -401,7 +458,14 @@ AS
 	FROM dbo.Usuarios ORDER BY apellido1
 GO
 
-EXEC dbo.sp_informeFuncionarios
+/*
+
+-- Ejemplo de ejecucion: No recibe parametros es un informe de todos
+
+	EXEC dbo.sp_informeFuncionarios
+
+*/
+
 
 
 -- [] Estadística de franjas horarias
@@ -423,7 +487,13 @@ AS
 	ORDER BY funcionarios DESC
 GO
 
-EXEC dbo.sp_franjasHorarias
+/*
+
+-- Ejemplo de ejecucion: No recibe parametro alguno ya que es un reporte cuyas operaciones son globales
+
+	EXEC dbo.sp_franjasHorarias
+*/
+
 
 
 -- [] Consulta de un funcionario por identificacion
@@ -454,20 +524,32 @@ AS
 	END
 GO
 
+/*
+
+-- Ejemplo de ejecucion: Identificacion
+
 EXEC dbo.sp_consultaFuncionario '965310025'
+
+*/
 
 -- FOR JSON PATH: Fijo
 -- FOR JSON AUTO: Hace anidacion
 
+
+
 -- °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
--- Nuevo
+--	Nuevo	Nuevo	Nuevo	Nuevo	Nuevo	Nuevo	Nuevo	Nuevo
 -- °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
 
--- [] Modificar mi Informacion
+-- ==========================================
+--		FORMULARIO MODIFICAR MI INFORMACION
+-- ==========================================
 
---		traer
+--		traer: para pintar en las cajas
 
 DROP PROCEDURE IF EXISTS dbo.sp_pintarEditarUsuario
+
+-- Pinta solo en pantalla, los valores que se presentaran y que eventualmente puede editar
 
 CREATE PROCEDURE dbo.sp_pintarEditarUsuario
 	@usuarioId bigint
@@ -487,9 +569,11 @@ AS
 
 GO
 
-EXEC dbo.sp_pintarEditarUsuario 1
+-- ejemplo de ejecucion: @usuarioId
+-- 
+--	EXEC dbo.sp_pintarEditarUsuario 1
 
---		guardar
+--		guardar: para salvar los cambios, en caso de que el boton se oprima
 
 DROP PROCEDURE IF EXISTS dbo.sp_guardarEditarUsuario
 
@@ -582,21 +666,28 @@ AS
 
 GO
 
+/*
+-- ejemplo de ejecucion
 EXEC dbo.sp_guardarEditarUsuario 1, 'correito@email.cr', 'actualizada', '15531105', 'AU', 'ABC123', 'NRC152', 'NVA156', NULL,
 NULL, NULL, '07:30', '16:30', '07:30', '16:30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1
+*/
 
-EXEC dbo.sp_pintarEditarUsuario 1
 
-SELECT * FROM dbo.Vehiculos_Por_Usuario
-SELECT * FROM dbo.Vehiculos
-SELECT * FROM dbo.Horarios_Por_Usuario
+-- ==========================================
+--		FORMULARIO REGISTRAR USUARIO
+-- ==========================================
 
-EXEC dbo.sp_pintarEditarUsuario 1
+DROP PROCEDURE dbo.sp_registrarUsuarioTotal
 
-@usuarioId bigint,
+CREATE PROCEDURE dbo.sp_registrarUsuarioTotal
+	@correoInstitucional nvarchar(200),
+	@identificacion nvarchar(60),
 	@correo nvarchar(200),
 	@password nvarchar(200),
 	@telefono nvarchar(40),
+	@nombre nvarchar(60),
+	@apellido1 nvarchar(60),
+	@apellido2 nvarchar(60),
 	@departamento nvarchar(8),
 	@placa1 nvarchar(20),
 	@placa2 nvarchar(20),
@@ -604,5 +695,327 @@ EXEC dbo.sp_pintarEditarUsuario 1
 	@placa4 nvarchar(20),
 	@lunesA time(7),
 	@lunesB time(7),
+	@martesA time(7),
+	@martesB time(7),
+	@miercolesA time(7),
+	@miercolesB time(7),
+	@juevesA time(7),
+	@juevesB time(7),
+	@viernesA time(7),
+	@viernesB time(7),
+	@sabadoA time(7),
+	@sabadoB time(7),
+	@domingoA time(7),
+	@domingoB time(7),
 	@notificarCorreoAlterno bit
+AS
+	-- busqueda del Id de la division
+	DECLARE @divisionId INT
+	SELECT @divisionId = divisionId FROM dbo.Divisiones WHERE codigoDivision = @departamento OR descripcion = @departamento
 
+	DECLARE @nuevoUsuarioId BIGINT
+	EXEC @nuevoUsuarioId = dbo.sp_RegistrarFuncionario NULL, @divisionId, @identificacion, @nombre, @apellido1, @apellido2, @telefono, @correoInstitucional, @correo, @notificarCorreoAlterno, @password
+	
+	IF @nuevoUsuarioId = 0 BEGIN
+		RETURN 0					-- QUIERE DECIR QUE YA EL USUARIO ESTA REGISTRADO (por Id o por correoInstitucional)
+	END
+
+	-- Inmediatamente Inserta los permisos
+
+	EXEC dbo.sp_permisosUsuario @nuevoUsuarioId,1
+	EXEC dbo.sp_permisosUsuario @nuevoUsuarioId,2
+
+
+	-- busqueda o registro de las placas (el 1 es auto particular)
+
+	IF @placa1 IS NOT NULL BEGIN
+		EXEC dbo.sp_RegistrarVehiculo @nuevoUsuarioId, @placa1, 1
+	END
+
+	IF @placa2 IS NOT NULL BEGIN
+		EXEC dbo.sp_RegistrarVehiculo @nuevoUsuarioId, @placa2, 1
+	END
+
+	IF @placa3 IS NOT NULL BEGIN
+		EXEC dbo.sp_RegistrarVehiculo @nuevoUsuarioId, @placa3, 1
+	END
+
+	IF @placa4 IS NOT NULL BEGIN
+		EXEC dbo.sp_RegistrarVehiculo @nuevoUsuarioId, @placa4, 1
+	END
+
+	-- insercion de los horarios
+
+	IF @lunesA IS NOT NULL AND @lunesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @nuevoUsuarioId, 1, @lunesA, @lunesB
+	END
+
+	IF @martesA IS NOT NULL AND @martesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @nuevoUsuarioId, 2, @martesA, @martesB
+	END
+
+	IF @miercolesA IS NOT NULL AND @miercolesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @nuevoUsuarioId, 3, @miercolesA, @miercolesB
+	END
+
+	IF @juevesA IS NOT NULL AND @juevesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @nuevoUsuarioId, 4, @juevesA, @juevesB
+	END
+
+	IF @viernesA IS NOT NULL AND @juevesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @nuevoUsuarioId, 5, @viernesA, @viernesB
+	END
+
+	IF @sabadoA IS NOT NULL AND @sabadoB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @nuevoUsuarioId, 6, @sabadoA, @sabadoB
+	END
+
+	IF @domingoA IS NOT NULL AND @domingoB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorario @nuevoUsuarioId, 7, @domingoA, @domingoB
+	END
+
+	RETURN @nuevoUsuarioId -- Se completo exitosamente
+
+GO
+
+/*
+
+-- Ejemplo de ejecucion
+
+DECLARE @otraSalida BIGINT
+EXEC @otraSalida = dbo.sp_registrarUsuarioTotal 'jsolis.67@itcr.ac.cr', '812547785', 'jsolis.67@email.cr', 'jsolis.67', '74120336', 'Jorge', 'Solis', 'Thames', 'DIR',
+'RJST670', NULL, NULL, NULL,
+'07:30', '16:30', NULL, NULL, '07:30', '16:30', NULL, NULL, '07:30', '16:30', NULL, NULL, NULL, NULL, 0
+SELECT @otraSalida
+
+
+-- Ejemplo de ejecucion
+
+DECLARE @otraSalida BIGINT
+EXEC @otraSalida = dbo.sp_registrarUsuarioTotal 'aarias.19@itcr.ac.cr', '818049752', 'aarias.19@email.cr', 'aarias.19', '42361203', 'Andrés', 'Arias', 'Siles', 'IC',
+'232056', 'GTR232', NULL, NULL,
+'13:00', '16:30', '07:30', '16:30', '07:30', '16:30', '07:30', '16:30',  '07:30', '12:00', NULL, NULL, NULL, NULL, 1
+SELECT @otraSalida
+
+*/
+
+
+
+-- ==========================================
+--		FORMULARIO REGISTRAR ESTACIONAMIENTO
+-- ==========================================
+
+DROP PROCEDURE IF EXISTS dbo.sp_registrarEstacionamientoTotal
+
+CREATE PROCEDURE dbo.sp_registrarEstacionamientoTotal
+	@nombre nvarchar(200),
+	@correo nvarchar(200),
+	@telefono nvarchar(40),
+	@identificacion nvarchar(60),
+	@direccionExacta nvarchar(500),
+	@formaAcceso nvarchar(500),
+	@descripcion nvarchar(250),
+	@cantEspaciosEspeciales int,
+	@cantEspaciosJefaturas int,
+	@cantEspaciosVisitantes int,
+	@cantEspaciosOficiales int,
+	@cantEspacios int,
+	@imageUrl nvarchar(800),
+	@lunesA time(7),
+	@lunesB time(7),
+	@martesA time(7),
+	@martesB time(7),
+	@miercolesA time(7),
+	@miercolesB time(7),
+	@juevesA time(7),
+	@juevesB time(7),
+	@viernesA time(7),
+	@viernesB time(7),
+	@sabadoA time(7),
+	@sabadoB time(7),
+	@domingoA time(7),
+	@domingoB time(7),
+	@esInstitucional bit
+AS
+	-- institucional 1:
+	-- subcontratado 2:
+
+	DECLARE @tipoEstacionamiento INT
+
+	IF @esInstitucional=1 BEGIN
+		SELECT @tipoEstacionamiento = tipoEstacionamientoId FROM dbo.TiposEstacionamientos WHERE tipo = 'institucional' 
+	END ELSE BEGIN
+		SELECT @tipoEstacionamiento = tipoEstacionamientoId FROM dbo.TiposEstacionamientos WHERE tipo = 'subcontratado' 
+	END
+
+	DECLARE @nuevoEstacionamientoId BIGINT
+	EXEC @nuevoEstacionamientoId = dbo.sp_registrarEstacionamiento @tipoEstacionamiento, 1, 1, 1, @direccionExacta,
+	@nombre, @formaAcceso, @cantEspacios, @cantEspaciosEspeciales, @cantEspaciosJefaturas, @cantEspaciosVisitantes, @cantEspaciosOficiales,
+	@correo, @telefono, @identificacion, @imageUrl, @descripcion
+
+	-- insercion de los horarios
+
+	IF @lunesA IS NOT NULL AND @lunesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 1, @lunesA, @lunesB
+	END
+
+	IF @martesA IS NOT NULL AND @martesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 2, @lunesA, @lunesB
+	END
+
+	IF @miercolesA IS NOT NULL AND @miercolesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 3, @lunesA, @lunesB
+	END
+
+	IF @juevesA IS NOT NULL AND @juevesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 4, @lunesA, @lunesB
+	END
+
+	IF @viernesA IS NOT NULL AND @juevesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 5, @lunesA, @lunesB
+	END
+
+	IF @sabadoA IS NOT NULL AND @sabadoB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 6, @sabadoA, @sabadoB
+	END
+
+	IF @domingoA IS NOT NULL AND @domingoB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 7, @domingoA, @domingoB
+	END
+
+	RETURN @nuevoEstacionamientoId -- Se completo exitosamente
+
+GO
+
+/*
+
+-- Ejemplo de ejecucion
+
+EXEC dbo.sp_registrarEstacionamientoTotal 'Parqueo Amón', 'parqueo.amon@email.cr', '75643461', NULL, 'Diagonal a casa verde', 'Dar la vuelta por el edificio principal, sentido S-N', 'Parqueo cercano al campus',
+1, 1, 1, 0, 7, NULL, '06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '08:00', '16:00', NULL, NULL, 0
+*/
+
+
+-- ==================================================
+--		FORMULARIO MODIFICAR ESTACIONAMIENTO
+-- ==================================================
+
+--		traer: para pintar en las cajas
+
+DROP PROCEDURE IF EXISTS dbo.sp_pintarEditarEstacionamiento
+
+CREATE PROCEDURE dbo.sp_pintarEditarEstacionamiento
+	@estacionamientoId bigint
+AS
+	SELECT nombre, correo, telefono, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspacios, cantEspaciosOficiales, imageURL
+	FROM dbo.Estacionamientos e INNER JOIN dbo.Ubicaciones u ON e.ubicacion = u.ubicacionId WHERE estacionamientoId = @estacionamientoId FOR JSON PATH
+
+	SELECT diaSemana, horaInicio, horaFinal FROM dbo.Horarios_Por_Estacionamiento he
+	INNER JOIN dbo.Horarios h ON he.horarioId = h.horarioId
+	INNER JOIN dbo.Dias d ON h.diaSemana = d.diaId
+	WHERE estacionamientoId = @estacionamientoId FOR JSON AUTO
+
+GO
+
+/*
+-- ejemplo de ejecucion
+EXEC dbo.sp_pintarEditarEstacionamiento 8
+*/
+
+
+--		guardar: para salvar los cambios, en caso de que el boton se oprima
+
+DROP PROCEDURE IF EXISTS dbo.sp_guardarEditarEstacionamiento
+
+CREATE PROCEDURE dbo.sp_guardarEditarEstacionamiento
+	@estacionamientoId int,
+	@identificacion nvarchar(60),
+	@nombre nvarchar(200),
+	@correo nvarchar(200),
+	@telefono nvarchar(40),
+	@direccionExacta nvarchar(500),
+	@formaAcceso nvarchar(500),
+	@descripcion nvarchar(250),
+	@cantEspaciosEspeciales int,
+	@cantEspaciosJefaturas int,
+	@cantEspaciosVisitantes int,
+	@cantEspaciosOficiales int,
+	@cantEspacios int,
+	@imageUrl nvarchar(800),
+	@lunesA time(7),
+	@lunesB time(7),
+	@martesA time(7),
+	@martesB time(7),
+	@miercolesA time(7),
+	@miercolesB time(7),
+	@juevesA time(7),
+	@juevesB time(7),
+	@viernesA time(7),
+	@viernesB time(7),
+	@sabadoA time(7),
+	@sabadoB time(7),
+	@domingoA time(7),
+	@domingoB time(7)
+AS
+	-- busqueda del Id del estacionamiento
+	-- DECLARE @estacionamientoId INT
+	-- SELECT @estacionamientoId = estacionamientoId FROM dbo.Estacionamientos WHERE identificacion = @identificacion
+
+	-- busca y actualiza la direccionExacta
+	DECLARE @laUbicacion BIGINT
+	SELECT @laUbicacion = ubicacion FROM dbo.Estacionamientos WHERE identificacion = @identificacion OR estacionamientoId = @estacionamientoId
+
+	UPDATE dbo.Ubicaciones SET direccionExacta = @direccionExacta WHERE ubicacionId = @laUbicacion
+
+	-- actualiza informacion de la tabla de estacionamiento
+	
+	UPDATE dbo.Estacionamientos SET nombre = @nombre, correo= @correo, telefono = @telefono, formaAcceso = @formaAcceso, 
+	descripcion = @descripcion, cantEspaciosEspeciales = @cantEspaciosEspeciales, cantEspaciosJefaturas = @cantEspaciosJefaturas, cantEspaciosVisitantes = @cantEspaciosVisitantes,
+	cantEspaciosOficiales = @cantEspaciosOficiales, cantEspacios = @cantEspacios, imageUrl = @imageUrl
+	WHERE identificacion = @identificacion OR estacionamientoId = @estacionamientoId
+
+	-- actualizacion de los horarios
+
+	IF @lunesA IS NOT NULL AND @lunesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 1, @lunesA, @lunesB
+	END
+
+	IF @martesA IS NOT NULL AND @martesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 2, @martesA, @martesB
+	END
+
+	IF @miercolesA IS NOT NULL AND @miercolesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 3, @miercolesA, @miercolesB
+	END
+
+	IF @juevesA IS NOT NULL AND @juevesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 4, @juevesA, @juevesB
+	END
+
+	IF @viernesA IS NOT NULL AND @juevesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 5, @viernesA, @viernesB
+	END
+
+	IF @sabadoA IS NOT NULL AND @sabadoB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 6, @sabadoA, @sabadoB
+	END
+
+	IF @domingoA IS NOT NULL AND @domingoB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 7, @domingoA, @domingoB
+	END
+
+GO
+
+/*
+-- ejemplo de ejecucion
+EXEC dbo.sp_guardarEditarEstacionamiento 6, '75643457', 'Parqueo Nuevo Amón', 'nuevoamon@email.cr','96213505', '200m norte del morazán', 'Sobre la calle del casino, sentido O - E, mano derecha', 'Parqueo bajo techo',
+1, 1, 1, 1, 6, NULL,
+NULL, NULL, '07:30', '16:30', '07:30', '16:30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+*/
+
+
+
+/* Ejemplo insercion url
+	UPDATE dbo.Estacionamientos SET imageUrl = 'https://uc4f4ccbd04077e42700b24734e6.previews.dropboxusercontent.com/p/thumb/ABgq-SEhaqpPgjZ3Q_9i14E0xi2w0BrIEnNa_TC4gc-TacjNEowu0UqLNIQnyYiyGCYdwwDnivo3DyR3m66AWIiykKQvNpElk0IWpi09bV3gguJ7_dafbe_CnzQ_T2BwRfN6sSWeuTVvGExMbAlYjIFOT4yNQVFgrqdf8ErewsQEtUvkD91Ogx1Gq5G_L7QpVWwsvozSBksrIQcAWMYXxxUsHSBZVx-CKkqhAaMT0aqSRyuFIzifinwYkUDsdc5_EN8Q9vVKmdglXb4UOXoa5GuWc9XYLmNJOvxIbZ60ine2ih-EwG_XEDI38_4nSwD99XUfBny4HD5r0IFBhXcVXv6mKst2Xohmlqa7Qv0cgVyC9KKPmBi_XFbZLCfpQ_qxvg0/p.jpeg'
+	WHERE estacionamientoId = 6
+*/
