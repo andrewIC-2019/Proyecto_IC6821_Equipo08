@@ -128,6 +128,44 @@ export class SQLConnection implements DataSource {
       descripcion
     );
   }
+
+
+  public permisosUsuario(
+    usuarioId: number,
+    permisoUsuarioId: number,
+  ): Promise<string> {
+    return permisosUsuario(usuarioId, permisoUsuarioId);
+  }
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+async function permisosUsuario(
+  usuarioId: number,
+  permisoUsuarioId: number,
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("usuarioId", sql.bigint, usuarioId)
+    .input("permisoUsuarioId", sql.int, permisoUsuarioId)
+    .execute("sp_permisosUsuario");
+  console.log("sp_permisosUsuario");
+  console.log(result);
+
+  return result.returnValue;
 }
 
 async function registrarEstacionamiento(

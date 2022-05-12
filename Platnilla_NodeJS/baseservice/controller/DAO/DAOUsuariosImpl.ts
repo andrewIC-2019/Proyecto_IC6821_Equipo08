@@ -73,4 +73,11 @@ export class DAOUsuariosImpl implements DAOTransaccional {
       password
     );
   }
+
+  public permisosUsuario(
+    usuarioId: number,
+    permisoUsuarioId: number,
+  ): Promise<string> {
+    return SQLConnection.getInstance().permisosUsuario(usuarioId, permisoUsuarioId);
+  }
 }

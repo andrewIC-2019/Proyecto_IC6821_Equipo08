@@ -11,6 +11,32 @@ app.get("/login", login);
 app.post("/registrarVehiculo", registrarVehiculo);
 app.post("/ubicaciones", ubicaciones);
 app.post("/registrarFuncionario", registrarFuncionario);
+app.post("/permisosUsuario", permisosUsuario);
+
+async function permisosUsuario(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  let usuarioId: number = req.body.usuarioId;
+  let permisoUsuarioId: number = req.body.permisoUsuarioId;
+
+
+  await Control.getInstance()
+    .$gestorUsuario.permisosUsuario(
+      usuarioId,
+      permisoUsuarioId,
+
+    )
+    .then((data) => {
+      res.json(JSON.parse(data));
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
+
 
 async function registrarFuncionario(
   req: express.Request,

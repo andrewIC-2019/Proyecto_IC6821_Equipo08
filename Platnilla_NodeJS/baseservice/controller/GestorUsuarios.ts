@@ -93,4 +93,11 @@ export class GestorUsuario {
       password
     );
   }
+
+  public permisosUsuario(
+    usuarioId: number,
+    permisoUsuarioId: number,
+  ): Promise<string> {
+    return this.daoUsuario.permisosUsuario(usuarioId, permisoUsuarioId);
+  }
 }
