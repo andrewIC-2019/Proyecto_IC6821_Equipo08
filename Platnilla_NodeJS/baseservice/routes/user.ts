@@ -7,7 +7,7 @@ const router = express.Router();
 const app = express();
 const log = new Logger();
 
-app.post("/login", login);
+app.get("/login", login);
 app.post("/registrarVehiculo", registrarVehiculo);
 app.post("/ubicaciones", ubicaciones);
 app.post("/registrarFuncionario", registrarFuncionario);
@@ -98,8 +98,12 @@ async function login(
   res: express.Response,
   next: express.NextFunction
 ) {
-  let username: string = req.body.username;
-  let password: string = req.body.password;
+  let username: string = req.query.username as string;
+  let password: string = req.query.password as string;
+  console.log('login req')
+  console.log(username)
+
+  console.log(password)
 
   await Control.getInstance()
     .$gestorUsuario.login(username, password)

@@ -44,7 +44,7 @@ var router = express.Router();
 var app = express();
 exports.user = app;
 var log = new common_1.Logger();
-app.post("/login", login);
+app.get("/login", login);
 app.post("/registrarVehiculo", registrarVehiculo);
 app.post("/ubicaciones", ubicaciones);
 app.post("/registrarFuncionario", registrarFuncionario);
@@ -138,8 +138,11 @@ function login(req, res, next) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    username = req.body.username;
-                    password = req.body.password;
+                    username = req.query.username;
+                    password = req.query.password;
+                    console.log('login req');
+                    console.log(username);
+                    console.log(password);
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.login(username, password)
                             .then(function (data) {
