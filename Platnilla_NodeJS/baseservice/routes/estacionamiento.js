@@ -46,6 +46,30 @@ exports.estacionamiento = app;
 var log = new common_1.Logger();
 app.get("/inicio", inicio);
 app.post("/registrarEstacionamiento", registrarEstacionamiento);
+app.get("/estacionamientoInfo", estacionamientoInfo);
+function estacionamientoInfo(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var estacionamientoId;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    estacionamientoId = req.query.estacionamientoId;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorEstacionamiento.estacionamientoInfo(estacionamientoId)
+                            .then(function (data) {
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function registrarEstacionamiento(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion;

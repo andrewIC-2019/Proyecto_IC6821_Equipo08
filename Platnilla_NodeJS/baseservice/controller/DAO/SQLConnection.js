@@ -79,9 +79,361 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.registrarEstacionamiento = function (tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion) {
         return registrarEstacionamiento(tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion);
     };
+    SQLConnection.prototype.permisosUsuario = function (usuarioId, permisoUsuarioId) {
+        return permisosUsuario(usuarioId, permisoUsuarioId);
+    };
+    SQLConnection.prototype.insertarVehiculo = function (placa, tipoVehiculo) {
+        return insertarVehiculo(placa, tipoVehiculo);
+    };
+    SQLConnection.prototype.insertarHorario = function (diaSemana, horaInicio, horaFinal) {
+        return insertarHorario(diaSemana, horaInicio, horaFinal);
+    };
+    SQLConnection.prototype.informeFuncionarios = function () {
+        return informeFuncionarios();
+    };
+    SQLConnection.prototype.informeEstacionamientos = function () {
+        return informeEstacionamientos();
+    };
+    SQLConnection.prototype.franjasHorarias = function () {
+        return franjasHorarias();
+    };
+    SQLConnection.prototype.estacionamientoInfo = function (estacionamientoId) {
+        return estacionamientoInfo(estacionamientoId);
+    };
+    SQLConnection.prototype.consultaFuncionario = function (identificacion) {
+        return consultaFuncionario(identificacion);
+    };
+    SQLConnection.prototype.registrarHorario = function (usuarioId, diaSemana, horaInicio, horaFinal) {
+        return registrarHorario(usuarioId, diaSemana, horaInicio, horaFinal);
+    };
+    SQLConnection.prototype.pintarEditarUsuario = function (usuarioId) {
+        return pintarEditarUsuario(usuarioId);
+    };
+    SQLConnection.prototype.guardarEditarUsuario = function (usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno) {
+        return guardarEditarUsuario(usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno);
+    };
+    SQLConnection.prototype.registrarUsuarioTotal = function (correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno) {
+        return registrarUsuarioTotal(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+function registrarUsuarioTotal(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("correoInstitucional", sql.bigint, correoInstitucional)
+                            .input("identificacion", sql.bigint, identificacion)
+                            .input("correo", sql.nvarchar(200), correo)
+                            .input("password", sql.nvarchar(200), password)
+                            .input("telefono", sql.nvarchar(40), telefono)
+                            .input("nombre", sql.nvarchar(200), nombre)
+                            .input("apellido1", sql.nvarchar(200), apellido1)
+                            .input("apellido2", sql.nvarchar(40), apellido2)
+                            .input("departamento", sql.nvarchar(8), departamento)
+                            .input("placa1", sql.nvarchar(20), placa1)
+                            .input("placa2", sql.nvarchar(20), placa2)
+                            .input("placa3", sql.nvarchar(20), placa3)
+                            .input("placa4", sql.nvarchar(20), placa4)
+                            .input("lunesA", sql.time(7), lunesA)
+                            .input("lunesB", sql.time(7), lunesB)
+                            .input("martesA", sql.time(7), martesA)
+                            .input("martesB", sql.time(7), martesB)
+                            .input("miercolesA", sql.time(7), miercolesA)
+                            .input("miercolesB", sql.time(7), miercolesB)
+                            .input("juevesA", sql.time(7), juevesA)
+                            .input("juevesB", sql.time(7), juevesB)
+                            .input("viernesA", sql.time(7), viernesA)
+                            .input("viernesB", sql.time(7), viernesB)
+                            .input("sabadoA", sql.time(7), sabadoA)
+                            .input("sabadoB", sql.time(7), sabadoB)
+                            .input("domingoA", sql.time(7), domingoA)
+                            .input("domingoB", sql.time(7), domingoB)
+                            .input("notificarCorreoAlterno", sql.bit, notificarCorreoAlterno)
+                            .execute("sp_registrarUsuarioTotal")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_registrarUsuarioTotal");
+                    console.log(result);
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
+function guardarEditarUsuario(usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("usuarioId", sql.bigint, usuarioId)
+                            .input("correo", sql.nvarchar(200), correo)
+                            .input("password", sql.nvarchar(200), password)
+                            .input("telefono", sql.nvarchar(40), telefono)
+                            .input("departamento", sql.nvarchar(8), departamento)
+                            .input("placa1", sql.nvarchar(20), placa1)
+                            .input("placa2", sql.nvarchar(20), placa2)
+                            .input("placa3", sql.nvarchar(20), placa3)
+                            .input("placa4", sql.nvarchar(20), placa4)
+                            .input("lunesA", sql.time(7), lunesA)
+                            .input("lunesB", sql.time(7), lunesB)
+                            .input("martesA", sql.time(7), martesA)
+                            .input("martesB", sql.time(7), martesB)
+                            .input("miercolesA", sql.time(7), miercolesA)
+                            .input("miercolesB", sql.time(7), miercolesB)
+                            .input("juevesA", sql.time(7), juevesA)
+                            .input("juevesB", sql.time(7), juevesB)
+                            .input("viernesA", sql.time(7), viernesA)
+                            .input("viernesB", sql.time(7), viernesB)
+                            .input("sabadoA", sql.time(7), sabadoA)
+                            .input("sabadoB", sql.time(7), sabadoB)
+                            .input("domingoA", sql.time(7), domingoA)
+                            .input("domingoB", sql.time(7), domingoB)
+                            .input("notificarCorreoAlterno", sql.bit, notificarCorreoAlterno)
+                            .execute("sp_guardarEditarUsuario")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_guardarEditarUsuario");
+                    console.log(result);
+                    return [2 /*return*/, '{"done": true}'];
+            }
+        });
+    });
+}
+function pintarEditarUsuario(usuarioId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("usuarioId", sql.bigint, usuarioId)
+                            .execute("sp_pintarEditarUsuario")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_pintarEditarUsuario");
+                    console.log(result);
+                    return [2 /*return*/, result.recordsets[0]];
+            }
+        });
+    });
+}
+function registrarHorario(usuarioId, diaSemana, horaInicio, horaFinal) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("usuarioId", sql.bigint, usuarioId)
+                            .input("diaSemana", sql.tinyint, diaSemana)
+                            .input("horaInicio", sql.time(7), horaInicio)
+                            .input("horaFinal", sql.time(7), horaFinal)
+                            .execute("sp_registrarHorario")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_registrarHorario");
+                    console.log(result);
+                    return [2 /*return*/, '{"done": true}'];
+            }
+        });
+    });
+}
+function consultaFuncionario(identificacion) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("identificacion", sql.nvarchar(60), identificacion)
+                            .execute("sp_consultaFuncionario")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_consultaFuncionario");
+                    console.log(result);
+                    return [2 /*return*/, result.recordsets[0]];
+            }
+        });
+    });
+}
+function estacionamientoInfo(estacionamientoId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result, str, obj, key;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("estacionamientoId", sql.INT, estacionamientoId)
+                            .execute("sp_estacionamientoinfo")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_estacionamientoinfo");
+                    console.log(result);
+                    obj = result.recordsets[0][0];
+                    for (key in obj) {
+                        str = obj[key];
+                    }
+                    return [2 /*return*/, str];
+            }
+        });
+    });
+}
+function franjasHorarias() {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result, str, obj, key;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool.request().execute("sp_franjasHorarias")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_franjasHorarias");
+                    console.log(result);
+                    obj = result.recordsets[0][0];
+                    for (key in obj) {
+                        str = obj[key];
+                    }
+                    return [2 /*return*/, str];
+            }
+        });
+    });
+}
+function informeEstacionamientos() {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result, str, obj, key;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool.request().execute("sp_informeEstacionamientos")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_informeEstacionamientos");
+                    console.log(result);
+                    obj = result.recordsets[0][0];
+                    for (key in obj) {
+                        str = obj[key];
+                    }
+                    return [2 /*return*/, str];
+            }
+        });
+    });
+}
+function informeFuncionarios() {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result, str, obj, key;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool.request().execute("sp_informeFuncionarios")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_informeFuncionarios");
+                    console.log(result);
+                    obj = result.recordsets[0][0];
+                    for (key in obj) {
+                        str = obj[key];
+                    }
+                    return [2 /*return*/, str];
+            }
+        });
+    });
+}
+function insertarHorario(diaSemana, horaInicio, horaFinal) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("diaSemana", sql.tinyint, diaSemana)
+                            .input("horaInicio", sql.time(7), horaInicio)
+                            .input("horaFinal", sql.time(7), horaFinal)
+                            .execute("sp_InsertarHorario")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_InsertarHorario");
+                    console.log(result);
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
+function insertarVehiculo(placa, tipoVehiculo) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("placa", sql.NVARCHAR(20), placa)
+                            .input("tipoVehiculo", sql.SMALLINT, tipoVehiculo)
+                            .execute("sp_InsertarVehiculo")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_InsertarVehiculo");
+                    console.log(result);
+                    return [2 /*return*/, '{"done": true}'];
+            }
+        });
+    });
+}
+function permisosUsuario(usuarioId, permisoUsuarioId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("usuarioId", sql.bigint, usuarioId)
+                            .input("permisoUsuarioId", sql.int, permisoUsuarioId)
+                            .execute("sp_permisosUsuario")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_permisosUsuario");
+                    console.log(result);
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
 function registrarEstacionamiento(tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result;

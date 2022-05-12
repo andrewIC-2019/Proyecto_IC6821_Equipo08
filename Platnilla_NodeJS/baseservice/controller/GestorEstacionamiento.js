@@ -52,6 +52,9 @@ var GestorEstacionamiento = /** @class */ (function () {
         console.log("llega bien A");
         return this.daoEstacionamiento.registrarEstacionamiento(tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion);
     };
+    GestorEstacionamiento.prototype.estacionamientoInfo = function (estacionamientoId) {
+        return this.daoEstacionamiento.estacionamientoInfo(estacionamientoId);
+    };
     return GestorEstacionamiento;
 }());
 exports.GestorEstacionamiento = GestorEstacionamiento;

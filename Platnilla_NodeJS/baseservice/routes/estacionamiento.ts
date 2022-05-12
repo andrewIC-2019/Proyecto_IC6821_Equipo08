@@ -8,6 +8,25 @@ const log = new Logger();
 
 app.get("/inicio", inicio);
 app.post("/registrarEstacionamiento", registrarEstacionamiento);
+app.get("/estacionamientoInfo", estacionamientoInfo);
+
+async function estacionamientoInfo(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+
+  let estacionamientoId : string = req.query.estacionamientoId  as string;
+  await Control.getInstance()
+    .$gestorEstacionamiento.estacionamientoInfo(estacionamientoId)
+    .then((data) => {
+      res.json(JSON.parse(data));
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function registrarEstacionamiento(
   req: express.Request,

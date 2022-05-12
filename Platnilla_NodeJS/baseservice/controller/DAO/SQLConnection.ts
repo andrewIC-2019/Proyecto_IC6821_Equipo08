@@ -129,30 +129,468 @@ export class SQLConnection implements DataSource {
     );
   }
 
-
   public permisosUsuario(
     usuarioId: number,
-    permisoUsuarioId: number,
+    permisoUsuarioId: number
   ): Promise<string> {
     return permisosUsuario(usuarioId, permisoUsuarioId);
   }
 
+  public insertarVehiculo(
+    placa: string,
+    tipoVehiculo: number
+  ): Promise<string> {
+    return insertarVehiculo(placa, tipoVehiculo);
+  }
 
+  public insertarHorario(
+    diaSemana: number,
+    horaInicio: string,
+    horaFinal: string
+  ): Promise<string> {
+    return insertarHorario(diaSemana, horaInicio, horaFinal);
+  }
 
+  informeFuncionarios(): Promise<string> {
+    return informeFuncionarios();
+  }
 
+  informeEstacionamientos(): Promise<string> {
+    return informeEstacionamientos();
+  }
 
+  franjasHorarias(): Promise<string> {
+    return franjasHorarias();
+  }
 
+  estacionamientoInfo(estacionamientoId: string): Promise<string> {
+    return estacionamientoInfo(estacionamientoId);
+  }
+
+  consultaFuncionario(identificacion: string): Promise<string> {
+    return consultaFuncionario(identificacion);
+  }
+
+  registrarHorario(
+    usuarioId: number,
+    diaSemana: number,
+    horaInicio: string,
+    horaFinal: string
+  ): Promise<string> {
+    return registrarHorario(usuarioId, diaSemana, horaInicio, horaFinal);
+  }
+
+  pintarEditarUsuario(usuarioId: string): Promise<string> {
+    return pintarEditarUsuario(usuarioId);
+  }
+
+  guardarEditarUsuario(
+    usuarioId: string,
+    correo: string,
+    password: string,
+    telefono: string,
+    departamento: string,
+    placa1: string,
+    placa2: string,
+    placa3: string,
+    placa4: string,
+    lunesA: string,
+    lunesB: string,
+    martesA: string,
+    martesB: string,
+    miercolesA: string,
+    miercolesB: string,
+    juevesA: string,
+    juevesB: string,
+    viernesA: string,
+    viernesB: string,
+    sabadoA: string,
+    sabadoB: string,
+    domingoA: string,
+    domingoB: string,
+    notificarCorreoAlterno: string
+  ): Promise<string> {
+    return guardarEditarUsuario(
+      usuarioId,
+      correo,
+      password,
+      telefono,
+      departamento,
+      placa1,
+      placa2,
+      placa3,
+      placa4,
+      lunesA,
+      lunesB,
+      martesA,
+      martesB,
+      miercolesA,
+      miercolesB,
+      juevesA,
+      juevesB,
+      viernesA,
+      viernesB,
+      sabadoA,
+      sabadoB,
+      domingoA,
+      domingoB,
+      notificarCorreoAlterno
+    );
+  }
+
+  registrarUsuarioTotal(
+    correoInstitucional: string,
+    identificacion: string,
+    correo: string,
+    password: string,
+    telefono: string,
+    nombre: string,
+    apellido1: string,
+    apellido2: string,
+    departamento: string,
+    placa1: string,
+    placa2: string,
+    placa3: string,
+    placa4: string,
+    lunesA: string,
+    lunesB: string,
+    martesA: string,
+    martesB: string,
+    miercolesA: string,
+    miercolesB: string,
+    juevesA: string,
+    juevesB: string,
+    viernesA: string,
+    viernesB: string,
+    sabadoA: string,
+    sabadoB: string,
+    domingoA: string,
+    domingoB: string,
+    notificarCorreoAlterno: string
+  ): Promise<string> {
+    return registrarUsuarioTotal(
+      correoInstitucional,
+      identificacion,
+      correo,
+      password,
+      telefono,
+      nombre,
+      apellido1,
+      apellido2,
+      departamento,
+      placa1,
+      placa2,
+      placa3,
+      placa4,
+      lunesA,
+      lunesB,
+      martesA,
+      martesB,
+      miercolesA,
+      miercolesB,
+      juevesA,
+      juevesB,
+      viernesA,
+      viernesB,
+      sabadoA,
+      sabadoB,
+      domingoA,
+      domingoB,
+      notificarCorreoAlterno
+    );
+  }
 }
 
+async function registrarUsuarioTotal(
+  correoInstitucional: string,
+  identificacion: string,
+  correo: string,
+  password: string,
+  telefono: string,
+  nombre: string,
+  apellido1: string,
+  apellido2: string,
+  departamento: string,
+  placa1: string,
+  placa2: string,
+  placa3: string,
+  placa4: string,
+  lunesA: string,
+  lunesB: string,
+  martesA: string,
+  martesB: string,
+  miercolesA: string,
+  miercolesB: string,
+  juevesA: string,
+  juevesB: string,
+  viernesA: string,
+  viernesB: string,
+  sabadoA: string,
+  sabadoB: string,
+  domingoA: string,
+  domingoB: string,
+  notificarCorreoAlterno: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("correoInstitucional", sql.bigint, correoInstitucional)
+    .input("identificacion", sql.bigint, identificacion)
+    .input("correo", sql.nvarchar(200), correo)
+    .input("password", sql.nvarchar(200), password)
+    .input("telefono", sql.nvarchar(40), telefono)
+    .input("nombre", sql.nvarchar(200), nombre)
+    .input("apellido1", sql.nvarchar(200), apellido1)
+    .input("apellido2", sql.nvarchar(40), apellido2)
+    .input("departamento", sql.nvarchar(8), departamento)
+    .input("placa1", sql.nvarchar(20), placa1)
+    .input("placa2", sql.nvarchar(20), placa2)
+    .input("placa3", sql.nvarchar(20), placa3)
+    .input("placa4", sql.nvarchar(20), placa4)
+    .input("lunesA", sql.time(7), lunesA)
+    .input("lunesB", sql.time(7), lunesB)
+    .input("martesA", sql.time(7), martesA)
+    .input("martesB", sql.time(7), martesB)
+    .input("miercolesA", sql.time(7), miercolesA)
+    .input("miercolesB", sql.time(7), miercolesB)
+    .input("juevesA", sql.time(7), juevesA)
+    .input("juevesB", sql.time(7), juevesB)
+    .input("viernesA", sql.time(7), viernesA)
+    .input("viernesB", sql.time(7), viernesB)
+    .input("sabadoA", sql.time(7), sabadoA)
+    .input("sabadoB", sql.time(7), sabadoB)
+    .input("domingoA", sql.time(7), domingoA)
+    .input("domingoB", sql.time(7), domingoB)
+    .input("notificarCorreoAlterno", sql.bit, notificarCorreoAlterno)
+    .execute("sp_registrarUsuarioTotal");
+  console.log("sp_registrarUsuarioTotal");
+  console.log(result);
 
+  return result.returnValue
+}
 
+async function guardarEditarUsuario(
+  usuarioId: string,
+  correo: string,
+  password: string,
+  telefono: string,
+  departamento: string,
+  placa1: string,
+  placa2: string,
+  placa3: string,
+  placa4: string,
+  lunesA: string,
+  lunesB: string,
+  martesA: string,
+  martesB: string,
+  miercolesA: string,
+  miercolesB: string,
+  juevesA: string,
+  juevesB: string,
+  viernesA: string,
+  viernesB: string,
+  sabadoA: string,
+  sabadoB: string,
+  domingoA: string,
+  domingoB: string,
+  notificarCorreoAlterno: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("usuarioId", sql.bigint, usuarioId)
+    .input("correo", sql.nvarchar(200), correo)
+    .input("password", sql.nvarchar(200), password)
+    .input("telefono", sql.nvarchar(40), telefono)
+    .input("departamento", sql.nvarchar(8), departamento)
+    .input("placa1", sql.nvarchar(20), placa1)
+    .input("placa2", sql.nvarchar(20), placa2)
+    .input("placa3", sql.nvarchar(20), placa3)
+    .input("placa4", sql.nvarchar(20), placa4)
+    .input("lunesA", sql.time(7), lunesA)
+    .input("lunesB", sql.time(7), lunesB)
+    .input("martesA", sql.time(7), martesA)
+    .input("martesB", sql.time(7), martesB)
+    .input("miercolesA", sql.time(7), miercolesA)
+    .input("miercolesB", sql.time(7), miercolesB)
+    .input("juevesA", sql.time(7), juevesA)
+    .input("juevesB", sql.time(7), juevesB)
+    .input("viernesA", sql.time(7), viernesA)
+    .input("viernesB", sql.time(7), viernesB)
+    .input("sabadoA", sql.time(7), sabadoA)
+    .input("sabadoB", sql.time(7), sabadoB)
+    .input("domingoA", sql.time(7), domingoA)
+    .input("domingoB", sql.time(7), domingoB)
+    .input("notificarCorreoAlterno", sql.bit, notificarCorreoAlterno)
+    .execute("sp_guardarEditarUsuario");
+  console.log("sp_guardarEditarUsuario");
+  console.log(result);
 
+  return '{"done": true}';
+}
 
+async function pintarEditarUsuario(usuarioId: string): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("usuarioId", sql.bigint, usuarioId)
+    .execute("sp_pintarEditarUsuario");
+  console.log("sp_pintarEditarUsuario");
+  console.log(result);
 
+  return result.recordsets[0];
+}
+
+async function registrarHorario(
+  usuarioId: number,
+  diaSemana: number,
+  horaInicio: string,
+  horaFinal: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("usuarioId", sql.bigint, usuarioId)
+    .input("diaSemana", sql.tinyint, diaSemana)
+    .input("horaInicio", sql.time(7), horaInicio)
+    .input("horaFinal", sql.time(7), horaFinal)
+    .execute("sp_registrarHorario");
+  console.log("sp_registrarHorario");
+  console.log(result);
+
+  return '{"done": true}';
+}
+
+async function consultaFuncionario(identificacion: string): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("identificacion", sql.nvarchar(60), identificacion)
+    .execute("sp_consultaFuncionario");
+  console.log("sp_consultaFuncionario");
+  console.log(result);
+
+  return result.recordsets[0];
+}
+
+async function estacionamientoInfo(estacionamientoId: string): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("estacionamientoId", sql.INT, estacionamientoId)
+    .execute("sp_estacionamientoinfo");
+  console.log("sp_estacionamientoinfo");
+  console.log(result);
+
+  let str: string;
+  let obj: any = result.recordsets[0][0];
+  for (var key in obj) {
+    str = obj[key];
+  }
+  return str;
+}
+
+async function franjasHorarias(): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool.request().execute("sp_franjasHorarias");
+  console.log("sp_franjasHorarias");
+  console.log(result);
+
+  let str: string;
+  let obj: any = result.recordsets[0][0];
+  for (var key in obj) {
+    str = obj[key];
+  }
+  return str;
+}
+
+async function informeEstacionamientos(): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool.request().execute("sp_informeEstacionamientos");
+  console.log("sp_informeEstacionamientos");
+  console.log(result);
+
+  let str: string;
+  let obj: any = result.recordsets[0][0];
+  for (var key in obj) {
+    str = obj[key];
+  }
+  return str;
+}
+
+async function informeFuncionarios(): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool.request().execute("sp_informeFuncionarios");
+  console.log("sp_informeFuncionarios");
+  console.log(result);
+
+  let str: string;
+  let obj: any = result.recordsets[0][0];
+  for (var key in obj) {
+    str = obj[key];
+  }
+  return str;
+}
+
+async function insertarHorario(
+  diaSemana: number,
+  horaInicio: string,
+  horaFinal: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("diaSemana", sql.tinyint, diaSemana)
+    .input("horaInicio", sql.time(7), horaInicio)
+    .input("horaFinal", sql.time(7), horaFinal)
+    .execute("sp_InsertarHorario");
+  console.log("sp_InsertarHorario");
+  console.log(result);
+
+  return result.returnValue;
+}
+
+async function insertarVehiculo(
+  placa: string,
+  tipoVehiculo: number
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("placa", sql.NVARCHAR(20), placa)
+    .input("tipoVehiculo", sql.SMALLINT, tipoVehiculo)
+    .execute("sp_InsertarVehiculo");
+  console.log("sp_InsertarVehiculo");
+  console.log(result);
+
+  return '{"done": true}';
+}
 
 async function permisosUsuario(
   usuarioId: number,
-  permisoUsuarioId: number,
+  permisoUsuarioId: number
 ): Promise<string> {
   //do connection
   let pool = await new sql.connect(config);

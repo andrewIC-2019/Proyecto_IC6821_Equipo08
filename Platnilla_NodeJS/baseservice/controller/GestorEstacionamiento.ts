@@ -86,4 +86,10 @@ export class GestorEstacionamiento {
       descripcion
     );
   }
+
+
+  public estacionamientoInfo( estacionamientoId: string): Promise<string> {
+    return this.daoEstacionamiento.estacionamientoInfo(estacionamientoId);
+  }
+
 }

@@ -63,4 +63,7 @@ export class DAOEStacionamientoImpl implements DAOTransaccional{
         );
       }
     
+      public estacionamientoInfo( estacionamientoId: string): Promise<string> {
+        return SQLConnection.getInstance().estacionamientoInfo(estacionamientoId)
+    }
 }

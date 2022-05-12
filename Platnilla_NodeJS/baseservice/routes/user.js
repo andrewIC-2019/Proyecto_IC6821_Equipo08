@@ -48,6 +48,318 @@ app.get("/login", login);
 app.post("/registrarVehiculo", registrarVehiculo);
 app.post("/ubicaciones", ubicaciones);
 app.post("/registrarFuncionario", registrarFuncionario);
+app.post("/permisosUsuario", permisosUsuario);
+app.post("/insertarVehiculo", insertarVehiculo);
+app.post("/insertarHorario", insertarHorario);
+app.get("/informeFuncionarios", informeFuncionarios);
+app.get("/informeEstacionamientos", informeEstacionamientos);
+app.get("/franjasHorarias", franjasHorarias);
+app.get("/consultaFuncionario", consultaFuncionario);
+app.post("/registrarHorario", registrarHorario);
+app.get("/pintarEditarUsuario", pintarEditarUsuario);
+app.post("/guardarEditarUsuario", guardarEditarUsuario);
+app.post("/registrarUsuarioTotal", registrarUsuarioTotal);
+function registrarUsuarioTotal(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    correoInstitucional = req.body.correoInstitucional;
+                    identificacion = req.body.identificacion;
+                    correo = req.body.correo;
+                    password = req.body.password;
+                    telefono = req.body.telefono;
+                    nombre = req.body.nombre;
+                    apellido1 = req.body.apellido1;
+                    apellido2 = req.body.apellido2;
+                    departamento = req.body.departamento;
+                    placa1 = req.body.placa1;
+                    placa2 = req.body.placa2;
+                    placa3 = req.body.placa3;
+                    placa4 = req.body.placa4;
+                    lunesA = req.body.lunesA;
+                    lunesB = req.body.lunesB;
+                    martesA = req.body.martesA;
+                    martesB = req.body.martesB;
+                    miercolesA = req.body.miercolesA;
+                    miercolesB = req.body.miercolesB;
+                    juevesA = req.body.juevesA;
+                    juevesB = req.body.juevesB;
+                    viernesA = req.body.viernesA;
+                    viernesB = req.body.viernesB;
+                    sabadoA = req.body.sabadoA;
+                    sabadoB = req.body.sabadoB;
+                    domingoA = req.body.domingoA;
+                    domingoB = req.body.domingoB;
+                    notificarCorreoAlterno = req.body.notificarCorreoAlterno;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.registrarUsuarioTotal(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno)
+                            .then(function (data) {
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function guardarEditarUsuario(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    usuarioId = req.body.usuarioId;
+                    correo = req.body.correo;
+                    password = req.body.password;
+                    telefono = req.body.telefono;
+                    departamento = req.body.departamento;
+                    placa1 = req.body.placa1;
+                    placa2 = req.body.placa2;
+                    placa3 = req.body.placa3;
+                    placa4 = req.body.placa4;
+                    lunesA = req.body.lunesA;
+                    lunesB = req.body.lunesB;
+                    martesA = req.body.martesA;
+                    martesB = req.body.martesB;
+                    miercolesA = req.body.miercolesA;
+                    miercolesB = req.body.miercolesB;
+                    juevesA = req.body.juevesA;
+                    juevesB = req.body.juevesB;
+                    viernesA = req.body.viernesA;
+                    viernesB = req.body.viernesB;
+                    sabadoA = req.body.sabadoA;
+                    sabadoB = req.body.sabadoB;
+                    domingoA = req.body.domingoA;
+                    domingoB = req.body.domingoB;
+                    notificarCorreoAlterno = req.body.notificarCorreoAlterno;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.guardarEditarUsuario(usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno)
+                            .then(function (data) {
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function pintarEditarUsuario(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var usuarioId;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    usuarioId = req.query.usuarioId;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.pintarEditarUsuario(usuarioId)
+                            .then(function (data) {
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function registrarHorario(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var usuarioId, diaSemana, horaInicio, horaFinal;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    usuarioId = req.body.usuarioId;
+                    diaSemana = req.body.diaSemana;
+                    horaInicio = req.body.horaInicio;
+                    horaFinal = req.body.horaFinal;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.registrarHorario(usuarioId, diaSemana, horaInicio, horaFinal)
+                            .then(function (data) {
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function consultaFuncionario(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var identificacion;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    identificacion = req.query.identificacion;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.consultaFuncionario(identificacion)
+                            .then(function (data) {
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function franjasHorarias(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, controller_1.Control.getInstance()
+                        .$gestorUsuario.franjasHorarias()
+                        .then(function (data) {
+                        res.json(JSON.parse(data));
+                    })
+                        .catch(function (err) {
+                        log.error(err);
+                        return "";
+                    })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function informeEstacionamientos(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, controller_1.Control.getInstance()
+                        .$gestorUsuario.informeEstacionamientos()
+                        .then(function (data) {
+                        res.json(JSON.parse(data));
+                    })
+                        .catch(function (err) {
+                        log.error(err);
+                        return "";
+                    })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function informeFuncionarios(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, controller_1.Control.getInstance()
+                        .$gestorUsuario.informeFuncionarios()
+                        .then(function (data) {
+                        res.json(JSON.parse(data));
+                    })
+                        .catch(function (err) {
+                        log.error(err);
+                        return "";
+                    })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function insertarHorario(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var diaSemana, horaInicio, horaFinal;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    diaSemana = req.body.diaSemana;
+                    horaInicio = req.body.horaInicio;
+                    horaFinal = req.body.horaFinal;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.insertarHorario(diaSemana, horaInicio, horaFinal)
+                            .then(function (data) {
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function insertarVehiculo(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var placa, tipoVehiculo;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    placa = req.body.placa;
+                    tipoVehiculo = req.body.tipoVehiculo;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.insertarVehiculo(placa, tipoVehiculo)
+                            .then(function (data) {
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function permisosUsuario(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var usuarioId, permisoUsuarioId;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    usuarioId = req.body.usuarioId;
+                    permisoUsuarioId = req.body.permisoUsuarioId;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.permisosUsuario(usuarioId, permisoUsuarioId)
+                            .then(function (data) {
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function registrarFuncionario(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password;
@@ -140,7 +452,7 @@ function login(req, res, next) {
                 case 0:
                     username = req.query.username;
                     password = req.query.password;
-                    console.log('login req');
+                    console.log("login req");
                     console.log(username);
                     console.log(password);
                     return [4 /*yield*/, controller_1.Control.getInstance()

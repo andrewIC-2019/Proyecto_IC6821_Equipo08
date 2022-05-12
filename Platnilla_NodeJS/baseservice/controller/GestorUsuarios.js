@@ -57,6 +57,39 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.registrarFuncionario = function (tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password) {
         return this.daoUsuario.registrarFuncionario(tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password);
     };
+    GestorUsuario.prototype.permisosUsuario = function (usuarioId, permisoUsuarioId) {
+        return this.daoUsuario.permisosUsuario(usuarioId, permisoUsuarioId);
+    };
+    GestorUsuario.prototype.insertarVehiculo = function (placa, tipoVehiculo) {
+        return this.daoUsuario.insertarVehiculo(placa, tipoVehiculo);
+    };
+    GestorUsuario.prototype.insertarHorario = function (diaSemana, horaInicio, horaFinal) {
+        return this.daoUsuario.insertarHorario(diaSemana, horaInicio, horaFinal);
+    };
+    GestorUsuario.prototype.informeFuncionarios = function () {
+        return this.daoUsuario.informeFuncionarios();
+    };
+    GestorUsuario.prototype.informeEstacionamientos = function () {
+        return this.daoUsuario.informeEstacionamientos();
+    };
+    GestorUsuario.prototype.franjasHorarias = function () {
+        return this.daoUsuario.franjasHorarias();
+    };
+    GestorUsuario.prototype.consultaFuncionario = function (identificacion) {
+        return this.daoUsuario.consultaFuncionario(identificacion);
+    };
+    GestorUsuario.prototype.registrarHorario = function (usuarioId, diaSemana, horaInicio, horaFinal) {
+        return this.daoUsuario.registrarHorario(usuarioId, diaSemana, horaInicio, horaFinal);
+    };
+    GestorUsuario.prototype.pintarEditarUsuario = function (usuarioId) {
+        return this.daoUsuario.pintarEditarUsuario(usuarioId);
+    };
+    GestorUsuario.prototype.guardarEditarUsuario = function (usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno) {
+        return this.daoUsuario.guardarEditarUsuario(usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno);
+    };
+    GestorUsuario.prototype.registrarUsuarioTotal = function (correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno) {
+        return this.daoUsuario.registrarUsuarioTotal(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno);
+    };
     return GestorUsuario;
 }());
 exports.GestorUsuario = GestorUsuario;
