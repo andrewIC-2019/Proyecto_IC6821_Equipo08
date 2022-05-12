@@ -31,6 +31,9 @@ var DAOEStacionamientoImpl = /** @class */ (function () {
     DAOEStacionamientoImpl.prototype.eliminarEstacionamiento = function (identificacion) {
         return SQLConnection_1.SQLConnection.getInstance().eliminarEstacionamiento(identificacion);
     };
+    DAOEStacionamientoImpl.prototype.registrarEstacionamientoTotal = function (nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional) {
+        return SQLConnection_1.SQLConnection.getInstance().registrarEstacionamientoTotal(nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional);
+    };
     return DAOEStacionamientoImpl;
 }());
 exports.DAOEStacionamientoImpl = DAOEStacionamientoImpl;

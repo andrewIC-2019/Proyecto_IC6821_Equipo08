@@ -46,8 +46,62 @@ exports.estacionamiento = app;
 var log = new common_1.Logger();
 app.get("/inicio", inicio);
 app.post("/registrarEstacionamiento", registrarEstacionamiento);
+app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal);
 app.get("/estacionamientoInfo", estacionamientoInfo);
 app.post("/eliminarEstacionamiento", eliminarEstacionamiento);
+function registrarEstacionamientoTotal(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    nombre = req.body.nombre;
+                    correo = req.body.correo;
+                    telefono = req.body.telefono;
+                    identificacion = req.body.identificacion;
+                    direccionExacta = req.body.direccionExacta;
+                    formaAcceso = req.body.formaAcceso;
+                    descripcion = req.body.descripcion;
+                    cantEspaciosEspeciales = req.body.cantEspaciosEspeciales;
+                    cantEspaciosJefaturas = req.body.cantEspaciosJefaturas;
+                    cantEspaciosVisitantes = req.body.cantEspaciosVisitantes;
+                    cantEspaciosOficiales = req.body.cantEspaciosOficiales;
+                    cantEspacios = req.body.cantEspacios;
+                    imageUrl = req.body.imageUrl;
+                    lunesA = req.body.lunesA;
+                    lunesB = req.body.lunesB;
+                    martesA = req.body.martesA;
+                    martesB = req.body.martesB;
+                    miercolesA = req.body.miercolesA;
+                    miercolesB = req.body.miercolesB;
+                    juevesA = req.body.juevesA;
+                    juevesB = req.body.juevesB;
+                    viernesA = req.body.viernesA;
+                    viernesB = req.body.viernesB;
+                    sabadoA = req.body.sabadoA;
+                    sabadoB = req.body.sabadoB;
+                    domingoA = req.body.domingoA;
+                    domingoB = req.body.domingoB;
+                    esInstitucional = req.body.esInstitucional;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorEstacionamiento.registrarEstacionamientoTotal(nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function eliminarEstacionamiento(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var identificacion;

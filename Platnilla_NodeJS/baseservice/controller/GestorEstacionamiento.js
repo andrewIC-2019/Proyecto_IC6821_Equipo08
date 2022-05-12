@@ -58,6 +58,9 @@ var GestorEstacionamiento = /** @class */ (function () {
     GestorEstacionamiento.prototype.eliminarEstacionamiento = function (identificacion) {
         return this.daoEstacionamiento.eliminarEstacionamiento(identificacion);
     };
+    GestorEstacionamiento.prototype.registrarEstacionamientoTotal = function (nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional) {
+        return this.daoEstacionamiento.registrarEstacionamientoTotal(nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional);
+    };
     return GestorEstacionamiento;
 }());
 exports.GestorEstacionamiento = GestorEstacionamiento;

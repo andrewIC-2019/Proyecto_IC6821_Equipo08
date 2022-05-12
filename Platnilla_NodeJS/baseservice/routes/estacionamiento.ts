@@ -8,8 +8,88 @@ const log = new Logger();
 
 app.get("/inicio", inicio);
 app.post("/registrarEstacionamiento", registrarEstacionamiento);
+app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal);
 app.get("/estacionamientoInfo", estacionamientoInfo);
 app.post("/eliminarEstacionamiento", eliminarEstacionamiento);
+
+
+
+async function registrarEstacionamientoTotal(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  let nombre: string = req.body.nombre;
+	let correo: string = req.body.correo;
+	let telefono: string = req.body.telefono;
+	let identificacion: string = req.body.identificacion;
+	let direccionExacta: string = req.body.direccionExacta;
+	let formaAcceso: string = req.body.formaAcceso;
+	let descripcion: string = req.body.descripcion;
+	let cantEspaciosEspeciales: string = req.body.cantEspaciosEspeciales;
+	let cantEspaciosJefaturas: string = req.body.cantEspaciosJefaturas;
+	let cantEspaciosVisitantes: string = req.body.cantEspaciosVisitantes;
+	let cantEspaciosOficiales: string = req.body.cantEspaciosOficiales;
+	let cantEspacios: string = req.body.cantEspacios;
+	let imageUrl: string = req.body.imageUrl;
+	let lunesA: string = req.body.lunesA;
+	let lunesB: string = req.body.lunesB;
+	let martesA: string = req.body.martesA;
+	let martesB: string = req.body.martesB;
+	let miercolesA: string = req.body.miercolesA;
+	let miercolesB: string = req.body.miercolesB;
+	let juevesA: string = req.body.juevesA;
+	let juevesB: string = req.body.juevesB;
+	let viernesA: string = req.body.viernesA;
+	let viernesB: string = req.body.viernesB;
+	let sabadoA: string = req.body.sabadoA;
+	let sabadoB: string = req.body.sabadoB;
+	let domingoA: string = req.body.domingoA;
+	let domingoB: string = req.body.domingoB;
+	let esInstitucional: string = req.body.esInstitucional;
+
+  await Control.getInstance()
+    .$gestorEstacionamiento.registrarEstacionamientoTotal(
+      nombre,
+      correo,
+      telefono,
+      identificacion,
+      direccionExacta,
+      formaAcceso,
+      descripcion,
+      cantEspaciosEspeciales,
+      cantEspaciosJefaturas,
+      cantEspaciosVisitantes,
+      cantEspaciosOficiales,
+      cantEspacios,
+      imageUrl,
+      lunesA,
+      lunesB,
+      martesA,
+      martesB,
+      miercolesA,
+      miercolesB,
+      juevesA,
+      juevesB,
+      viernesA,
+      viernesB,
+      sabadoA,
+      sabadoB,
+      domingoA,
+      domingoB,
+      esInstitucional,
+    )
+    .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
+      res.json(JSON.parse(data));
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function eliminarEstacionamiento(
   req: express.Request,

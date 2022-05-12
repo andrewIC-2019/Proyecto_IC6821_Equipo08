@@ -121,9 +121,60 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.eliminarEstacionamiento = function (identificacion) {
         return eliminarEstacionamiento(identificacion);
     };
+    SQLConnection.prototype.registrarEstacionamientoTotal = function (nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional) {
+        return registrarEstacionamientoTotal(nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+function registrarEstacionamientoTotal(nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("nombre", sql.NVarChar(200), nombre)
+                            .input("correo", sql.NVarChar(200), correo)
+                            .input("telefono", sql.NVarChar(40), telefono)
+                            .input("identificacion", sql.NVarChar(60), identificacion)
+                            .input("direccionExacta", sql.NVarChar(500), direccionExacta)
+                            .input("formaAcceso", sql.NVarChar(500), formaAcceso)
+                            .input("descripcion", sql.NVarChar(20), descripcion)
+                            .input("cantEspaciosEspeciales", sql.NVarChar(250), cantEspaciosEspeciales)
+                            .input("cantEspaciosJefaturas", sql.Int, cantEspaciosJefaturas)
+                            .input("cantEspaciosVisitantes", sql.Int, cantEspaciosVisitantes)
+                            .input("cantEspaciosOficiales", sql.Int, cantEspaciosOficiales)
+                            .input("cantEspacios", sql.Int, cantEspacios)
+                            .input("imageUrl", sql.NVarChar(800), imageUrl)
+                            .input("lunesA", sql.NVarChar(20), lunesA)
+                            .input("lunesB", sql.NVarChar(20), lunesB)
+                            .input("martesA", sql.NVarChar(20), martesA)
+                            .input("martesB", sql.NVarChar(20), martesB)
+                            .input("miercolesA", sql.NVarChar(20), miercolesA)
+                            .input("miercolesB", sql.NVarChar(20), miercolesB)
+                            .input("juevesA", sql.NVarChar(20), juevesA)
+                            .input("juevesB", sql.NVarChar(20), juevesB)
+                            .input("viernesA", sql.NVarChar(20), viernesA)
+                            .input("viernesB", sql.NVarChar(20), viernesB)
+                            .input("sabadoA", sql.NVarChar(20), sabadoA)
+                            .input("sabadoB", sql.NVarChar(20), sabadoB)
+                            .input("domingoA", sql.NVarChar(20), domingoA)
+                            .input("domingoB", sql.NVarChar(20), domingoB)
+                            .input("esInstitucional", sql.Bit, esInstitucional)
+                            .execute("sp_registrarEstacionamientoTotal")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_registrarEstacionamientoTotal");
+                    console.log(result);
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
 function eliminarEstacionamiento(identificacion) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result;
@@ -209,6 +260,7 @@ function registrarUsuarioTotal(correoInstitucional, identificacion, correo, pass
                     result = _a.sent();
                     console.log("sp_registrarUsuarioTotal");
                     console.log(result);
+                    console.log(result.recordset);
                     return [2 /*return*/, result.returnValue];
             }
         });
