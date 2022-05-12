@@ -7,14 +7,14 @@ var Reservacion = /** @class */ (function () {
     Object.defineProperty(Reservacion.prototype, "$numero", {
         /**
          * Getter $numero
-         * @return {bigint}
+         * @return {int}
          */
         get: function () {
             return this.numero;
         },
         /**
          * Setter $numero
-         * @param {bigint} value
+         * @param {int} value
          */
         set: function (value) {
             this.numero = value;

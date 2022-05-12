@@ -315,7 +315,7 @@ async function eliminarEstacionamiento(identificacion: string): Promise<string> 
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("identificacion", sql.nvarchar(60), identificacion)
+    .input("identificacion", sql.NVarChar(60), identificacion)
     .execute("sp_eliminarEstacionamiento");
   console.log("sp_eliminarEstacionamiento");
   console.log(result);
@@ -329,7 +329,7 @@ async function eliminarUsuario(identificacion: string): Promise<string> {
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("identificacion", sql.nvarchar(60), identificacion)
+    .input("identificacion", sql.NVarChar(60), identificacion)
     .execute("sp_eliminarUsuario");
   console.log("sp_eliminarUsuario");
   console.log(result);
@@ -372,34 +372,34 @@ async function registrarUsuarioTotal(
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("correoInstitucional", sql.bigint, correoInstitucional)
-    .input("identificacion", sql.bigint, identificacion)
-    .input("correo", sql.nvarchar(200), correo)
-    .input("password", sql.nvarchar(200), password)
-    .input("telefono", sql.nvarchar(40), telefono)
-    .input("nombre", sql.nvarchar(200), nombre)
-    .input("apellido1", sql.nvarchar(200), apellido1)
-    .input("apellido2", sql.nvarchar(40), apellido2)
-    .input("departamento", sql.nvarchar(8), departamento)
-    .input("placa1", sql.nvarchar(20), placa1)
-    .input("placa2", sql.nvarchar(20), placa2)
-    .input("placa3", sql.nvarchar(20), placa3)
-    .input("placa4", sql.nvarchar(20), placa4)
-    .input("lunesA", sql.time(7), lunesA)
-    .input("lunesB", sql.time(7), lunesB)
-    .input("martesA", sql.time(7), martesA)
-    .input("martesB", sql.time(7), martesB)
-    .input("miercolesA", sql.time(7), miercolesA)
-    .input("miercolesB", sql.time(7), miercolesB)
-    .input("juevesA", sql.time(7), juevesA)
-    .input("juevesB", sql.time(7), juevesB)
-    .input("viernesA", sql.time(7), viernesA)
-    .input("viernesB", sql.time(7), viernesB)
-    .input("sabadoA", sql.time(7), sabadoA)
-    .input("sabadoB", sql.time(7), sabadoB)
-    .input("domingoA", sql.time(7), domingoA)
-    .input("domingoB", sql.time(7), domingoB)
-    .input("notificarCorreoAlterno", sql.bit, notificarCorreoAlterno)
+    .input("correoInstitucional", sql.NVarChar(200), correoInstitucional)
+    .input("identificacion", sql.NVarChar(60), identificacion)
+    .input("correo", sql.NVarChar(200), correo)
+    .input("password", sql.NVarChar(200), password)
+    .input("telefono", sql.NVarChar(40), telefono)
+    .input("nombre", sql.NVarChar(200), nombre)
+    .input("apellido1", sql.NVarChar(200), apellido1)
+    .input("apellido2", sql.NVarChar(40), apellido2)
+    .input("departamento", sql.NVarChar(8), departamento)
+    .input("placa1", sql.NVarChar(20), placa1)
+    .input("placa2", sql.NVarChar(20), placa2)
+    .input("placa3", sql.NVarChar(20), placa3)
+    .input("placa4", sql.NVarChar(20), placa4)
+    .input("lunesA", sql.NVarChar(20), lunesA)
+    .input("lunesB", sql.NVarChar(20), lunesB)
+    .input("martesA", sql.NVarChar(20), martesA)
+    .input("martesB", sql.NVarChar(20), martesB)
+    .input("miercolesA", sql.NVarChar(20), miercolesA)
+    .input("miercolesB", sql.NVarChar(20), miercolesB)
+    .input("juevesA", sql.NVarChar(20), juevesA)
+    .input("juevesB", sql.NVarChar(20), juevesB)
+    .input("viernesA", sql.NVarChar(20), viernesA)
+    .input("viernesB", sql.NVarChar(20), viernesB)
+    .input("sabadoA", sql.NVarChar(20), sabadoA)
+    .input("sabadoB", sql.NVarChar(20), sabadoB)
+    .input("domingoA", sql.NVarChar(20), domingoA)
+    .input("domingoB", sql.NVarChar(20), domingoB)
+    .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
     .execute("sp_registrarUsuarioTotal");
   console.log("sp_registrarUsuarioTotal");
   console.log(result);
@@ -438,30 +438,30 @@ async function guardarEditarUsuario(
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("usuarioId", sql.bigint, usuarioId)
-    .input("correo", sql.nvarchar(200), correo)
-    .input("password", sql.nvarchar(200), password)
-    .input("telefono", sql.nvarchar(40), telefono)
-    .input("departamento", sql.nvarchar(8), departamento)
-    .input("placa1", sql.nvarchar(20), placa1)
-    .input("placa2", sql.nvarchar(20), placa2)
-    .input("placa3", sql.nvarchar(20), placa3)
-    .input("placa4", sql.nvarchar(20), placa4)
-    .input("lunesA", sql.time(7), lunesA)
-    .input("lunesB", sql.time(7), lunesB)
-    .input("martesA", sql.time(7), martesA)
-    .input("martesB", sql.time(7), martesB)
-    .input("miercolesA", sql.time(7), miercolesA)
-    .input("miercolesB", sql.time(7), miercolesB)
-    .input("juevesA", sql.time(7), juevesA)
-    .input("juevesB", sql.time(7), juevesB)
-    .input("viernesA", sql.time(7), viernesA)
-    .input("viernesB", sql.time(7), viernesB)
-    .input("sabadoA", sql.time(7), sabadoA)
-    .input("sabadoB", sql.time(7), sabadoB)
-    .input("domingoA", sql.time(7), domingoA)
-    .input("domingoB", sql.time(7), domingoB)
-    .input("notificarCorreoAlterno", sql.bit, notificarCorreoAlterno)
+    .input("usuarioId", sql.Int, usuarioId)
+    .input("correo", sql.NVarChar(200), correo)
+    .input("password", sql.NVarChar(200), password)
+    .input("telefono", sql.NVarChar(40), telefono)
+    .input("departamento", sql.NVarChar(8), departamento)
+    .input("placa1", sql.NVarChar(20), placa1)
+    .input("placa2", sql.NVarChar(20), placa2)
+    .input("placa3", sql.NVarChar(20), placa3)
+    .input("placa4", sql.NVarChar(20), placa4)
+    .input("lunesA", sql.NVarChar(20), lunesA)
+    .input("lunesB", sql.NVarChar(20), lunesB)
+    .input("martesA", sql.NVarChar(20), martesA)
+    .input("martesB", sql.NVarChar(20), martesB)
+    .input("miercolesA", sql.NVarChar(20), miercolesA)
+    .input("miercolesB", sql.NVarChar(20), miercolesB)
+    .input("juevesA", sql.NVarChar(20), juevesA)
+    .input("juevesB", sql.NVarChar(20), juevesB)
+    .input("viernesA", sql.NVarChar(20), viernesA)
+    .input("viernesB", sql.NVarChar(20), viernesB)
+    .input("sabadoA", sql.NVarChar(20), sabadoA)
+    .input("sabadoB", sql.NVarChar(20), sabadoB)
+    .input("domingoA", sql.NVarChar(20), domingoA)
+    .input("domingoB", sql.NVarChar(20), domingoB)
+    .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
     .execute("sp_guardarEditarUsuario");
   console.log("sp_guardarEditarUsuario");
   console.log(result);
@@ -475,7 +475,7 @@ async function pintarEditarUsuario(usuarioId: string): Promise<string> {
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("usuarioId", sql.bigint, usuarioId)
+    .input("usuarioId", sql.Int, usuarioId)
     .execute("sp_pintarEditarUsuario");
   console.log("sp_pintarEditarUsuario");
   console.log(result);
@@ -494,10 +494,10 @@ async function registrarHorario(
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("usuarioId", sql.bigint, usuarioId)
+    .input("usuarioId", sql.Int, usuarioId)
     .input("diaSemana", sql.tinyint, diaSemana)
-    .input("horaInicio", sql.time(7), horaInicio)
-    .input("horaFinal", sql.time(7), horaFinal)
+    .input("horaInicio", sql.NVarChar(20), horaInicio)
+    .input("horaFinal", sql.NVarChar(20), horaFinal)
     .execute("sp_registrarHorario");
   console.log("sp_registrarHorario");
   console.log(result);
@@ -511,7 +511,7 @@ async function consultaFuncionario(identificacion: string): Promise<string> {
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("identificacion", sql.nvarchar(60), identificacion)
+    .input("identificacion", sql.NVarChar(60), identificacion)
     .execute("sp_consultaFuncionario");
   console.log("sp_consultaFuncionario");
   console.log(result);
@@ -525,7 +525,7 @@ async function estacionamientoInfo(estacionamientoId: string): Promise<string> {
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("estacionamientoId", sql.INT, estacionamientoId)
+    .input("estacionamientoId", sql.Int, estacionamientoId)
     .execute("sp_estacionamientoinfo");
   console.log("sp_estacionamientoinfo");
   console.log(result);
@@ -597,8 +597,8 @@ async function insertarHorario(
   let result = await pool
     .request()
     .input("diaSemana", sql.tinyint, diaSemana)
-    .input("horaInicio", sql.time(7), horaInicio)
-    .input("horaFinal", sql.time(7), horaFinal)
+    .input("horaInicio", sql.NVarChar(20), horaInicio)
+    .input("horaFinal", sql.NVarChar(20), horaFinal)
     .execute("sp_InsertarHorario");
   console.log("sp_InsertarHorario");
   console.log(result);
@@ -615,7 +615,7 @@ async function insertarVehiculo(
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("placa", sql.NVARCHAR(20), placa)
+    .input("placa", sql.NVarChar(20), placa)
     .input("tipoVehiculo", sql.SMALLINT, tipoVehiculo)
     .execute("sp_InsertarVehiculo");
   console.log("sp_InsertarVehiculo");
@@ -633,8 +633,8 @@ async function permisosUsuario(
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("usuarioId", sql.bigint, usuarioId)
-    .input("permisoUsuarioId", sql.int, permisoUsuarioId)
+    .input("usuarioId", sql.Int, usuarioId)
+    .input("permisoUsuarioId", sql.Int, permisoUsuarioId)
     .execute("sp_permisosUsuario");
   console.log("sp_permisosUsuario");
   console.log(result);
@@ -669,20 +669,20 @@ async function registrarEstacionamiento(
     .input("tipoEstacionamiento", sql.smallint, tipoEstacionamiento)
     .input("provincia", sql.tinyint, provincia)
     .input("canton", sql.smallint, canton)
-    .input("distrito", sql.int, distrito)
-    .input("direccion", sql.nvarchar(500), direccion)
-    .input("nombre", sql.nvarchar(200), nombre)
-    .input("formaAcceso", sql.nvarchar(200), formaAcceso)
-    .input("cantEspacios", sql.int, cantEspacios)
-    .input("cantEspaciosEspeciales", sql.int, cantEspaciosEspeciales)
-    .input("cantEspaciosJefaturas", sql.int, cantEspaciosJefaturas)
-    .input("cantEspaciosVisitantes", sql.int, cantEspaciosVisitantes)
-    .input("cantEspaciosOficiales", sql.int, cantEspaciosOficiales)
-    .input("correo", sql.nvarchar(200), correo)
-    .input("telefono", sql.nvarchar(40), telefono)
-    .input("identificacion", sql.nvarchar(60), identificacion)
-    .input("imageUrl", sql.nvarchar(128), imageUrl)
-    .input("descripcion", sql.nvarchar(250), descripcion)
+    .input("distrito", sql.Int, distrito)
+    .input("direccion", sql.NVarChar(500), direccion)
+    .input("nombre", sql.NVarChar(200), nombre)
+    .input("formaAcceso", sql.NVarChar(200), formaAcceso)
+    .input("cantEspacios", sql.Int, cantEspacios)
+    .input("cantEspaciosEspeciales", sql.Int, cantEspaciosEspeciales)
+    .input("cantEspaciosJefaturas", sql.Int, cantEspaciosJefaturas)
+    .input("cantEspaciosVisitantes", sql.Int, cantEspaciosVisitantes)
+    .input("cantEspaciosOficiales", sql.Int, cantEspaciosOficiales)
+    .input("correo", sql.NVarChar(200), correo)
+    .input("telefono", sql.NVarChar(40), telefono)
+    .input("identificacion", sql.NVarChar(60), identificacion)
+    .input("imageUrl", sql.NVarChar(128), imageUrl)
+    .input("descripcion", sql.NVarChar(250), descripcion)
     .execute("sp_registrarEstacionamiento");
   console.log("sp_registrarEstacionamiento");
   console.log(result);
@@ -709,17 +709,17 @@ async function registrarFuncionario(
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("tipoFuncionario", sql.int, tipoFuncionario)
-    .input("division", sql.int, division)
-    .input("identificacion", sql.nvarchar(60), identificacion)
-    .input("nombre", sql.nvarchar(60), nombre)
-    .input("apellido1", sql.nvarchar(60), apellido1)
-    .input("apellido2", sql.nvarchar(40), apellido2)
-    .input("telefono", sql.nvarchar(200), telefono)
-    .input("correoInstitucional", sql.nvarchar(200), correoInstitucional)
-    .input("correo", sql.nvarchar(200), correo)
-    .input("notificarCorreoAlterno", sql.bit, notificarCorreoAlterno)
-    .input("password", sql.nvarchar(100), password)
+    .input("tipoFuncionario", sql.Int, tipoFuncionario)
+    .input("division", sql.Int, division)
+    .input("identificacion", sql.NVarChar(60), identificacion)
+    .input("nombre", sql.NVarChar(60), nombre)
+    .input("apellido1", sql.NVarChar(60), apellido1)
+    .input("apellido2", sql.NVarChar(40), apellido2)
+    .input("telefono", sql.NVarChar(200), telefono)
+    .input("correoInstitucional", sql.NVarChar(200), correoInstitucional)
+    .input("correo", sql.NVarChar(200), correo)
+    .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
+    .input("password", sql.NVarChar(100), password)
     .execute("sp_RegistrarFuncionario");
   console.log("sp_RegistrarFuncionario");
   console.log(result);
@@ -746,8 +746,8 @@ async function ubicaciones(
     .request()
     .input("provincia", sql.tinyint, provincia)
     .input("canton", sql.smallint, canton)
-    .input("distrito", sql.int, distrito)
-    .input("direccion", sql.nvarchar(500), direccion)
+    .input("distrito", sql.Int, distrito)
+    .input("direccion", sql.NVarChar(500), direccion)
     .execute("sp_ubicaciones");
   console.log("sp_ubicaciones");
   console.log(result);
@@ -766,7 +766,7 @@ async function registrarVehiculo(
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("usuarioId", sql.bigint, usuarioId)
+    .input("usuarioId", sql.Int, usuarioId)
     .input("placa", sql.NVarChar(200), placa)
     .input("tipoVehiculo", sql.SMALLINT, tipoVehiculo)
     .execute("sp_RegistrarVehiculo");

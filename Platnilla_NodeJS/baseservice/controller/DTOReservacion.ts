@@ -4,7 +4,7 @@ import { Horario } from "../model/Horario";
 import { Usuario } from "../model/Usuario";
 
 export class DTOReservacion {
-  private numero: bigint;
+  private numero: number;
   private usuario: Usuario;
   private estacionamieno: Estacionamiento;
   private espacio: EspacioEstacionmiento;
@@ -13,9 +13,9 @@ export class DTOReservacion {
 
   /**
    * Getter $numero
-   * @return {bigint}
+   * @return {int}
    */
-  public get $numero(): bigint {
+  public get $numero(): number {
     return this.numero;
   }
 
@@ -53,9 +53,9 @@ export class DTOReservacion {
 
   /**
    * Setter $numero
-   * @param {bigint} value
+   * @param {int} value
    */
-  public set $numero(value: bigint) {
+  public set $numero(value: number) {
     this.numero = value;
   }
 

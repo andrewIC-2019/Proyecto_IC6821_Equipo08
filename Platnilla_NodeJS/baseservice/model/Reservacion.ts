@@ -4,7 +4,7 @@ import { Horario } from "./Horario";
 import { Usuario } from "./Usuario";
 
 export class Reservacion {
-  private numero: bigint;
+  private numero: number;
   private usuario: Usuario;
   private estacionamieno: Estacionamiento;
   private espacio: EspacioEstacionmiento;
@@ -14,9 +14,9 @@ export class Reservacion {
 
   /**
    * Getter $numero
-   * @return {bigint}
+   * @return {int}
    */
-   public get $numero(): bigint {
+   public get $numero(): number {
     return this.numero;
   }
 
@@ -70,9 +70,9 @@ export class Reservacion {
 
   /**
    * Setter $numero
-   * @param {bigint} value
+   * @param {int} value
    */
-  public set $numero(value: bigint) {
+  public set $numero(value: number) {
     this.numero = value;
   }
 

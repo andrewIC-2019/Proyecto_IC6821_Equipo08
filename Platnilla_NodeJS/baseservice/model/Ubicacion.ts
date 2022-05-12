@@ -3,8 +3,8 @@ export class Ubicacion {
   private canton: string;
   private distrito: string;
   private direccionExacta: string;
-  private latitud: bigint;
-  private longitud: bigint;
+  private latitud: number;
+  private longitud: number;
 
 
     /**
@@ -41,17 +41,17 @@ export class Ubicacion {
 
     /**
      * Getter $latitud
-     * @return {bigint}
+     * @return {int}
      */
-	public get $latitud(): bigint {
+	public get $latitud(): number {
 		return this.latitud;
 	}
 
     /**
      * Getter $longitud
-     * @return {bigint}
+     * @return {int}
      */
-	public get $longitud(): bigint {
+	public get $longitud(): number {
 		return this.longitud;
 	}
 
@@ -89,17 +89,17 @@ export class Ubicacion {
 
     /**
      * Setter $latitud
-     * @param {bigint} value
+     * @param {int} value
      */
-	public set $latitud(value: bigint) {
+	public set $latitud(value: number) {
 		this.latitud = value;
 	}
 
     /**
      * Setter $longitud
-     * @param {bigint} value
+     * @param {int} value
      */
-	public set $longitud(value: bigint) {
+	public set $longitud(value: number) {
 		this.longitud = value;
 	}
 

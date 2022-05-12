@@ -79,14 +79,14 @@ var Ubicacion = /** @class */ (function () {
     Object.defineProperty(Ubicacion.prototype, "$latitud", {
         /**
          * Getter $latitud
-         * @return {bigint}
+         * @return {int}
          */
         get: function () {
             return this.latitud;
         },
         /**
          * Setter $latitud
-         * @param {bigint} value
+         * @param {int} value
          */
         set: function (value) {
             this.latitud = value;
@@ -97,14 +97,14 @@ var Ubicacion = /** @class */ (function () {
     Object.defineProperty(Ubicacion.prototype, "$longitud", {
         /**
          * Getter $longitud
-         * @return {bigint}
+         * @return {int}
          */
         get: function () {
             return this.longitud;
         },
         /**
          * Setter $longitud
-         * @param {bigint} value
+         * @param {int} value
          */
         set: function (value) {
             this.longitud = value;
