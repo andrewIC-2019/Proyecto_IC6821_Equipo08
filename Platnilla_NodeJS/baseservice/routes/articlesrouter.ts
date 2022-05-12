@@ -14,7 +14,10 @@ const log = new Logger();
 app.get("/list", (req, res,next) => {
     ArticleController.getInstance().listArticles()
     .then((data)=>{
-        res.json(JSON.parse(data));
+        if (!data) {
+        data = '{"response": false}'
+      } 
+      res.json(JSON.parse(data));
     })
     .catch((err)=>{
         log.error(err);

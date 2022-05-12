@@ -15,6 +15,9 @@ var log = new common_1.Logger();
 app.get("/list", function (req, res, next) {
     controllers_1.ArticleController.getInstance().listArticles()
         .then(function (data) {
+        if (!data) {
+            data = '{"response": false}';
+        }
         res.json(JSON.parse(data));
     })
         .catch(function (err) {

@@ -21,6 +21,9 @@ async function eliminarEstacionamiento(
   await Control.getInstance()
     .$gestorEstacionamiento.eliminarEstacionamiento(identificacion)
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -38,6 +41,9 @@ async function estacionamientoInfo(
   await Control.getInstance()
     .$gestorEstacionamiento.estacionamientoInfo(estacionamientoId)
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -90,6 +96,9 @@ async function registrarEstacionamiento(
         descripcion,
     )
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -106,6 +115,9 @@ async function inicio(
   await Control.getInstance()
     .$gestorEstacionamiento.inicio()
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {

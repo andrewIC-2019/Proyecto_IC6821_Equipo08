@@ -34,6 +34,9 @@ async function eliminarUsuario(
   await Control.getInstance()
     .$gestorUsuario.eliminarUsuario(identificacion)
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -108,6 +111,9 @@ async function registrarUsuarioTotal(
       notificarCorreoAlterno
     )
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -173,6 +179,9 @@ async function guardarEditarUsuario(
       notificarCorreoAlterno
     )
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -191,6 +200,9 @@ async function pintarEditarUsuario(
   await Control.getInstance()
     .$gestorUsuario.pintarEditarUsuario(usuarioId)
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -217,6 +229,9 @@ async function registrarHorario(
       horaFinal
     )
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -235,6 +250,9 @@ async function consultaFuncionario(
   await Control.getInstance()
     .$gestorUsuario.consultaFuncionario(identificacion)
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -251,6 +269,9 @@ async function franjasHorarias(
   await Control.getInstance()
     .$gestorUsuario.franjasHorarias()
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -267,6 +288,9 @@ async function informeEstacionamientos(
   await Control.getInstance()
     .$gestorUsuario.informeEstacionamientos()
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -283,6 +307,16 @@ async function informeFuncionarios(
   await Control.getInstance()
     .$gestorUsuario.informeFuncionarios()
     .then((data) => {
+      if (data) {
+        
+      if (!data) {
+        data = '{"response": false}'
+      } 
+      res.json(JSON.parse(data));
+      }
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -303,6 +337,9 @@ async function insertarHorario(
   await Control.getInstance()
     .$gestorUsuario.insertarHorario(diaSemana, horaInicio, horaFinal)
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -322,6 +359,9 @@ async function insertarVehiculo(
   await Control.getInstance()
     .$gestorUsuario.insertarVehiculo(placa, tipoVehiculo)
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -341,6 +381,9 @@ async function permisosUsuario(
   await Control.getInstance()
     .$gestorUsuario.permisosUsuario(usuarioId, permisoUsuarioId)
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -381,6 +424,9 @@ async function registrarFuncionario(
       password
     )
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -402,6 +448,9 @@ async function ubicaciones(
   await Control.getInstance()
     .$gestorUsuario.ubicaciones(provincia, canton, distrito, direccion)
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -422,6 +471,9 @@ async function registrarVehiculo(
   await Control.getInstance()
     .$gestorUsuario.registrarVehiculo(usuarioId, placa, tipoVehiculo)
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {
@@ -445,6 +497,9 @@ async function login(
   await Control.getInstance()
     .$gestorUsuario.login(username, password)
     .then((data) => {
+      if (!data) {
+        data = '{"response": false}'
+      } 
       res.json(JSON.parse(data));
     })
     .catch((err) => {

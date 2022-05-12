@@ -70,6 +70,9 @@ function eliminarUsuario(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.eliminarUsuario(identificacion)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -120,6 +123,9 @@ function registrarUsuarioTotal(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.registrarUsuarioTotal(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -166,6 +172,9 @@ function guardarEditarUsuario(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.guardarEditarUsuario(usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -189,6 +198,9 @@ function pintarEditarUsuario(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.pintarEditarUsuario(usuarioId)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -215,6 +227,9 @@ function registrarHorario(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.registrarHorario(usuarioId, diaSemana, horaInicio, horaFinal)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -238,6 +253,9 @@ function consultaFuncionario(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.consultaFuncionario(identificacion)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -258,6 +276,9 @@ function franjasHorarias(req, res, next) {
                 case 0: return [4 /*yield*/, controller_1.Control.getInstance()
                         .$gestorUsuario.franjasHorarias()
                         .then(function (data) {
+                        if (!data) {
+                            data = '{"response": false}';
+                        }
                         res.json(JSON.parse(data));
                     })
                         .catch(function (err) {
@@ -278,6 +299,9 @@ function informeEstacionamientos(req, res, next) {
                 case 0: return [4 /*yield*/, controller_1.Control.getInstance()
                         .$gestorUsuario.informeEstacionamientos()
                         .then(function (data) {
+                        if (!data) {
+                            data = '{"response": false}';
+                        }
                         res.json(JSON.parse(data));
                     })
                         .catch(function (err) {
@@ -298,6 +322,15 @@ function informeFuncionarios(req, res, next) {
                 case 0: return [4 /*yield*/, controller_1.Control.getInstance()
                         .$gestorUsuario.informeFuncionarios()
                         .then(function (data) {
+                        if (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
+                            res.json(JSON.parse(data));
+                        }
+                        if (!data) {
+                            data = '{"response": false}';
+                        }
                         res.json(JSON.parse(data));
                     })
                         .catch(function (err) {
@@ -323,6 +356,9 @@ function insertarHorario(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.insertarHorario(diaSemana, horaInicio, horaFinal)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -347,6 +383,9 @@ function insertarVehiculo(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.insertarVehiculo(placa, tipoVehiculo)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -371,6 +410,9 @@ function permisosUsuario(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.permisosUsuario(usuarioId, permisoUsuarioId)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -404,6 +446,9 @@ function registrarFuncionario(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.registrarFuncionario(tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -430,6 +475,9 @@ function ubicaciones(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.ubicaciones(provincia, canton, distrito, direccion)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -455,6 +503,9 @@ function registrarVehiculo(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.registrarVehiculo(usuarioId, placa, tipoVehiculo)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -482,6 +533,9 @@ function login(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.login(username, password)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {

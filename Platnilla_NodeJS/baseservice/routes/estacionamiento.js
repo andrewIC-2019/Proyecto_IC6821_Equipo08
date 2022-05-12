@@ -58,6 +58,9 @@ function eliminarEstacionamiento(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorEstacionamiento.eliminarEstacionamiento(identificacion)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -81,6 +84,9 @@ function estacionamientoInfo(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorEstacionamiento.estacionamientoInfo(estacionamientoId)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -120,6 +126,9 @@ function registrarEstacionamiento(req, res, next) {
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorEstacionamiento.registrarEstacionamiento(tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion)
                             .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
                             res.json(JSON.parse(data));
                         })
                             .catch(function (err) {
@@ -140,6 +149,9 @@ function inicio(req, res, next) {
                 case 0: return [4 /*yield*/, controller_1.Control.getInstance()
                         .$gestorEstacionamiento.inicio()
                         .then(function (data) {
+                        if (!data) {
+                            data = '{"response": false}';
+                        }
                         res.json(JSON.parse(data));
                     })
                         .catch(function (err) {
