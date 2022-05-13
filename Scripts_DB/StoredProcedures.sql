@@ -1019,3 +1019,81 @@ NULL, NULL, '07:30', '16:30', '07:30', '16:30', NULL, NULL, NULL, NULL, NULL, NU
 	UPDATE dbo.Estacionamientos SET imageUrl = 'https://uc4f4ccbd04077e42700b24734e6.previews.dropboxusercontent.com/p/thumb/ABgq-SEhaqpPgjZ3Q_9i14E0xi2w0BrIEnNa_TC4gc-TacjNEowu0UqLNIQnyYiyGCYdwwDnivo3DyR3m66AWIiykKQvNpElk0IWpi09bV3gguJ7_dafbe_CnzQ_T2BwRfN6sSWeuTVvGExMbAlYjIFOT4yNQVFgrqdf8ErewsQEtUvkD91Ogx1Gq5G_L7QpVWwsvozSBksrIQcAWMYXxxUsHSBZVx-CKkqhAaMT0aqSRyuFIzifinwYkUDsdc5_EN8Q9vVKmdglXb4UOXoa5GuWc9XYLmNJOvxIbZ60ine2ih-EwG_XEDI38_4nSwD99XUfBny4HD5r0IFBhXcVXv6mKst2Xohmlqa7Qv0cgVyC9KKPmBi_XFbZLCfpQ_qxvg0/p.jpeg'
 	WHERE estacionamientoId = 6
 */
+
+
+
+-- //////////////////////////////////////////////////////
+--			NUEVAS SOLICITUDES DE SP
+-- //////////////////////////////////////////////////////
+
+
+DROP PROCEDURE IF EXISTS dbo.sp_estacionamientosTipoSubcontratados
+	
+-- Bandera
+-- 0: Institucional
+-- 1: Subcontratado
+
+CREATE PROCEDURE dbo.sp_estacionamientosTipoSubcontratados
+	@subcontratados BIT
+AS
+	IF @subcontratados = 1 BEGIN
+		--subcontratados
+		SELECT estacionamientoId, nombre, espaciosTotales = cantEspacios+cantEspaciosEspeciales+cantEspaciosJefaturas+cantEspaciosVisitantes+cantEspaciosOficiales, telefono, imageUrl FROM dbo.Estacionamientos
+		WHERE tipoEstacionamiento = 2 FOR JSON PATH
+
+	END ELSE BEGIN
+		--institucionales
+		SELECT estacionamientoId, nombre, espaciosTotales = cantEspacios+cantEspaciosEspeciales+cantEspaciosJefaturas+cantEspaciosVisitantes+cantEspaciosOficiales, telefono, imageUrl FROM dbo.Estacionamientos
+		WHERE tipoEstacionamiento = 1 FOR JSON PATH
+
+	END
+
+GO
+
+/*
+-- ejemplo de ejecucion
+
+EXEC dbo.sp_estacionamientosTipoSubcontratados 0
+*/
+
+
+-- ..............................................................................................
+
+
+DROP PROCEDURE IF EXISTS dbo.deshabilitarEstacionamiento
+	
+CREATE PROCEDURE dbo.deshabilitarEstacionamiento	
+	@estacionamientoId nvarchar(60)
+AS
+	UPDATE dbo.Estacionamientos SET deshabilitado = 1 WHERE estacionamientoId = @estacionamientoId
+	RETURN 1
+GO
+
+/*
+
+Ejemplo de ejecucion: 
+
+EXEC dbo.deshabilitarEstacionamiento 3
+
+*/
+
+
+
+-- ..............................................................................................
+
+DROP PROCEDURE IF EXISTS dbo.deshabilitarUsuario
+	
+CREATE PROCEDURE dbo.deshabilitarUsuario	
+	@usuarioId BIGINT
+AS
+	UPDATE dbo.Usuarios SET deshabilitado = 1 WHERE usuarioId = @usuarioId
+	RETURN 1
+GO
+
+/*
+
+Ejemplo de ejecucion: 
+
+EXEC dbo.deshabilitarUsuario 2
+
+*/
