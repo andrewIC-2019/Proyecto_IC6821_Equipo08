@@ -48,24 +48,6 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.login = function (username, password) {
         return this.daoUsuario.login(username, password);
     };
-    GestorUsuario.prototype.registrarVehiculo = function (usuarioId, placa, tipoVehiculo) {
-        return this.daoUsuario.registrarVehiculo(usuarioId, placa, tipoVehiculo);
-    };
-    GestorUsuario.prototype.ubicaciones = function (provincia, canton, distrito, direccion) {
-        return this.daoUsuario.ubicaciones(provincia, canton, distrito, direccion);
-    };
-    GestorUsuario.prototype.registrarFuncionario = function (tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password) {
-        return this.daoUsuario.registrarFuncionario(tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password);
-    };
-    GestorUsuario.prototype.permisosUsuario = function (usuarioId, permisoUsuarioId) {
-        return this.daoUsuario.permisosUsuario(usuarioId, permisoUsuarioId);
-    };
-    GestorUsuario.prototype.insertarVehiculo = function (placa, tipoVehiculo) {
-        return this.daoUsuario.insertarVehiculo(placa, tipoVehiculo);
-    };
-    GestorUsuario.prototype.insertarHorario = function (diaSemana, horaInicio, horaFinal) {
-        return this.daoUsuario.insertarHorario(diaSemana, horaInicio, horaFinal);
-    };
     GestorUsuario.prototype.informeFuncionarios = function () {
         return this.daoUsuario.informeFuncionarios();
     };
@@ -77,9 +59,6 @@ var GestorUsuario = /** @class */ (function () {
     };
     GestorUsuario.prototype.consultaFuncionario = function (identificacion) {
         return this.daoUsuario.consultaFuncionario(identificacion);
-    };
-    GestorUsuario.prototype.registrarHorario = function (usuarioId, diaSemana, horaInicio, horaFinal) {
-        return this.daoUsuario.registrarHorario(usuarioId, diaSemana, horaInicio, horaFinal);
     };
     GestorUsuario.prototype.pintarEditarUsuario = function (usuarioId) {
         return this.daoUsuario.pintarEditarUsuario(usuarioId);

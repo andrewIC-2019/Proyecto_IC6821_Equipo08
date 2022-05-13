@@ -20,24 +20,6 @@ var DAOUsuariosImpl = /** @class */ (function () {
     DAOUsuariosImpl.prototype.login = function (username, password) {
         return SQLConnection_1.SQLConnection.getInstance().login(username, password);
     };
-    DAOUsuariosImpl.prototype.registrarVehiculo = function (usuarioId, placa, tipoVehiculo) {
-        return SQLConnection_1.SQLConnection.getInstance().registrarVehiculo(usuarioId, placa, tipoVehiculo);
-    };
-    DAOUsuariosImpl.prototype.ubicaciones = function (provincia, canton, distrito, direccion) {
-        return SQLConnection_1.SQLConnection.getInstance().ubicaciones(provincia, canton, distrito, direccion);
-    };
-    DAOUsuariosImpl.prototype.registrarFuncionario = function (tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password) {
-        return SQLConnection_1.SQLConnection.getInstance().registrarFuncionario(tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password);
-    };
-    DAOUsuariosImpl.prototype.permisosUsuario = function (usuarioId, permisoUsuarioId) {
-        return SQLConnection_1.SQLConnection.getInstance().permisosUsuario(usuarioId, permisoUsuarioId);
-    };
-    DAOUsuariosImpl.prototype.insertarVehiculo = function (placa, tipoVehiculo) {
-        return SQLConnection_1.SQLConnection.getInstance().insertarVehiculo(placa, tipoVehiculo);
-    };
-    DAOUsuariosImpl.prototype.insertarHorario = function (diaSemana, horaInicio, horaFinal) {
-        return SQLConnection_1.SQLConnection.getInstance().insertarHorario(diaSemana, horaInicio, horaFinal);
-    };
     DAOUsuariosImpl.prototype.informeFuncionarios = function () {
         return SQLConnection_1.SQLConnection.getInstance().informeFuncionarios();
     };
@@ -49,9 +31,6 @@ var DAOUsuariosImpl = /** @class */ (function () {
     };
     DAOUsuariosImpl.prototype.consultaFuncionario = function (identificacion) {
         return SQLConnection_1.SQLConnection.getInstance().consultaFuncionario(identificacion);
-    };
-    DAOUsuariosImpl.prototype.registrarHorario = function (usuarioId, diaSemana, horaInicio, horaFinal) {
-        return SQLConnection_1.SQLConnection.getInstance().registrarHorario(usuarioId, diaSemana, horaInicio, horaFinal);
     };
     DAOUsuariosImpl.prototype.pintarEditarUsuario = function (usuarioId) {
         return SQLConnection_1.SQLConnection.getInstance().pintarEditarUsuario(usuarioId);

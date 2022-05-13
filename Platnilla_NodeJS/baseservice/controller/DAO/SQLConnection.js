@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -78,27 +67,6 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.inicio = function () {
         return inicio();
     };
-    SQLConnection.prototype.registrarVehiculo = function (usuarioId, placa, tipoVehiculo) {
-        return registrarVehiculo(usuarioId, placa, tipoVehiculo);
-    };
-    SQLConnection.prototype.ubicaciones = function (provincia, canton, distrito, direccion) {
-        return ubicaciones(provincia, canton, distrito, direccion);
-    };
-    SQLConnection.prototype.registrarFuncionario = function (tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password) {
-        return registrarFuncionario(tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password);
-    };
-    SQLConnection.prototype.registrarEstacionamiento = function (tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion) {
-        return registrarEstacionamiento(tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion);
-    };
-    SQLConnection.prototype.permisosUsuario = function (usuarioId, permisoUsuarioId) {
-        return permisosUsuario(usuarioId, permisoUsuarioId);
-    };
-    SQLConnection.prototype.insertarVehiculo = function (placa, tipoVehiculo) {
-        return insertarVehiculo(placa, tipoVehiculo);
-    };
-    SQLConnection.prototype.insertarHorario = function (diaSemana, horaInicio, horaFinal) {
-        return insertarHorario(diaSemana, horaInicio, horaFinal);
-    };
     SQLConnection.prototype.informeFuncionarios = function () {
         return informeFuncionarios();
     };
@@ -114,9 +82,6 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.consultaFuncionario = function (identificacion) {
         return consultaFuncionario(identificacion);
     };
-    SQLConnection.prototype.registrarHorario = function (usuarioId, diaSemana, horaInicio, horaFinal) {
-        return registrarHorario(usuarioId, diaSemana, horaInicio, horaFinal);
-    };
     SQLConnection.prototype.pintarEditarUsuario = function (usuarioId) {
         return pintarEditarUsuario(usuarioId);
     };
@@ -129,15 +94,130 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.eliminarUsuario = function (identificacion) {
         return eliminarUsuario(identificacion);
     };
-    SQLConnection.prototype.eliminarEstacionamiento = function (identificacion) {
-        return eliminarEstacionamiento(identificacion);
+    SQLConnection.prototype.eliminarEstacionamiento = function (estacionamientoId) {
+        return eliminarEstacionamiento(estacionamientoId);
     };
     SQLConnection.prototype.registrarEstacionamientoTotal = function (nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional) {
         return registrarEstacionamientoTotal(nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional);
     };
+    SQLConnection.prototype.pintarEditarEstacionamiento = function (estacionamientoId) {
+        return pintarEditarEstacionamiento(estacionamientoId);
+    };
+    SQLConnection.prototype.guardarEditarEstacionamiento = function (estacionamientoId, identificacion, nombre, correo, telefono, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB) {
+        return guardarEditarEstacionamiento(estacionamientoId, identificacion, nombre, correo, telefono, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB);
+    };
+    SQLConnection.prototype.estacionamientosTipoSubcontratados = function (subcontratados) {
+        return estacionamientosTipoSubcontratados(subcontratados);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+function estacionamientosTipoSubcontratados(subcontratados) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result, str, key;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("subcontratados", sql.Bit, subcontratados)
+                            .execute("sp_estacionamientosTipoSubcontratados")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_estacionamientosTipoSubcontratados");
+                    console.log(result);
+                    for (key in result.recordset[0]) {
+                        str = result.recordset[0][key];
+                    }
+                    return [2 /*return*/, str];
+            }
+        });
+    });
+}
+function guardarEditarEstacionamiento(estacionamientoId, identificacion, nombre, correo, telefono, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+                            .input("identificacion", sql.NVarChar, identificacion)
+                            .input("nombre", sql.NVarChar, nombre)
+                            .input("correo", sql.NVarChar, correo)
+                            .input("telefono", sql.NVarChar, telefono)
+                            .input("direccionExacta", sql.NVarChar, direccionExacta)
+                            .input("formaAcceso", sql.NVarChar, formaAcceso)
+                            .input("descripcion", sql.NVarChar, descripcion)
+                            .input("cantEspaciosEspeciales", sql.NVarChar, cantEspaciosEspeciales)
+                            .input("cantEspaciosJefaturas", sql.NVarChar, cantEspaciosJefaturas)
+                            .input("cantEspaciosVisitantes", sql.NVarChar, cantEspaciosVisitantes)
+                            .input("cantEspaciosOficiales", sql.NVarChar, cantEspaciosOficiales)
+                            .input("cantEspacios", sql.NVarChar, cantEspacios)
+                            .input("imageUrl", sql.NVarChar, imageUrl)
+                            .input("lunesA", sql.NVarChar, lunesA)
+                            .input("lunesB", sql.NVarChar, lunesB)
+                            .input("martesA", sql.NVarChar, martesA)
+                            .input("martesB", sql.NVarChar, martesB)
+                            .input("miercolesA", sql.NVarChar, miercolesA)
+                            .input("miercolesB", sql.NVarChar, miercolesB)
+                            .input("juevesA", sql.NVarChar, juevesA)
+                            .input("juevesB", sql.NVarChar, juevesB)
+                            .input("viernesA", sql.NVarChar, viernesA)
+                            .input("viernesB", sql.NVarChar, viernesB)
+                            .input("sabadoA", sql.NVarChar, sabadoA)
+                            .input("sabadoB", sql.NVarChar, sabadoB)
+                            .input("domingoA", sql.NVarChar, domingoA)
+                            .input("domingoB", sql.NVarChar, domingoB)
+                            .execute("sp_guardarEditarEstacionamiento")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_guardarEditarEstacionamiento");
+                    console.log(result);
+                    return [2 /*return*/, "1"];
+            }
+        });
+    });
+}
+function pintarEditarEstacionamiento(estacionamientoId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result, str, json, i, key, tmpStr, tmp;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("estacionamientoId", sql.Int, estacionamientoId)
+                            .execute("sp_pintarEditarEstacionamiento")];
+                case 2:
+                    result = _a.sent();
+                    console.log("sp_pintarEditarEstacionamiento");
+                    console.log(result);
+                    str = "{";
+                    for (i in result.recordsets) {
+                        for (key in result.recordsets[i][0]) {
+                            tmpStr = result.recordsets[i][0][key];
+                            tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+                            str += '"' + i + '": "' + tmpStr + '",';
+                            tmp = JSON.parse(result.recordsets[i][0][key]);
+                        }
+                    }
+                    str = str.slice(0, -1);
+                    str += "}";
+                    console.log("str****************");
+                    console.log(str);
+                    return [2 /*return*/, str];
+            }
+        });
+    });
+}
 function registrarEstacionamientoTotal(nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result;
@@ -186,7 +266,7 @@ function registrarEstacionamientoTotal(nombre, correo, telefono, identificacion,
         });
     });
 }
-function eliminarEstacionamiento(identificacion) {
+function eliminarEstacionamiento(estacionamientoId) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result;
         return __generator(this, function (_a) {
@@ -196,11 +276,11 @@ function eliminarEstacionamiento(identificacion) {
                     pool = _a.sent();
                     return [4 /*yield*/, pool
                             .request()
-                            .input("identificacion", sql.NVarChar(60), identificacion)
-                            .execute("sp_eliminarEstacionamiento")];
+                            .input("estacionamientoId", sql.NVarChar(60), estacionamientoId)
+                            .execute("deshabilitarEstacionamiento")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_eliminarEstacionamiento");
+                    console.log("deshabilitarEstacionamiento");
                     console.log(result);
                     return [2 /*return*/, result.returnValue];
             }
@@ -218,10 +298,10 @@ function eliminarUsuario(identificacion) {
                     return [4 /*yield*/, pool
                             .request()
                             .input("identificacion", sql.NVarChar(60), identificacion)
-                            .execute("sp_eliminarUsuario")];
+                            .execute("deshabilitarUsuario")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_eliminarUsuario");
+                    console.log("deshabilitarUsuario");
                     console.log(result);
                     return [2 /*return*/, result.returnValue];
             }
@@ -323,7 +403,7 @@ function guardarEditarUsuario(usuarioId, correo, password, telefono, departament
 }
 function pintarEditarUsuario(usuarioId) {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, result, str, json, i, key, tmpStr, tmp, key2;
+        var pool, result, str, json, i, key, tmpStr, tmp;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
@@ -341,15 +421,9 @@ function pintarEditarUsuario(usuarioId) {
                     for (i in result.recordsets) {
                         for (key in result.recordsets[i][0]) {
                             tmpStr = result.recordsets[i][0][key];
-                            tmpStr = tmpStr.replace(new RegExp('"', 'g'), '\\"');
+                            tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
                             str += '"' + i + '": "' + tmpStr + '",';
                             tmp = JSON.parse(result.recordsets[i][0][key]);
-                            console.log(tmp);
-                            for (key2 in tmp) {
-                                json = __assign(__assign({}, json), tmp[key2]);
-                            }
-                            console.log("jsonnnn");
-                            console.log(json);
                         }
                     }
                     str = str.slice(0, -1);
@@ -357,30 +431,6 @@ function pintarEditarUsuario(usuarioId) {
                     console.log("str****************");
                     console.log(str);
                     return [2 /*return*/, str];
-            }
-        });
-    });
-}
-function registrarHorario(usuarioId, diaSemana, horaInicio, horaFinal) {
-    return __awaiter(this, void 0, void 0, function () {
-        var pool, result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, new sql.connect(config)];
-                case 1:
-                    pool = _a.sent();
-                    return [4 /*yield*/, pool
-                            .request()
-                            .input("usuarioId", sql.Int, usuarioId)
-                            .input("diaSemana", sql.tinyint, diaSemana)
-                            .input("horaInicio", sql.NVarChar(20), horaInicio)
-                            .input("horaFinal", sql.NVarChar(20), horaFinal)
-                            .execute("sp_registrarHorario")];
-                case 2:
-                    result = _a.sent();
-                    console.log("sp_registrarHorario");
-                    console.log(result);
-                    return [2 /*return*/, '{"done": true}'];
             }
         });
     });
@@ -493,195 +543,6 @@ function informeFuncionarios() {
                         str = obj[key];
                     }
                     return [2 /*return*/, str];
-            }
-        });
-    });
-}
-function insertarHorario(diaSemana, horaInicio, horaFinal) {
-    return __awaiter(this, void 0, void 0, function () {
-        var pool, result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, new sql.connect(config)];
-                case 1:
-                    pool = _a.sent();
-                    return [4 /*yield*/, pool
-                            .request()
-                            .input("diaSemana", sql.tinyint, diaSemana)
-                            .input("horaInicio", sql.NVarChar(20), horaInicio)
-                            .input("horaFinal", sql.NVarChar(20), horaFinal)
-                            .execute("sp_InsertarHorario")];
-                case 2:
-                    result = _a.sent();
-                    console.log("sp_InsertarHorario");
-                    console.log(result);
-                    return [2 /*return*/, result.returnValue];
-            }
-        });
-    });
-}
-function insertarVehiculo(placa, tipoVehiculo) {
-    return __awaiter(this, void 0, void 0, function () {
-        var pool, result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, new sql.connect(config)];
-                case 1:
-                    pool = _a.sent();
-                    return [4 /*yield*/, pool
-                            .request()
-                            .input("placa", sql.NVarChar(20), placa)
-                            .input("tipoVehiculo", sql.SMALLINT, tipoVehiculo)
-                            .execute("sp_InsertarVehiculo")];
-                case 2:
-                    result = _a.sent();
-                    console.log("sp_InsertarVehiculo");
-                    console.log(result);
-                    return [2 /*return*/, '{"done": true}'];
-            }
-        });
-    });
-}
-function permisosUsuario(usuarioId, permisoUsuarioId) {
-    return __awaiter(this, void 0, void 0, function () {
-        var pool, result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, new sql.connect(config)];
-                case 1:
-                    pool = _a.sent();
-                    return [4 /*yield*/, pool
-                            .request()
-                            .input("usuarioId", sql.Int, usuarioId)
-                            .input("permisoUsuarioId", sql.Int, permisoUsuarioId)
-                            .execute("sp_permisosUsuario")];
-                case 2:
-                    result = _a.sent();
-                    console.log("sp_permisosUsuario");
-                    console.log(result);
-                    return [2 /*return*/, result.returnValue];
-            }
-        });
-    });
-}
-function registrarEstacionamiento(tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion) {
-    return __awaiter(this, void 0, void 0, function () {
-        var pool, result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, new sql.connect(config)];
-                case 1:
-                    pool = _a.sent();
-                    return [4 /*yield*/, pool
-                            .request()
-                            .input("tipoEstacionamiento", sql.smallint, tipoEstacionamiento)
-                            .input("provincia", sql.tinyint, provincia)
-                            .input("canton", sql.smallint, canton)
-                            .input("distrito", sql.Int, distrito)
-                            .input("direccion", sql.NVarChar(500), direccion)
-                            .input("nombre", sql.NVarChar(200), nombre)
-                            .input("formaAcceso", sql.NVarChar(200), formaAcceso)
-                            .input("cantEspacios", sql.Int, cantEspacios)
-                            .input("cantEspaciosEspeciales", sql.Int, cantEspaciosEspeciales)
-                            .input("cantEspaciosJefaturas", sql.Int, cantEspaciosJefaturas)
-                            .input("cantEspaciosVisitantes", sql.Int, cantEspaciosVisitantes)
-                            .input("cantEspaciosOficiales", sql.Int, cantEspaciosOficiales)
-                            .input("correo", sql.NVarChar(200), correo)
-                            .input("telefono", sql.NVarChar(40), telefono)
-                            .input("identificacion", sql.NVarChar(60), identificacion)
-                            .input("imageUrl", sql.NVarChar(128), imageUrl)
-                            .input("descripcion", sql.NVarChar(250), descripcion)
-                            .execute("sp_registrarEstacionamiento")];
-                case 2:
-                    result = _a.sent();
-                    console.log("sp_registrarEstacionamiento");
-                    console.log(result);
-                    return [2 /*return*/, result.returnValue];
-            }
-        });
-    });
-}
-//this function is the same as test but without then and catch
-function registrarFuncionario(tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password) {
-    return __awaiter(this, void 0, void 0, function () {
-        var pool, result, str, obj, key;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, new sql.connect(config)];
-                case 1:
-                    pool = _a.sent();
-                    return [4 /*yield*/, pool
-                            .request()
-                            .input("tipoFuncionario", sql.Int, tipoFuncionario)
-                            .input("division", sql.Int, division)
-                            .input("identificacion", sql.NVarChar(60), identificacion)
-                            .input("nombre", sql.NVarChar(60), nombre)
-                            .input("apellido1", sql.NVarChar(60), apellido1)
-                            .input("apellido2", sql.NVarChar(40), apellido2)
-                            .input("telefono", sql.NVarChar(200), telefono)
-                            .input("correoInstitucional", sql.NVarChar(200), correoInstitucional)
-                            .input("correo", sql.NVarChar(200), correo)
-                            .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
-                            .input("password", sql.NVarChar(100), password)
-                            .execute("sp_RegistrarFuncionario")];
-                case 2:
-                    result = _a.sent();
-                    console.log("sp_RegistrarFuncionario");
-                    console.log(result);
-                    obj = result.recordsets[0][0];
-                    for (key in obj) {
-                        str = obj[key];
-                    }
-                    return [2 /*return*/, str];
-            }
-        });
-    });
-}
-//this function is the same as test but without then and catch
-function ubicaciones(provincia, canton, distrito, direccion) {
-    return __awaiter(this, void 0, void 0, function () {
-        var pool, result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, new sql.connect(config)];
-                case 1:
-                    pool = _a.sent();
-                    return [4 /*yield*/, pool
-                            .request()
-                            .input("provincia", sql.tinyint, provincia)
-                            .input("canton", sql.smallint, canton)
-                            .input("distrito", sql.Int, distrito)
-                            .input("direccion", sql.NVarChar(500), direccion)
-                            .execute("sp_ubicaciones")];
-                case 2:
-                    result = _a.sent();
-                    console.log("sp_ubicaciones");
-                    console.log(result);
-                    return [2 /*return*/, result.returnValue];
-            }
-        });
-    });
-}
-//this function is the same as test but without then and catch
-function registrarVehiculo(usuarioId, placa, tipoVehiculo) {
-    return __awaiter(this, void 0, void 0, function () {
-        var pool, result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, new sql.connect(config)];
-                case 1:
-                    pool = _a.sent();
-                    return [4 /*yield*/, pool
-                            .request()
-                            .input("usuarioId", sql.Int, usuarioId)
-                            .input("placa", sql.NVarChar(200), placa)
-                            .input("tipoVehiculo", sql.SMALLINT, tipoVehiculo)
-                            .execute("sp_RegistrarVehiculo")];
-                case 2:
-                    result = _a.sent();
-                    console.log("sp_RegistrarVehiculo");
-                    console.log(result);
-                    return [2 /*return*/, result.returnValue];
             }
         });
     });

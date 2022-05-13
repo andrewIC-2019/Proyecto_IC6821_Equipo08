@@ -21,18 +21,23 @@ var DAOEStacionamientoImpl = /** @class */ (function () {
         console.log("llega bien b");
         return SQLConnection_1.SQLConnection.getInstance().inicio();
     };
-    DAOEStacionamientoImpl.prototype.registrarEstacionamiento = function (tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion) {
-        console.log("llega bien A");
-        return SQLConnection_1.SQLConnection.getInstance().registrarEstacionamiento(tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion);
-    };
     DAOEStacionamientoImpl.prototype.estacionamientoInfo = function (estacionamientoId) {
         return SQLConnection_1.SQLConnection.getInstance().estacionamientoInfo(estacionamientoId);
     };
-    DAOEStacionamientoImpl.prototype.eliminarEstacionamiento = function (identificacion) {
-        return SQLConnection_1.SQLConnection.getInstance().eliminarEstacionamiento(identificacion);
+    DAOEStacionamientoImpl.prototype.eliminarEstacionamiento = function (estacionamientoId) {
+        return SQLConnection_1.SQLConnection.getInstance().eliminarEstacionamiento(estacionamientoId);
     };
     DAOEStacionamientoImpl.prototype.registrarEstacionamientoTotal = function (nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional) {
         return SQLConnection_1.SQLConnection.getInstance().registrarEstacionamientoTotal(nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional);
+    };
+    DAOEStacionamientoImpl.prototype.pintarEditarEstacionamiento = function (estacionamientoId) {
+        return SQLConnection_1.SQLConnection.getInstance().pintarEditarEstacionamiento(estacionamientoId);
+    };
+    DAOEStacionamientoImpl.prototype.guardarEditarEstacionamiento = function (estacionamientoId, identificacion, nombre, correo, telefono, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB) {
+        return SQLConnection_1.SQLConnection.getInstance().guardarEditarEstacionamiento(estacionamientoId, identificacion, nombre, correo, telefono, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB);
+    };
+    DAOEStacionamientoImpl.prototype.estacionamientosTipoSubcontratados = function (subcontratados) {
+        return SQLConnection_1.SQLConnection.getInstance().estacionamientosTipoSubcontratados(subcontratados);
     };
     return DAOEStacionamientoImpl;
 }());

@@ -44,23 +44,16 @@ var router = express.Router();
 var app = express();
 exports.user = app;
 var log = new common_1.Logger();
-app.get("/login", login);
-app.post("/registrarVehiculo", registrarVehiculo);
-app.post("/ubicaciones", ubicaciones);
-app.post("/registrarFuncionario", registrarFuncionario);
-app.post("/permisosUsuario", permisosUsuario);
-app.post("/insertarVehiculo", insertarVehiculo);
-app.post("/insertarHorario", insertarHorario);
+app.get("/login", login); //listo
 app.get("/informeFuncionarios", informeFuncionarios);
 app.get("/informeEstacionamientos", informeEstacionamientos);
 app.get("/franjasHorarias", franjasHorarias);
 app.get("/consultaFuncionario", consultaFuncionario);
-app.post("/registrarHorario", registrarHorario);
-app.get("/pintarEditarUsuario", pintarEditarUsuario);
+app.get("/pintarEditarUsuario", pintarEditarUsuario); //listo
 app.post("/guardarEditarUsuario", guardarEditarUsuario);
-app.post("/registrarUsuarioTotal", registrarUsuarioTotal);
-app.post("/eliminarUsuario", eliminarUsuario);
-function eliminarUsuario(req, res, next) {
+app.post("/registrarUsuarioTotal", registrarUsuarioTotal); //listo
+app.post("/deshabilitarUsuario", deshabilitarUsuario);
+function deshabilitarUsuario(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var identificacion;
         return __generator(this, function (_a) {
@@ -214,35 +207,6 @@ function pintarEditarUsuario(req, res, next) {
         });
     });
 }
-function registrarHorario(req, res, next) {
-    return __awaiter(this, void 0, void 0, function () {
-        var usuarioId, diaSemana, horaInicio, horaFinal;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    usuarioId = req.body.usuarioId;
-                    diaSemana = req.body.diaSemana;
-                    horaInicio = req.body.horaInicio;
-                    horaFinal = req.body.horaFinal;
-                    return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorUsuario.registrarHorario(usuarioId, diaSemana, horaInicio, horaFinal)
-                            .then(function (data) {
-                            if (!data) {
-                                data = '{"response": false}';
-                            }
-                            res.json(JSON.parse(data));
-                        })
-                            .catch(function (err) {
-                            log.error(err);
-                            return "";
-                        })];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
 function consultaFuncionario(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var identificacion;
@@ -337,181 +301,6 @@ function informeFuncionarios(req, res, next) {
                         log.error(err);
                         return "";
                     })];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-function insertarHorario(req, res, next) {
-    return __awaiter(this, void 0, void 0, function () {
-        var diaSemana, horaInicio, horaFinal;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    diaSemana = req.body.diaSemana;
-                    horaInicio = req.body.horaInicio;
-                    horaFinal = req.body.horaFinal;
-                    return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorUsuario.insertarHorario(diaSemana, horaInicio, horaFinal)
-                            .then(function (data) {
-                            if (!data) {
-                                data = '{"response": false}';
-                            }
-                            res.json(JSON.parse(data));
-                        })
-                            .catch(function (err) {
-                            log.error(err);
-                            return "";
-                        })];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-function insertarVehiculo(req, res, next) {
-    return __awaiter(this, void 0, void 0, function () {
-        var placa, tipoVehiculo;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    placa = req.body.placa;
-                    tipoVehiculo = req.body.tipoVehiculo;
-                    return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorUsuario.insertarVehiculo(placa, tipoVehiculo)
-                            .then(function (data) {
-                            if (!data) {
-                                data = '{"response": false}';
-                            }
-                            res.json(JSON.parse(data));
-                        })
-                            .catch(function (err) {
-                            log.error(err);
-                            return "";
-                        })];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-function permisosUsuario(req, res, next) {
-    return __awaiter(this, void 0, void 0, function () {
-        var usuarioId, permisoUsuarioId;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    usuarioId = req.body.usuarioId;
-                    permisoUsuarioId = req.body.permisoUsuarioId;
-                    return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorUsuario.permisosUsuario(usuarioId, permisoUsuarioId)
-                            .then(function (data) {
-                            if (!data) {
-                                data = '{"response": false}';
-                            }
-                            res.json(JSON.parse(data));
-                        })
-                            .catch(function (err) {
-                            log.error(err);
-                            return "";
-                        })];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-function registrarFuncionario(req, res, next) {
-    return __awaiter(this, void 0, void 0, function () {
-        var tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    tipoFuncionario = req.body.tipoFuncionario;
-                    division = req.body.division;
-                    identificacion = req.body.identificacion;
-                    nombre = req.body.nombre;
-                    apellido1 = req.body.apellido1;
-                    apellido2 = req.body.apellido2;
-                    telefono = req.body.telefono;
-                    correoInstitucional = req.body.correoInstitucional;
-                    correo = req.body.correo;
-                    notificarCorreoAlterno = req.body.notificarCorreoAlterno;
-                    password = req.body.password;
-                    return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorUsuario.registrarFuncionario(tipoFuncionario, division, identificacion, nombre, apellido1, apellido2, telefono, correoInstitucional, correo, notificarCorreoAlterno, password)
-                            .then(function (data) {
-                            if (!data) {
-                                data = '{"response": false}';
-                            }
-                            res.json(JSON.parse(data));
-                        })
-                            .catch(function (err) {
-                            log.error(err);
-                            return "";
-                        })];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-function ubicaciones(req, res, next) {
-    return __awaiter(this, void 0, void 0, function () {
-        var provincia, canton, distrito, direccion;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    provincia = req.body.provincia;
-                    canton = req.body.canton;
-                    distrito = req.body.distrito;
-                    direccion = req.body.direccion;
-                    return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorUsuario.ubicaciones(provincia, canton, distrito, direccion)
-                            .then(function (data) {
-                            if (!data) {
-                                data = '{"response": false}';
-                            }
-                            res.json(JSON.parse(data));
-                        })
-                            .catch(function (err) {
-                            log.error(err);
-                            return "";
-                        })];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-function registrarVehiculo(req, res, next) {
-    return __awaiter(this, void 0, void 0, function () {
-        var usuarioId, placa, tipoVehiculo;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    usuarioId = req.body.usuarioId;
-                    placa = req.body.placa;
-                    tipoVehiculo = req.body.tipoVehiculo;
-                    return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorUsuario.registrarVehiculo(usuarioId, placa, tipoVehiculo)
-                            .then(function (data) {
-                            if (!data) {
-                                data = '{"response": false}';
-                            }
-                            res.json(JSON.parse(data));
-                        })
-                            .catch(function (err) {
-                            log.error(err);
-                            return "";
-                        })];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];

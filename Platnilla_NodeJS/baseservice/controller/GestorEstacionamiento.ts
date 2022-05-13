@@ -46,54 +46,12 @@ export class GestorEstacionamiento {
     return this.daoEstacionamiento.getAllEStacionamientos();
   }
 
-  public registrarEstacionamiento(
-    tipoEstacionamiento: number,
-    provincia: number,
-    canton: string,
-    distrito: string,
-    direccion: string,
-    nombre: string,
-    formaAcceso: string,
-    cantEspacios: string,
-    cantEspaciosEspeciales: string,
-    cantEspaciosJefaturas: number,
-    cantEspaciosVisitantes: string,
-    cantEspaciosOficiales: string,
-    correo: string,
-    telefono: number,
-    identificacion: string,
-    imageUrl: number,
-    descripcion: string
-  ): Promise<string> {
-    console.log("llega bien A");
-    return this.daoEstacionamiento.registrarEstacionamiento(
-      tipoEstacionamiento,
-      provincia,
-      canton,
-      distrito,
-      direccion,
-      nombre,
-      formaAcceso,
-      cantEspacios,
-      cantEspaciosEspeciales,
-      cantEspaciosJefaturas,
-      cantEspaciosVisitantes,
-      cantEspaciosOficiales,
-      correo,
-      telefono,
-      identificacion,
-      imageUrl,
-      descripcion
-    );
-  }
-
-
-  public estacionamientoInfo( estacionamientoId: string): Promise<string> {
+  public estacionamientoInfo(estacionamientoId: string): Promise<string> {
     return this.daoEstacionamiento.estacionamientoInfo(estacionamientoId);
   }
 
-  public eliminarEstacionamiento(identificacion: string): Promise<string> {
-    return this.daoEstacionamiento.eliminarEstacionamiento(identificacion);
+  public eliminarEstacionamiento(estacionamientoId: string): Promise<string> {
+    return this.daoEstacionamiento.eliminarEstacionamiento(estacionamientoId);
   }
 
   public registrarEstacionamientoTotal(
@@ -124,9 +82,10 @@ export class GestorEstacionamiento {
     sabadoB: string,
     domingoA: string,
     domingoB: string,
-    esInstitucional: string,
-    ): Promise<string> {
-    return this.daoEstacionamiento.registrarEstacionamientoTotal(nombre,
+    esInstitucional: string
+  ): Promise<string> {
+    return this.daoEstacionamiento.registrarEstacionamientoTotal(
+      nombre,
       correo,
       telefono,
       identificacion,
@@ -153,7 +112,81 @@ export class GestorEstacionamiento {
       sabadoB,
       domingoA,
       domingoB,
-      esInstitucional,);
+      esInstitucional
+    );
   }
 
+  public pintarEditarEstacionamiento(
+    estacionamientoId: string
+  ): Promise<string> {
+    return this.daoEstacionamiento.pintarEditarEstacionamiento(
+      estacionamientoId
+    );
+  }
+
+  public guardarEditarEstacionamiento(
+    estacionamientoId: string,
+    identificacion: string,
+    nombre: string,
+    correo: string,
+    telefono: string,
+    direccionExacta: string,
+    formaAcceso: string,
+    descripcion: string,
+    cantEspaciosEspeciales: string,
+    cantEspaciosJefaturas: string,
+    cantEspaciosVisitantes: string,
+    cantEspaciosOficiales: string,
+    cantEspacios: string,
+    imageUrl: string,
+    lunesA: string,
+    lunesB: string,
+    martesA: string,
+    martesB: string,
+    miercolesA: string,
+    miercolesB: string,
+    juevesA: string,
+    juevesB: string,
+    viernesA: string,
+    viernesB: string,
+    sabadoA: string,
+    sabadoB: string,
+    domingoA: string,
+    domingoB: string
+  ): Promise<string> {
+    return this.daoEstacionamiento.guardarEditarEstacionamiento(
+      estacionamientoId,
+      identificacion,
+      nombre,
+      correo,
+      telefono,
+      direccionExacta,
+      formaAcceso,
+      descripcion,
+      cantEspaciosEspeciales,
+      cantEspaciosJefaturas,
+      cantEspaciosVisitantes,
+      cantEspaciosOficiales,
+      cantEspacios,
+      imageUrl,
+      lunesA,
+      lunesB,
+      martesA,
+      martesB,
+      miercolesA,
+      miercolesB,
+      juevesA,
+      juevesB,
+      viernesA,
+      viernesB,
+      sabadoA,
+      sabadoB,
+      domingoA,
+      domingoB
+    );
+  }
+
+  public estacionamientosTipoSubcontratados(subcontratados: string): Promise<string> {
+    return this.daoEstacionamiento.estacionamientosTipoSubcontratados(subcontratados);
+  }
 }

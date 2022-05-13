@@ -48,18 +48,23 @@ var GestorEstacionamiento = /** @class */ (function () {
         console.log("llega bien A");
         return this.daoEstacionamiento.getAllEStacionamientos();
     };
-    GestorEstacionamiento.prototype.registrarEstacionamiento = function (tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion) {
-        console.log("llega bien A");
-        return this.daoEstacionamiento.registrarEstacionamiento(tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion);
-    };
     GestorEstacionamiento.prototype.estacionamientoInfo = function (estacionamientoId) {
         return this.daoEstacionamiento.estacionamientoInfo(estacionamientoId);
     };
-    GestorEstacionamiento.prototype.eliminarEstacionamiento = function (identificacion) {
-        return this.daoEstacionamiento.eliminarEstacionamiento(identificacion);
+    GestorEstacionamiento.prototype.eliminarEstacionamiento = function (estacionamientoId) {
+        return this.daoEstacionamiento.eliminarEstacionamiento(estacionamientoId);
     };
     GestorEstacionamiento.prototype.registrarEstacionamientoTotal = function (nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional) {
         return this.daoEstacionamiento.registrarEstacionamientoTotal(nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional);
+    };
+    GestorEstacionamiento.prototype.pintarEditarEstacionamiento = function (estacionamientoId) {
+        return this.daoEstacionamiento.pintarEditarEstacionamiento(estacionamientoId);
+    };
+    GestorEstacionamiento.prototype.guardarEditarEstacionamiento = function (estacionamientoId, identificacion, nombre, correo, telefono, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB) {
+        return this.daoEstacionamiento.guardarEditarEstacionamiento(estacionamientoId, identificacion, nombre, correo, telefono, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB);
+    };
+    GestorEstacionamiento.prototype.estacionamientosTipoSubcontratados = function (subcontratados) {
+        return this.daoEstacionamiento.estacionamientosTipoSubcontratados(subcontratados);
     };
     return GestorEstacionamiento;
 }());

@@ -44,113 +44,6 @@ export class SQLConnection implements DataSource {
     return inicio();
   }
 
-  registrarVehiculo(
-    usuarioId: number,
-    placa: string,
-    tipoVehiculo: number
-  ): Promise<string> {
-    return registrarVehiculo(usuarioId, placa, tipoVehiculo);
-  }
-
-  ubicaciones(
-    provincia: number,
-    canton: number,
-    distrito: number,
-    direccion: string
-  ): Promise<string> {
-    return ubicaciones(provincia, canton, distrito, direccion);
-  }
-
-  registrarFuncionario(
-    tipoFuncionario: number,
-    division: number,
-    identificacion: string,
-    nombre: string,
-    apellido1: string,
-    apellido2: string,
-    telefono: string,
-    correoInstitucional: string,
-    correo: string,
-    notificarCorreoAlterno: number,
-    password: string
-  ): Promise<string> {
-    return registrarFuncionario(
-      tipoFuncionario,
-      division,
-      identificacion,
-      nombre,
-      apellido1,
-      apellido2,
-      telefono,
-      correoInstitucional,
-      correo,
-      notificarCorreoAlterno,
-      password
-    );
-  }
-
-  public registrarEstacionamiento(
-    tipoEstacionamiento: number,
-    provincia: number,
-    canton: string,
-    distrito: string,
-    direccion: string,
-    nombre: string,
-    formaAcceso: string,
-    cantEspacios: string,
-    cantEspaciosEspeciales: string,
-    cantEspaciosJefaturas: number,
-    cantEspaciosVisitantes: string,
-    cantEspaciosOficiales: string,
-    correo: string,
-    telefono: number,
-    identificacion: string,
-    imageUrl: number,
-    descripcion: string
-  ): Promise<string> {
-    return registrarEstacionamiento(
-      tipoEstacionamiento,
-      provincia,
-      canton,
-      distrito,
-      direccion,
-      nombre,
-      formaAcceso,
-      cantEspacios,
-      cantEspaciosEspeciales,
-      cantEspaciosJefaturas,
-      cantEspaciosVisitantes,
-      cantEspaciosOficiales,
-      correo,
-      telefono,
-      identificacion,
-      imageUrl,
-      descripcion
-    );
-  }
-
-  public permisosUsuario(
-    usuarioId: number,
-    permisoUsuarioId: number
-  ): Promise<string> {
-    return permisosUsuario(usuarioId, permisoUsuarioId);
-  }
-
-  public insertarVehiculo(
-    placa: string,
-    tipoVehiculo: number
-  ): Promise<string> {
-    return insertarVehiculo(placa, tipoVehiculo);
-  }
-
-  public insertarHorario(
-    diaSemana: number,
-    horaInicio: string,
-    horaFinal: string
-  ): Promise<string> {
-    return insertarHorario(diaSemana, horaInicio, horaFinal);
-  }
-
   informeFuncionarios(): Promise<string> {
     return informeFuncionarios();
   }
@@ -169,15 +62,6 @@ export class SQLConnection implements DataSource {
 
   consultaFuncionario(identificacion: string): Promise<string> {
     return consultaFuncionario(identificacion);
-  }
-
-  registrarHorario(
-    usuarioId: number,
-    diaSemana: number,
-    horaInicio: string,
-    horaFinal: string
-  ): Promise<string> {
-    return registrarHorario(usuarioId, diaSemana, horaInicio, horaFinal);
   }
 
   pintarEditarUsuario(usuarioId: string): Promise<string> {
@@ -304,8 +188,8 @@ export class SQLConnection implements DataSource {
     return eliminarUsuario(identificacion);
   }
 
-  eliminarEstacionamiento(identificacion: string): Promise<string> {
-    return eliminarEstacionamiento(identificacion);
+  eliminarEstacionamiento(estacionamientoId: string): Promise<string> {
+    return eliminarEstacionamiento(estacionamientoId);
   }
 
   registrarEstacionamientoTotal(
@@ -369,6 +253,200 @@ export class SQLConnection implements DataSource {
       esInstitucional
     );
   }
+
+  public pintarEditarEstacionamiento(
+    estacionamientoId: string
+  ): Promise<string> {
+    return pintarEditarEstacionamiento(estacionamientoId);
+  }
+
+  public guardarEditarEstacionamiento(
+    estacionamientoId: string,
+    identificacion: string,
+    nombre: string,
+    correo: string,
+    telefono: string,
+    direccionExacta: string,
+    formaAcceso: string,
+    descripcion: string,
+    cantEspaciosEspeciales: string,
+    cantEspaciosJefaturas: string,
+    cantEspaciosVisitantes: string,
+    cantEspaciosOficiales: string,
+    cantEspacios: string,
+    imageUrl: string,
+    lunesA: string,
+    lunesB: string,
+    martesA: string,
+    martesB: string,
+    miercolesA: string,
+    miercolesB: string,
+    juevesA: string,
+    juevesB: string,
+    viernesA: string,
+    viernesB: string,
+    sabadoA: string,
+    sabadoB: string,
+    domingoA: string,
+    domingoB: string
+  ): Promise<string> {
+    return guardarEditarEstacionamiento(
+      estacionamientoId,
+      identificacion,
+      nombre,
+      correo,
+      telefono,
+      direccionExacta,
+      formaAcceso,
+      descripcion,
+      cantEspaciosEspeciales,
+      cantEspaciosJefaturas,
+      cantEspaciosVisitantes,
+      cantEspaciosOficiales,
+      cantEspacios,
+      imageUrl,
+      lunesA,
+      lunesB,
+      martesA,
+      martesB,
+      miercolesA,
+      miercolesB,
+      juevesA,
+      juevesB,
+      viernesA,
+      viernesB,
+      sabadoA,
+      sabadoB,
+      domingoA,
+      domingoB
+    );
+  }
+
+  public estacionamientosTipoSubcontratados(
+    subcontratados: string
+  ): Promise<string> {
+    return estacionamientosTipoSubcontratados(subcontratados);
+  }
+}
+
+async function estacionamientosTipoSubcontratados(
+  subcontratados: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("subcontratados", sql.Bit, subcontratados)
+    .execute("sp_estacionamientosTipoSubcontratados");
+  console.log("sp_estacionamientosTipoSubcontratados");
+  console.log(result);
+  let str: string;
+  for (var key in result.recordset[0]) {
+    str = result.recordset[0][key];
+  }
+
+  return str;
+}
+
+async function guardarEditarEstacionamiento(
+  estacionamientoId: string,
+  identificacion: string,
+  nombre: string,
+  correo: string,
+  telefono: string,
+  direccionExacta: string,
+  formaAcceso: string,
+  descripcion: string,
+  cantEspaciosEspeciales: string,
+  cantEspaciosJefaturas: string,
+  cantEspaciosVisitantes: string,
+  cantEspaciosOficiales: string,
+  cantEspacios: string,
+  imageUrl: string,
+  lunesA: string,
+  lunesB: string,
+  martesA: string,
+  martesB: string,
+  miercolesA: string,
+  miercolesB: string,
+  juevesA: string,
+  juevesB: string,
+  viernesA: string,
+  viernesB: string,
+  sabadoA: string,
+  sabadoB: string,
+  domingoA: string,
+  domingoB: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+    .input("identificacion", sql.NVarChar, identificacion)
+    .input("nombre", sql.NVarChar, nombre)
+    .input("correo", sql.NVarChar, correo)
+    .input("telefono", sql.NVarChar, telefono)
+    .input("direccionExacta", sql.NVarChar, direccionExacta)
+    .input("formaAcceso", sql.NVarChar, formaAcceso)
+    .input("descripcion", sql.NVarChar, descripcion)
+    .input("cantEspaciosEspeciales", sql.NVarChar, cantEspaciosEspeciales)
+    .input("cantEspaciosJefaturas", sql.NVarChar, cantEspaciosJefaturas)
+    .input("cantEspaciosVisitantes", sql.NVarChar, cantEspaciosVisitantes)
+    .input("cantEspaciosOficiales", sql.NVarChar, cantEspaciosOficiales)
+    .input("cantEspacios", sql.NVarChar, cantEspacios)
+    .input("imageUrl", sql.NVarChar, imageUrl)
+    .input("lunesA", sql.NVarChar, lunesA)
+    .input("lunesB", sql.NVarChar, lunesB)
+    .input("martesA", sql.NVarChar, martesA)
+    .input("martesB", sql.NVarChar, martesB)
+    .input("miercolesA", sql.NVarChar, miercolesA)
+    .input("miercolesB", sql.NVarChar, miercolesB)
+    .input("juevesA", sql.NVarChar, juevesA)
+    .input("juevesB", sql.NVarChar, juevesB)
+    .input("viernesA", sql.NVarChar, viernesA)
+    .input("viernesB", sql.NVarChar, viernesB)
+    .input("sabadoA", sql.NVarChar, sabadoA)
+    .input("sabadoB", sql.NVarChar, sabadoB)
+    .input("domingoA", sql.NVarChar, domingoA)
+    .input("domingoB", sql.NVarChar, domingoB)
+    .execute("sp_guardarEditarEstacionamiento");
+  console.log("sp_guardarEditarEstacionamiento");
+  console.log(result);
+  
+  return "1";
+}
+
+async function pintarEditarEstacionamiento(
+  estacionamientoId: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("estacionamientoId", sql.Int, estacionamientoId)
+    .execute("sp_pintarEditarEstacionamiento");
+  console.log("sp_pintarEditarEstacionamiento");
+  console.log(result);
+
+  let str: string = "{";
+  let json: any;
+  for (var i in result.recordsets) {
+    for (var key in result.recordsets[i][0]) {
+      let tmpStr: string = result.recordsets[i][0][key];
+      tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+      str += '"' + i + '": "' + tmpStr + '",';
+      let tmp: any = JSON.parse(result.recordsets[i][0][key]);
+    }
+  }
+  str = str.slice(0, -1);
+  str += "}";
+  console.log("str****************");
+  console.log(str);
+  return str;
 }
 
 async function registrarEstacionamientoTotal(
@@ -443,16 +521,16 @@ async function registrarEstacionamientoTotal(
 }
 
 async function eliminarEstacionamiento(
-  identificacion: string
+  estacionamientoId: string
 ): Promise<string> {
   //do connection
   let pool = await new sql.connect(config);
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("identificacion", sql.NVarChar(60), identificacion)
-    .execute("sp_eliminarEstacionamiento");
-  console.log("sp_eliminarEstacionamiento");
+    .input("estacionamientoId", sql.NVarChar(60), estacionamientoId)
+    .execute("deshabilitarEstacionamiento");
+  console.log("deshabilitarEstacionamiento");
   console.log(result);
 
   return result.returnValue;
@@ -465,8 +543,8 @@ async function eliminarUsuario(identificacion: string): Promise<string> {
   let result = await pool
     .request()
     .input("identificacion", sql.NVarChar(60), identificacion)
-    .execute("sp_eliminarUsuario");
-  console.log("sp_eliminarUsuario");
+    .execute("deshabilitarUsuario");
+  console.log("deshabilitarUsuario");
   console.log(result);
 
   return result.returnValue;
@@ -616,46 +694,20 @@ async function pintarEditarUsuario(usuarioId: string): Promise<string> {
   console.log(result);
 
   let str: string = "{";
-  let json : any;
+  let json: any;
   for (var i in result.recordsets) {
     for (var key in result.recordsets[i][0]) {
-
-      let tmpStr: string = result.recordsets[i][0][key]
-      tmpStr = tmpStr.replace(new RegExp('"', 'g'), '\\"')
-      str += '"' + i + '": "' + tmpStr + '",'
-      let tmp: any = JSON.parse(result.recordsets[i][0][key])
-      
-
-
+      let tmpStr: string = result.recordsets[i][0][key];
+      tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+      str += '"' + i + '": "' + tmpStr + '",';
+      let tmp: any = JSON.parse(result.recordsets[i][0][key]);
+    }
   }
-  }
-  str = str.slice(0, -1)
-  str+= "}"
-  console.log("str****************")
-  console.log(str)
+  str = str.slice(0, -1);
+  str += "}";
+  console.log("str****************");
+  console.log(str);
   return str;
-}
-
-async function registrarHorario(
-  usuarioId: number,
-  diaSemana: number,
-  horaInicio: string,
-  horaFinal: string
-): Promise<string> {
-  //do connection
-  let pool = await new sql.connect(config);
-  //do reques from pool, with parameters and execute sp
-  let result = await pool
-    .request()
-    .input("usuarioId", sql.Int, usuarioId)
-    .input("diaSemana", sql.tinyint, diaSemana)
-    .input("horaInicio", sql.NVarChar(20), horaInicio)
-    .input("horaFinal", sql.NVarChar(20), horaFinal)
-    .execute("sp_registrarHorario");
-  console.log("sp_registrarHorario");
-  console.log(result);
-
-  return '{"done": true}';
 }
 
 async function consultaFuncionario(identificacion: string): Promise<string> {
@@ -737,196 +789,6 @@ async function informeFuncionarios(): Promise<string> {
     str = obj[key];
   }
   return str;
-}
-
-async function insertarHorario(
-  diaSemana: number,
-  horaInicio: string,
-  horaFinal: string
-): Promise<string> {
-  //do connection
-  let pool = await new sql.connect(config);
-  //do reques from pool, with parameters and execute sp
-  let result = await pool
-    .request()
-    .input("diaSemana", sql.tinyint, diaSemana)
-    .input("horaInicio", sql.NVarChar(20), horaInicio)
-    .input("horaFinal", sql.NVarChar(20), horaFinal)
-    .execute("sp_InsertarHorario");
-  console.log("sp_InsertarHorario");
-  console.log(result);
-
-  return result.returnValue;
-}
-
-async function insertarVehiculo(
-  placa: string,
-  tipoVehiculo: number
-): Promise<string> {
-  //do connection
-  let pool = await new sql.connect(config);
-  //do reques from pool, with parameters and execute sp
-  let result = await pool
-    .request()
-    .input("placa", sql.NVarChar(20), placa)
-    .input("tipoVehiculo", sql.SMALLINT, tipoVehiculo)
-    .execute("sp_InsertarVehiculo");
-  console.log("sp_InsertarVehiculo");
-  console.log(result);
-
-  return '{"done": true}';
-}
-
-async function permisosUsuario(
-  usuarioId: number,
-  permisoUsuarioId: number
-): Promise<string> {
-  //do connection
-  let pool = await new sql.connect(config);
-  //do reques from pool, with parameters and execute sp
-  let result = await pool
-    .request()
-    .input("usuarioId", sql.Int, usuarioId)
-    .input("permisoUsuarioId", sql.Int, permisoUsuarioId)
-    .execute("sp_permisosUsuario");
-  console.log("sp_permisosUsuario");
-  console.log(result);
-
-  return result.returnValue;
-}
-
-async function registrarEstacionamiento(
-  tipoEstacionamiento: number,
-  provincia: number,
-  canton: string,
-  distrito: string,
-  direccion: string,
-  nombre: string,
-  formaAcceso: string,
-  cantEspacios: string,
-  cantEspaciosEspeciales: string,
-  cantEspaciosJefaturas: number,
-  cantEspaciosVisitantes: string,
-  cantEspaciosOficiales: string,
-  correo: string,
-  telefono: number,
-  identificacion: string,
-  imageUrl: number,
-  descripcion: string
-): Promise<string> {
-  //do connection
-  let pool = await new sql.connect(config);
-  //do reques from pool, with parameters and execute sp
-  let result = await pool
-    .request()
-    .input("tipoEstacionamiento", sql.smallint, tipoEstacionamiento)
-    .input("provincia", sql.tinyint, provincia)
-    .input("canton", sql.smallint, canton)
-    .input("distrito", sql.Int, distrito)
-    .input("direccion", sql.NVarChar(500), direccion)
-    .input("nombre", sql.NVarChar(200), nombre)
-    .input("formaAcceso", sql.NVarChar(200), formaAcceso)
-    .input("cantEspacios", sql.Int, cantEspacios)
-    .input("cantEspaciosEspeciales", sql.Int, cantEspaciosEspeciales)
-    .input("cantEspaciosJefaturas", sql.Int, cantEspaciosJefaturas)
-    .input("cantEspaciosVisitantes", sql.Int, cantEspaciosVisitantes)
-    .input("cantEspaciosOficiales", sql.Int, cantEspaciosOficiales)
-    .input("correo", sql.NVarChar(200), correo)
-    .input("telefono", sql.NVarChar(40), telefono)
-    .input("identificacion", sql.NVarChar(60), identificacion)
-    .input("imageUrl", sql.NVarChar(128), imageUrl)
-    .input("descripcion", sql.NVarChar(250), descripcion)
-    .execute("sp_registrarEstacionamiento");
-  console.log("sp_registrarEstacionamiento");
-  console.log(result);
-
-  return result.returnValue;
-}
-
-//this function is the same as test but without then and catch
-async function registrarFuncionario(
-  tipoFuncionario: number,
-  division: number,
-  identificacion: string,
-  nombre: string,
-  apellido1: string,
-  apellido2: string,
-  telefono: string,
-  correoInstitucional: string,
-  correo: string,
-  notificarCorreoAlterno: number,
-  password: string
-): Promise<string> {
-  //do connection
-  let pool = await new sql.connect(config);
-  //do reques from pool, with parameters and execute sp
-  let result = await pool
-    .request()
-    .input("tipoFuncionario", sql.Int, tipoFuncionario)
-    .input("division", sql.Int, division)
-    .input("identificacion", sql.NVarChar(60), identificacion)
-    .input("nombre", sql.NVarChar(60), nombre)
-    .input("apellido1", sql.NVarChar(60), apellido1)
-    .input("apellido2", sql.NVarChar(40), apellido2)
-    .input("telefono", sql.NVarChar(200), telefono)
-    .input("correoInstitucional", sql.NVarChar(200), correoInstitucional)
-    .input("correo", sql.NVarChar(200), correo)
-    .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
-    .input("password", sql.NVarChar(100), password)
-    .execute("sp_RegistrarFuncionario");
-  console.log("sp_RegistrarFuncionario");
-  console.log(result);
-
-  let str: string;
-  let obj: any = result.recordsets[0][0];
-  for (var key in obj) {
-    str = obj[key];
-  }
-  return str;
-}
-
-//this function is the same as test but without then and catch
-async function ubicaciones(
-  provincia: number,
-  canton: number,
-  distrito: number,
-  direccion: string
-): Promise<string> {
-  //do connection
-  let pool = await new sql.connect(config);
-  //do reques from pool, with parameters and execute sp
-  let result = await pool
-    .request()
-    .input("provincia", sql.tinyint, provincia)
-    .input("canton", sql.smallint, canton)
-    .input("distrito", sql.Int, distrito)
-    .input("direccion", sql.NVarChar(500), direccion)
-    .execute("sp_ubicaciones");
-  console.log("sp_ubicaciones");
-  console.log(result);
-
-  return result.returnValue;
-}
-
-//this function is the same as test but without then and catch
-async function registrarVehiculo(
-  usuarioId: number,
-  placa: string,
-  tipoVehiculo: number
-): Promise<string> {
-  //do connection
-  let pool = await new sql.connect(config);
-  //do reques from pool, with parameters and execute sp
-  let result = await pool
-    .request()
-    .input("usuarioId", sql.Int, usuarioId)
-    .input("placa", sql.NVarChar(200), placa)
-    .input("tipoVehiculo", sql.SMALLINT, tipoVehiculo)
-    .execute("sp_RegistrarVehiculo");
-  console.log("sp_RegistrarVehiculo");
-  console.log(result);
-
-  return result.returnValue;
 }
 
 //this function is the same as test but without then and catch

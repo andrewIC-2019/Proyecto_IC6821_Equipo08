@@ -49,72 +49,6 @@ export class GestorUsuario {
     return this.daoUsuario.login(username, password);
   }
 
-  public registrarVehiculo(
-    usuarioId: number,
-    placa: string,
-    tipoVehiculo: number
-  ): Promise<string> {
-    return this.daoUsuario.registrarVehiculo(usuarioId, placa, tipoVehiculo);
-  }
-
-  public ubicaciones(
-    provincia: number,
-    canton: number,
-    distrito: number,
-    direccion: string
-  ): Promise<string> {
-    return this.daoUsuario.ubicaciones(provincia, canton, distrito, direccion);
-  }
-
-  public registrarFuncionario(
-    tipoFuncionario: number,
-    division: number,
-    identificacion: string,
-    nombre: string,
-    apellido1: string,
-    apellido2: string,
-    telefono: string,
-    correoInstitucional: string,
-    correo: string,
-    notificarCorreoAlterno: number,
-    password: string
-  ): Promise<string> {
-    return this.daoUsuario.registrarFuncionario(
-      tipoFuncionario,
-      division,
-      identificacion,
-      nombre,
-      apellido1,
-      apellido2,
-      telefono,
-      correoInstitucional,
-      correo,
-      notificarCorreoAlterno,
-      password
-    );
-  }
-
-  public permisosUsuario(
-    usuarioId: number,
-    permisoUsuarioId: number
-  ): Promise<string> {
-    return this.daoUsuario.permisosUsuario(usuarioId, permisoUsuarioId);
-  }
-
-  public insertarVehiculo(
-    placa: string,
-    tipoVehiculo: number
-  ): Promise<string> {
-    return this.daoUsuario.insertarVehiculo(placa, tipoVehiculo);
-  }
-
-  public insertarHorario(
-    diaSemana: number,
-    horaInicio: string,
-    horaFinal: string
-  ): Promise<string> {
-    return this.daoUsuario.insertarHorario(diaSemana, horaInicio, horaFinal);
-  }
 
   public informeFuncionarios(): Promise<string> {
     return this.daoUsuario.informeFuncionarios();
@@ -132,19 +66,7 @@ export class GestorUsuario {
     return this.daoUsuario.consultaFuncionario(identificacion);
   }
 
-  public registrarHorario(
-    usuarioId: number,
-    diaSemana: number,
-    horaInicio: string,
-    horaFinal: string
-  ): Promise<string> {
-    return this.daoUsuario.registrarHorario(
-      usuarioId,
-      diaSemana,
-      horaInicio,
-      horaFinal
-    );
-  }
+
 
   public pintarEditarUsuario(usuarioId: string): Promise<string> {
     return this.daoUsuario.pintarEditarUsuario(usuarioId);

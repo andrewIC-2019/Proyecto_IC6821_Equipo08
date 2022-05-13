@@ -44,11 +44,119 @@ var controller_1 = require("../controller");
 var app = express();
 exports.estacionamiento = app;
 var log = new common_1.Logger();
-app.get("/inicio", inicio);
-app.post("/registrarEstacionamiento", registrarEstacionamiento);
-app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal);
-app.get("/estacionamientoInfo", estacionamientoInfo);
-app.post("/eliminarEstacionamiento", eliminarEstacionamiento);
+app.get("/inicio", inicio); //listo
+app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal); //listo
+app.get("/estacionamientoInfo", estacionamientoInfo); //listo
+app.post("/deshabilitarEstacionamiento", deshabilitarEstacionamiento); //listo
+app.get("/pintarEditarEstacionamiento", pintarEditarEstacionamiento); //listo
+app.post("/guardarEditarEstacionamiento", guardarEditarEstacionamiento);
+app.get("/estacionamientosTipoSubcontratados", estacionamientosTipoSubcontratados //listo
+);
+function estacionamientosTipoSubcontratados(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var subcontratados;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    subcontratados = req.query.subcontratados;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorEstacionamiento.estacionamientosTipoSubcontratados(subcontratados)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function guardarEditarEstacionamiento(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var estacionamientoId, identificacion, nombre, correo, telefono, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    estacionamientoId = req.body.estacionamientoId;
+                    identificacion = req.body.identificacion;
+                    nombre = req.body.nombre;
+                    correo = req.body.correo;
+                    telefono = req.body.telefono;
+                    direccionExacta = req.body.direccionExacta;
+                    formaAcceso = req.body.formaAcceso;
+                    descripcion = req.body.descripcion;
+                    cantEspaciosEspeciales = req.body.cantEspaciosEspeciales;
+                    cantEspaciosJefaturas = req.body.cantEspaciosJefaturas;
+                    cantEspaciosVisitantes = req.body.cantEspaciosVisitantes;
+                    cantEspaciosOficiales = req.body.cantEspaciosOficiales;
+                    cantEspacios = req.body.cantEspacios;
+                    imageUrl = req.body.imageUrl;
+                    lunesA = req.body.lunesA;
+                    lunesB = req.body.lunesB;
+                    martesA = req.body.martesA;
+                    martesB = req.body.martesB;
+                    miercolesA = req.body.miercolesA;
+                    miercolesB = req.body.miercolesB;
+                    juevesA = req.body.juevesA;
+                    juevesB = req.body.juevesB;
+                    viernesA = req.body.viernesA;
+                    viernesB = req.body.viernesB;
+                    sabadoA = req.body.sabadoA;
+                    sabadoB = req.body.sabadoB;
+                    domingoA = req.body.domingoA;
+                    domingoB = req.body.domingoB;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorEstacionamiento.guardarEditarEstacionamiento(estacionamientoId, identificacion, nombre, correo, telefono, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '0';
+                            }
+                            res.json({ done: data == '1' });
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function pintarEditarEstacionamiento(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var estacionamientoId;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    estacionamientoId = req.query.estacionamientoId;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorEstacionamiento.pintarEditarEstacionamiento(estacionamientoId)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function registrarEstacionamientoTotal(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional;
@@ -102,20 +210,20 @@ function registrarEstacionamientoTotal(req, res, next) {
         });
     });
 }
-function eliminarEstacionamiento(req, res, next) {
+function deshabilitarEstacionamiento(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var identificacion;
+        var estacionamientoId;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    identificacion = req.body.identificacion;
+                    estacionamientoId = req.body.estacionamientoId;
                     return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorEstacionamiento.eliminarEstacionamiento(identificacion)
+                            .$gestorEstacionamiento.eliminarEstacionamiento(estacionamientoId)
                             .then(function (data) {
                             if (!data) {
-                                data = '{"response": false}';
+                                data = '0';
                             }
-                            res.json(JSON.parse(data));
+                            res.json({ done: data == '1' });
                         })
                             .catch(function (err) {
                             log.error(err);
@@ -137,48 +245,6 @@ function estacionamientoInfo(req, res, next) {
                     estacionamientoId = req.query.estacionamientoId;
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorEstacionamiento.estacionamientoInfo(estacionamientoId)
-                            .then(function (data) {
-                            if (!data) {
-                                data = '{"response": false}';
-                            }
-                            res.json(JSON.parse(data));
-                        })
-                            .catch(function (err) {
-                            log.error(err);
-                            return "";
-                        })];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-function registrarEstacionamiento(req, res, next) {
-    return __awaiter(this, void 0, void 0, function () {
-        var tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    tipoEstacionamiento = req.body.tipoEstacionamiento;
-                    provincia = req.body.provincia;
-                    canton = req.body.canton;
-                    distrito = req.body.distrito;
-                    direccion = req.body.direccion;
-                    nombre = req.body.nombre;
-                    formaAcceso = req.body.formaAcceso;
-                    cantEspacios = req.body.cantEspacios;
-                    cantEspaciosEspeciales = req.body.cantEspaciosEspeciales;
-                    cantEspaciosJefaturas = req.body.cantEspaciosJefaturas;
-                    cantEspaciosVisitantes = req.body.cantEspaciosVisitantes;
-                    cantEspaciosOficiales = req.body.cantEspaciosOficiales;
-                    correo = req.body.correo;
-                    telefono = req.body.telefono;
-                    identificacion = req.body.identificacion;
-                    imageUrl = req.body.imageUrl;
-                    descripcion = req.body.descripcion;
-                    return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorEstacionamiento.registrarEstacionamiento(tipoEstacionamiento, provincia, canton, distrito, direccion, nombre, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, correo, telefono, identificacion, imageUrl, descripcion)
                             .then(function (data) {
                             if (!data) {
                                 data = '{"response": false}';

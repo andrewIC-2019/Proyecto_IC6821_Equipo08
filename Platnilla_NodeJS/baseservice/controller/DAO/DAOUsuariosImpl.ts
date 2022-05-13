@@ -20,89 +20,6 @@ export class DAOUsuariosImpl implements DAOTransaccional {
     return SQLConnection.getInstance().login(username, password);
   }
 
-  public registrarVehiculo(
-    usuarioId: number,
-    placa: string,
-    tipoVehiculo: number
-  ): Promise<string> {
-    return SQLConnection.getInstance().registrarVehiculo(
-      usuarioId,
-      placa,
-      tipoVehiculo
-    );
-  }
-
-  public ubicaciones(
-    provincia: number,
-    canton: number,
-    distrito: number,
-    direccion: string
-  ): Promise<string> {
-    return SQLConnection.getInstance().ubicaciones(
-      provincia,
-      canton,
-      distrito,
-      direccion
-    );
-  }
-
-  public registrarFuncionario(
-    tipoFuncionario: number,
-    division: number,
-    identificacion: string,
-    nombre: string,
-    apellido1: string,
-    apellido2: string,
-    telefono: string,
-    correoInstitucional: string,
-    correo: string,
-    notificarCorreoAlterno: number,
-    password: string
-  ): Promise<string> {
-    return SQLConnection.getInstance().registrarFuncionario(
-      tipoFuncionario,
-      division,
-      identificacion,
-      nombre,
-      apellido1,
-      apellido2,
-      telefono,
-      correoInstitucional,
-      correo,
-      notificarCorreoAlterno,
-      password
-    );
-  }
-
-  public permisosUsuario(
-    usuarioId: number,
-    permisoUsuarioId: number
-  ): Promise<string> {
-    return SQLConnection.getInstance().permisosUsuario(
-      usuarioId,
-      permisoUsuarioId
-    );
-  }
-
-  public insertarVehiculo(
-    placa: string,
-    tipoVehiculo: number
-  ): Promise<string> {
-    return SQLConnection.getInstance().insertarVehiculo(placa, tipoVehiculo);
-  }
-
-  public insertarHorario(
-    diaSemana: number,
-    horaInicio: string,
-    horaFinal: string
-  ): Promise<string> {
-    return SQLConnection.getInstance().insertarHorario(
-      diaSemana,
-      horaInicio,
-      horaFinal
-    );
-  }
-
   public informeFuncionarios(): Promise<string> {
     return SQLConnection.getInstance().informeFuncionarios();
   }
@@ -119,19 +36,6 @@ export class DAOUsuariosImpl implements DAOTransaccional {
     return SQLConnection.getInstance().consultaFuncionario(identificacion);
   }
 
-  public registrarHorario(
-    usuarioId: number,
-    diaSemana: number,
-    horaInicio: string,
-    horaFinal: string
-  ): Promise<string> {
-    return SQLConnection.getInstance().registrarHorario(
-      usuarioId,
-      diaSemana,
-      horaInicio,
-      horaFinal
-    );
-  }
 
   public pintarEditarUsuario(usuarioId: string): Promise<string> {
     return SQLConnection.getInstance().pintarEditarUsuario(usuarioId);

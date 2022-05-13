@@ -22,53 +22,13 @@ export class DAOEStacionamientoImpl implements DAOTransaccional {
     return SQLConnection.getInstance().inicio();
   }
 
-  public registrarEstacionamiento(
-    tipoEstacionamiento: number,
-    provincia: number,
-    canton: string,
-    distrito: string,
-    direccion: string,
-    nombre: string,
-    formaAcceso: string,
-    cantEspacios: string,
-    cantEspaciosEspeciales: string,
-    cantEspaciosJefaturas: number,
-    cantEspaciosVisitantes: string,
-    cantEspaciosOficiales: string,
-    correo: string,
-    telefono: number,
-    identificacion: string,
-    imageUrl: number,
-    descripcion: string
-  ): Promise<string> {
-    console.log("llega bien A");
-    return SQLConnection.getInstance().registrarEstacionamiento(
-      tipoEstacionamiento,
-      provincia,
-      canton,
-      distrito,
-      direccion,
-      nombre,
-      formaAcceso,
-      cantEspacios,
-      cantEspaciosEspeciales,
-      cantEspaciosJefaturas,
-      cantEspaciosVisitantes,
-      cantEspaciosOficiales,
-      correo,
-      telefono,
-      identificacion,
-      imageUrl,
-      descripcion
-    );
-  }
 
   public estacionamientoInfo(estacionamientoId: string): Promise<string> {
     return SQLConnection.getInstance().estacionamientoInfo(estacionamientoId);
   }
 
-  public eliminarEstacionamiento(identificacion: string): Promise<string> {
-    return SQLConnection.getInstance().eliminarEstacionamiento(identificacion);
+  public eliminarEstacionamiento(estacionamientoId: string): Promise<string> {
+    return SQLConnection.getInstance().eliminarEstacionamiento(estacionamientoId);
   }
 
   public registrarEstacionamientoTotal(
@@ -129,5 +89,75 @@ export class DAOEStacionamientoImpl implements DAOTransaccional {
       domingoA,
       domingoB,
       esInstitucional,);
+  }
+
+  public pintarEditarEstacionamiento(estacionamientoId: string): Promise<string> {
+    return SQLConnection.getInstance().pintarEditarEstacionamiento(estacionamientoId);
+  }
+
+  public guardarEditarEstacionamiento(
+    estacionamientoId: string,
+    identificacion: string,
+    nombre: string,
+    correo: string,
+    telefono: string,
+    direccionExacta: string,
+    formaAcceso: string,
+    descripcion: string,
+    cantEspaciosEspeciales: string,
+    cantEspaciosJefaturas: string,
+    cantEspaciosVisitantes: string,
+    cantEspaciosOficiales: string,
+    cantEspacios: string,
+    imageUrl: string,
+    lunesA: string,
+    lunesB: string,
+    martesA: string,
+    martesB: string,
+    miercolesA: string,
+    miercolesB: string,
+    juevesA: string,
+    juevesB: string,
+    viernesA: string,
+    viernesB: string,
+    sabadoA: string,
+    sabadoB: string,
+    domingoA: string,
+    domingoB: string
+  ): Promise<string> {
+    return SQLConnection.getInstance().guardarEditarEstacionamiento(
+      estacionamientoId,
+      identificacion,
+      nombre,
+      correo,
+      telefono,
+      direccionExacta,
+      formaAcceso,
+      descripcion,
+      cantEspaciosEspeciales,
+      cantEspaciosJefaturas,
+      cantEspaciosVisitantes,
+      cantEspaciosOficiales,
+      cantEspacios,
+      imageUrl,
+      lunesA,
+      lunesB,
+      martesA,
+      martesB,
+      miercolesA,
+      miercolesB,
+      juevesA,
+      juevesB,
+      viernesA,
+      viernesB,
+      sabadoA,
+      sabadoB,
+      domingoA,
+      domingoB
+    );
+  }
+
+  public estacionamientosTipoSubcontratados(subcontratados: string): Promise<string> {
+    return SQLConnection.getInstance().estacionamientosTipoSubcontratados(subcontratados);
   }
 }
