@@ -359,7 +359,7 @@ AS
 	DECLARE @elUsuario INT = -1
 	DECLARE @continue INT = 0
 	
-	SELECT @elUsuario=usuarioId FROM dbo.Usuarios WHERE correoInstitucional = @user
+	SELECT @elUsuario=usuarioId FROM dbo.Usuarios WHERE correoInstitucional = @user AND deshabilitado = 0
 
 	IF @elUsuario = -1 BEGIN
 		RETURN 0
@@ -378,7 +378,7 @@ GO
 
 -- Ejemplo de ejecucion: correoInstitucional, password
 
-EXEC dbo.sp_login 'mcampos.71@itcr.ac.cr', 'hola'
+EXEC dbo.sp_login 'mcampos.71@itcr.ac.cr', 'actualizada'
 
 */
 
@@ -391,7 +391,8 @@ DROP PROCEDURE IF EXISTS dbo.sp_inicio
 
 CREATE PROCEDURE dbo.sp_inicio
 AS
-	SELECT estacionamientoId, nombre, espaciosTotales = cantEspacios+cantEspaciosEspeciales+cantEspaciosJefaturas+cantEspaciosVisitantes+cantEspaciosOficiales, telefono, imageUrl from dbo.Estacionamientos FOR JSON PATH
+	SELECT estacionamientoId, nombre, espaciosTotales = cantEspacios+cantEspaciosEspeciales+cantEspaciosJefaturas+cantEspaciosVisitantes+cantEspaciosOficiales, telefono, imageUrl from dbo.Estacionamientos
+	WHERE deshabilitado = 0 FOR JSON PATH
 GO
 
 /*
@@ -413,14 +414,14 @@ CREATE PROCEDURE dbo.sp_estacionamientoinfo
 	@estacionamientoId INT
 AS
 	SELECT nombre, descripcion, direccionExacta, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosOficiales, cantEspaciosVisitantes, imageUrl
-	FROM dbo.Estacionamientos e INNER JOIN dbo.Ubicaciones u ON e.ubicacion = u.ubicacionId WHERE estacionamientoId = @estacionamientoId FOR JSON PATH
+	FROM dbo.Estacionamientos e INNER JOIN dbo.Ubicaciones u ON e.ubicacion = u.ubicacionId WHERE estacionamientoId = @estacionamientoId  AND deshabilitado = 0 FOR JSON PATH
 GO
 
 /*
 
 -- Ejemplo de ejecucion: estacionamientoId
 
-EXEC dbo.sp_estacionamientoinfo 8
+EXEC dbo.sp_estacionamientoinfo 7
 
 */
 
@@ -437,7 +438,7 @@ DROP PROCEDURE IF EXISTS dbo.sp_informeEstacionamientos
 CREATE PROCEDURE dbo.sp_informeEstacionamientos
 AS
 	SELECT nombre, correo, telefono, descripcion, direccionExacta, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosOficiales, cantEspaciosVisitantes
-	FROM dbo.Estacionamientos e INNER JOIN dbo.Ubicaciones u ON e.ubicacion = u.ubicacionId FOR JSON PATH
+	FROM dbo.Estacionamientos e INNER JOIN dbo.Ubicaciones u ON e.ubicacion = u.ubicacionId WHERE deshabilitado = 0 FOR JSON PATH
 GO
 
 /*
@@ -455,7 +456,7 @@ CREATE PROCEDURE dbo.sp_informeFuncionarios
 
 AS
 	SELECT identificacion, apellido1, apellido2, nombre, correoInstitucional, telefono
-	FROM dbo.Usuarios ORDER BY apellido1
+	FROM dbo.Usuarios WHERE deshabilitado = 0 ORDER BY apellido1 FOR JSON path
 GO
 
 /*
@@ -481,10 +482,10 @@ CREATE PROCEDURE dbo.sp_franjasHorarias
 AS
 	SELECT dia, horaInicio, horaFinal, funcionarios FROM
 	(SELECT horarioId, funcionarios = count(horarioId) FROM dbo.Horarios_Por_Usuario
-	 WHERE deshabilitado=0 GROUP BY horarioId) hua 
+	WHERE deshabilitado=0 GROUP BY horarioId) hua 
 	INNER JOIN dbo.Horarios h ON hua.horarioId = h.horarioId
-	INNER JOIN dbo.Dias d ON h.diaSemana = d.dia
-	ORDER BY funcionarios DESC
+	INNER JOIN dbo.Dias d ON h.diaSemana = d.diaId
+	ORDER BY diaSemana, funcionarios DESC
 GO
 
 /*
@@ -505,20 +506,21 @@ CREATE PROCEDURE dbo.sp_consultaFuncionario
 AS 
 
 	DECLARE @usuarioId bigint = -1
-	SELECT @usuarioId = usuarioId FROM dbo.Usuarios WHERE identificacion = @identificacion
+	SELECT @usuarioId = usuarioId FROM dbo.Usuarios WHERE identificacion = @identificacion AND deshabilitado=0
 
 	IF @usuarioId > 0 BEGIN
-		SELECT identificacion, apellido1, apellido2, nombre, telefono, correoInstitucional
-		FROM dbo.Usuarios WHERE identificacion = @identificacion FOR JSON AUTO
+		SELECT identificacion, apellido1, apellido2, nombre, telefono, correoInstitucional, departamento = codigoDivision FROM dbo.Usuarios u
+		INNER JOIN dbo.Divisiones d ON u.division = d.divisionId
+		WHERE identificacion = @identificacion FOR JSON PATH
 
 		SELECT placa FROM dbo.Vehiculos_Por_Usuario vu 
 		INNER JOIN dbo.Vehiculos v ON vu.vehiculoId = v.vehiculoId 
-		WHERE usuarioId = @usuarioId FOR JSON AUTO
+		WHERE usuarioId = @usuarioId AND vu.deshabilitado = 0 FOR JSON AUTO
 
 		SELECT dia, horaInicio, horaFinal FROM dbo.Horarios_Por_Usuario hu 
 		INNER JOIN dbo.Horarios h ON hu.horarioId = h.horarioId
-		INNER JOIN dbo.Dias d ON h.diaSemana = d.dia
-		WHERE usuarioId = @usuarioId FOR JSON AUTO
+		INNER JOIN dbo.Dias d ON h.diaSemana = d.diaId
+		WHERE usuarioId = @usuarioId AND hu.deshabilitado = 0 FOR JSON AUTO
 	END ELSE BEGIN
 		RETURN 0
 	END
