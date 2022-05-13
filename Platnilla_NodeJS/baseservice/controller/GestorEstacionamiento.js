@@ -45,7 +45,6 @@ var GestorEstacionamiento = /** @class */ (function () {
         configurable: true
     });
     GestorEstacionamiento.prototype.inicio = function () {
-        console.log("llega bien A");
         return this.daoEstacionamiento.getAllEStacionamientos();
     };
     GestorEstacionamiento.prototype.estacionamientoInfo = function (estacionamientoId) {

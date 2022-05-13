@@ -55,12 +55,6 @@ var SQLConnection = /** @class */ (function () {
         return this.instance;
     };
     SQLConnection.prototype.login = function (username, password) {
-        /* login(username, password).then((value)=> {
-          return value
-        }).catch((err)=>{
-          console.log(err)
-          return false
-        }); */
         var res = login(username, password);
         return res;
     };
@@ -126,8 +120,6 @@ function estacionamientosTipoSubcontratados(subcontratados) {
                             .execute("sp_estacionamientosTipoSubcontratados")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_estacionamientosTipoSubcontratados");
-                    console.log(result);
                     for (key in result.recordset[0]) {
                         str = result.recordset[0][key];
                     }
@@ -177,8 +169,6 @@ function guardarEditarEstacionamiento(estacionamientoId, identificacion, nombre,
                             .execute("sp_guardarEditarEstacionamiento")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_guardarEditarEstacionamiento");
-                    console.log(result);
                     return [2 /*return*/, "1"];
             }
         });
@@ -194,12 +184,9 @@ function pintarEditarEstacionamiento(estacionamientoId) {
                     pool = _a.sent();
                     return [4 /*yield*/, pool
                             .request()
-                            .input("estacionamientoId", sql.Int, estacionamientoId)
-                            .execute("sp_pintarEditarEstacionamiento")];
+                            .input("estacionamientoId", sql.Int, estacionamientoId)];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_pintarEditarEstacionamiento");
-                    console.log(result);
                     str = "{";
                     for (i in result.recordsets) {
                         for (key in result.recordsets[i][0]) {
@@ -211,8 +198,6 @@ function pintarEditarEstacionamiento(estacionamientoId) {
                     }
                     str = str.slice(0, -1);
                     str += "}";
-                    console.log("str****************");
-                    console.log(str);
                     return [2 /*return*/, str];
             }
         });
@@ -259,8 +244,6 @@ function registrarEstacionamientoTotal(nombre, correo, telefono, identificacion,
                             .execute("sp_registrarEstacionamientoTotal")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_registrarEstacionamientoTotal");
-                    console.log(result);
                     return [2 /*return*/, result.returnValue];
             }
         });
@@ -280,8 +263,6 @@ function eliminarEstacionamiento(estacionamientoId) {
                             .execute("deshabilitarEstacionamiento")];
                 case 2:
                     result = _a.sent();
-                    console.log("deshabilitarEstacionamiento");
-                    console.log(result);
                     return [2 /*return*/, result.returnValue];
             }
         });
@@ -295,15 +276,12 @@ function eliminarUsuario(usuarioId) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
                 case 1:
                     pool = _a.sent();
-                    console.log(usuarioId);
                     return [4 /*yield*/, pool
                             .request()
                             .input("usuarioId", sql.Int, usuarioId)
                             .execute("deshabilitarUsuario")];
                 case 2:
                     result = _a.sent();
-                    console.log("deshabilitarUsuario");
-                    console.log(result);
                     return [2 /*return*/, result.returnValue];
             }
         });
@@ -350,9 +328,6 @@ function registrarUsuarioTotal(correoInstitucional, identificacion, correo, pass
                             .execute("sp_registrarUsuarioTotal")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_registrarUsuarioTotal");
-                    console.log(result);
-                    console.log(result.recordset);
                     return [2 /*return*/, result.returnValue];
             }
         });
@@ -395,8 +370,6 @@ function guardarEditarUsuario(usuarioId, correo, password, telefono, departament
                             .execute("sp_guardarEditarUsuario")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_guardarEditarUsuario");
-                    console.log(result);
                     return [2 /*return*/, '{"done": true}'];
             }
         });
@@ -416,8 +389,6 @@ function pintarEditarUsuario(usuarioId) {
                             .execute("sp_pintarEditarUsuario")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_pintarEditarUsuario");
-                    console.log(result);
                     str = "{";
                     for (i in result.recordsets) {
                         for (key in result.recordsets[i][0]) {
@@ -429,8 +400,6 @@ function pintarEditarUsuario(usuarioId) {
                     }
                     str = str.slice(0, -1);
                     str += "}";
-                    console.log("str****************");
-                    console.log(str);
                     return [2 /*return*/, str];
             }
         });
@@ -450,8 +419,6 @@ function consultaFuncionario(identificacion) {
                             .execute("sp_consultaFuncionario")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_consultaFuncionario");
-                    console.log(result);
                     str = "{";
                     for (i in result.recordsets) {
                         for (key in result.recordsets[i][0]) {
@@ -463,8 +430,6 @@ function consultaFuncionario(identificacion) {
                     }
                     str = str.slice(0, -1);
                     str += "}";
-                    console.log("str****************");
-                    console.log(str);
                     return [2 /*return*/, str];
             }
         });
@@ -484,8 +449,6 @@ function estacionamientoInfo(estacionamientoId) {
                             .execute("sp_estacionamientoinfo")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_estacionamientoinfo");
-                    console.log(result);
                     obj = result.recordsets[0][0];
                     for (key in obj) {
                         str = obj[key];
@@ -506,8 +469,6 @@ function franjasHorarias() {
                     return [4 /*yield*/, pool.request().execute("sp_franjasHorarias")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_franjasHorarias");
-                    console.log(result);
                     obj = result.recordsets[0][0];
                     for (key in obj) {
                         str = obj[key];
@@ -528,8 +489,6 @@ function informeEstacionamientos() {
                     return [4 /*yield*/, pool.request().execute("sp_informeEstacionamientos")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_informeEstacionamientos");
-                    console.log(result);
                     obj = result.recordsets[0][0];
                     for (key in obj) {
                         str = obj[key];
@@ -550,8 +509,6 @@ function informeFuncionarios() {
                     return [4 /*yield*/, pool.request().execute("sp_informeFuncionarios")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_informeFuncionarios");
-                    console.log(result);
                     return [2 /*return*/, result.recordsets[0]];
             }
         });
@@ -569,8 +526,6 @@ function inicio() {
                     return [4 /*yield*/, pool.request().execute("sp_inicio")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_inicio");
-                    console.log(result);
                     obj = result.recordsets[0][0];
                     for (key in obj) {
                         str = obj[key];
@@ -596,8 +551,6 @@ function login(username, password) {
                             .execute("sp_login")];
                 case 2:
                     result = _a.sent();
-                    console.log("sp_login");
-                    console.log(result);
                     if (result.returnValue == 0) {
                         return [2 /*return*/, "{}"];
                     }
@@ -614,53 +567,3 @@ function login(username, password) {
         });
     });
 }
-function test(username, password) {
-    return __awaiter(this, void 0, void 0, function () {
-        var result, err_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    result = void 0;
-                    console.log("***************");
-                    return [4 /*yield*/, sql
-                            .connect(config)
-                            .then(function (pool) {
-                            // Stored procedure
-                            console.log("dentro");
-                            return pool
-                                .request()
-                                .input("user", sql.NVarChar(200), username)
-                                .input("pass", sql.NVarChar(200), password)
-                                .execute("sp_login");
-                        })
-                            .then(function (result) {
-                            console.log("dentro BBB");
-                            console.dir(result);
-                        })
-                            .catch(function (err) {
-                            console.log(err);
-                        })];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/, result];
-                case 2:
-                    err_1 = _a.sent();
-                    console.log(err_1);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
-/* async function test () : Promise<string>{
-  try {
-      // make sure that any items are correctly URL encoded in the connection string
-      await  sql.connect('Server=localhost,1433;Database=parqueos;User Id=sa;Password=cer5a37Te9;Encrypt=false')
-      const result = await sql.query(`select * from Usuarios`)
-     
-      return result.recordset
-  } catch (err) {
-      console.log(err)
-  }
-} */

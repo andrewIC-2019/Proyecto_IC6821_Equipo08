@@ -29,13 +29,6 @@ export class SQLConnection implements DataSource {
   }
 
   login(username: string, password: string): Promise<string> {
-    /* login(username, password).then((value)=> {
-      return value
-    }).catch((err)=>{
-      console.log(err)
-      return false
-    }); */
-
     let res = login(username, password);
     return res;
   }
@@ -339,8 +332,7 @@ async function estacionamientosTipoSubcontratados(
     .request()
     .input("subcontratados", sql.Bit, subcontratados)
     .execute("sp_estacionamientosTipoSubcontratados");
-  console.log("sp_estacionamientosTipoSubcontratados");
-  console.log(result);
+
   let str: string;
   for (var key in result.recordset[0]) {
     str = result.recordset[0][key];
@@ -413,8 +405,7 @@ async function guardarEditarEstacionamiento(
     .input("domingoA", sql.NVarChar, domingoA)
     .input("domingoB", sql.NVarChar, domingoB)
     .execute("sp_guardarEditarEstacionamiento");
-  console.log("sp_guardarEditarEstacionamiento");
-  console.log(result);
+
   
   return "1";
 }
@@ -429,8 +420,6 @@ async function pintarEditarEstacionamiento(
     .request()
     .input("estacionamientoId", sql.Int, estacionamientoId)
     .execute("sp_pintarEditarEstacionamiento");
-  console.log("sp_pintarEditarEstacionamiento");
-  console.log(result);
 
   let str: string = "{";
   let json: any;
@@ -444,8 +433,7 @@ async function pintarEditarEstacionamiento(
   }
   str = str.slice(0, -1);
   str += "}";
-  console.log("str****************");
-  console.log(str);
+
   return str;
 }
 
@@ -514,8 +502,7 @@ async function registrarEstacionamientoTotal(
     .input("esInstitucional", sql.Bit, esInstitucional)
 
     .execute("sp_registrarEstacionamientoTotal");
-  console.log("sp_registrarEstacionamientoTotal");
-  console.log(result);
+
 
   return result.returnValue;
 }
@@ -530,8 +517,7 @@ async function eliminarEstacionamiento(
     .request()
     .input("estacionamientoId", sql.NVarChar(60), estacionamientoId)
     .execute("deshabilitarEstacionamiento");
-  console.log("deshabilitarEstacionamiento");
-  console.log(result);
+
 
   return result.returnValue;
 }
@@ -539,14 +525,13 @@ async function eliminarEstacionamiento(
 async function eliminarUsuario(usuarioId: number): Promise<string> {
   //do connection
   let pool = await new sql.connect(config);
-  console.log(usuarioId);
+
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
     .input("usuarioId", sql.Int, usuarioId)
     .execute("deshabilitarUsuario");
-  console.log("deshabilitarUsuario");
-  console.log(result);
+
 
   return result.returnValue;
 }
@@ -615,9 +600,7 @@ async function registrarUsuarioTotal(
     .input("domingoB", sql.NVarChar(20), domingoB)
     .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
     .execute("sp_registrarUsuarioTotal");
-  console.log("sp_registrarUsuarioTotal");
-  console.log(result);
-  console.log(result.recordset);
+
   return result.returnValue;
 }
 
@@ -677,8 +660,7 @@ async function guardarEditarUsuario(
     .input("domingoB", sql.NVarChar, domingoB)
     .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
     .execute("sp_guardarEditarUsuario");
-  console.log("sp_guardarEditarUsuario");
-  console.log(result);
+
 
   return '{"done": true}';
 }
@@ -691,8 +673,7 @@ async function pintarEditarUsuario(usuarioId: string): Promise<string> {
     .request()
     .input("usuarioId", sql.Int, usuarioId)
     .execute("sp_pintarEditarUsuario");
-  console.log("sp_pintarEditarUsuario");
-  console.log(result);
+
 
   let str: string = "{";
   let json: any;
@@ -706,8 +687,7 @@ async function pintarEditarUsuario(usuarioId: string): Promise<string> {
   }
   str = str.slice(0, -1);
   str += "}";
-  console.log("str****************");
-  console.log(str);
+
   return str;
 }
 
@@ -719,8 +699,7 @@ async function consultaFuncionario(identificacion: string): Promise<string> {
     .request()
     .input("identificacion", sql.NVarChar(60), identificacion)
     .execute("sp_consultaFuncionario");
-  console.log("sp_consultaFuncionario");
-  console.log(result);
+
   let str: string = "{";
   for (var i in result.recordsets) {
     for (var key in result.recordsets[i][0]) {
@@ -732,8 +711,7 @@ async function consultaFuncionario(identificacion: string): Promise<string> {
   }
   str = str.slice(0, -1);
   str += "}";
-  console.log("str****************");
-  console.log(str);
+
   return str;
 }
 
@@ -745,8 +723,7 @@ async function estacionamientoInfo(estacionamientoId: string): Promise<string> {
     .request()
     .input("estacionamientoId", sql.Int, estacionamientoId)
     .execute("sp_estacionamientoinfo");
-  console.log("sp_estacionamientoinfo");
-  console.log(result);
+
 
   let str: string;
   let obj: any = result.recordsets[0][0];
@@ -761,8 +738,7 @@ async function franjasHorarias(): Promise<string> {
   let pool = await new sql.connect(config);
   //do reques from pool, with parameters and execute sp
   let result = await pool.request().execute("sp_franjasHorarias");
-  console.log("sp_franjasHorarias");
-  console.log(result);
+
 
   let str: string;
   let obj: any = result.recordsets[0][0];
@@ -777,8 +753,7 @@ async function informeEstacionamientos(): Promise<string> {
   let pool = await new sql.connect(config);
   //do reques from pool, with parameters and execute sp
   let result = await pool.request().execute("sp_informeEstacionamientos");
-  console.log("sp_informeEstacionamientos");
-  console.log(result);
+
 
   let str : string;
   let obj: any = result.recordsets[0][0];
@@ -795,9 +770,6 @@ async function informeFuncionarios(): Promise<string> {
   let pool = await new sql.connect(config);
   //do reques from pool, with parameters and execute sp
   let result = await pool.request().execute("sp_informeFuncionarios");
-  console.log("sp_informeFuncionarios");
-  console.log(result);
-
 
   return result.recordsets[0];
 }
@@ -808,8 +780,6 @@ async function inicio(): Promise<string> {
   let pool = await new sql.connect(config);
   //do reques from pool, with parameters and execute sp
   let result = await pool.request().execute("sp_inicio");
-  console.log("sp_inicio");
-  console.log(result);
 
   let str: string;
   let obj: any = result.recordsets[0][0];
@@ -829,8 +799,7 @@ async function login(username: string, password: string): Promise<string> {
     .input("user", sql.NVarChar(200), username)
     .input("pass", sql.NVarChar(200), password)
     .execute("sp_login");
-  console.log("sp_login");
-  console.log(result);
+
 
   if (result.returnValue == 0) {
     return "{}";
@@ -843,44 +812,3 @@ async function login(username: string, password: string): Promise<string> {
     return str;
   }
 }
-
-async function test(username: string, password: string): Promise<string> {
-  try {
-    // make sure that any items are correctly URL encoded in the connection string
-    let result: any;
-    console.log("***************");
-    await sql
-      .connect(config)
-      .then((pool: any) => {
-        // Stored procedure
-        console.log("dentro");
-        return pool
-          .request()
-          .input("user", sql.NVarChar(200), username)
-          .input("pass", sql.NVarChar(200), password)
-          .execute("sp_login");
-      })
-      .then((result: any) => {
-        console.log("dentro BBB");
-        console.dir(result);
-      })
-      .catch((err: Error) => {
-        console.log(err);
-      });
-    return result;
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-/* async function test () : Promise<string>{
-  try {
-      // make sure that any items are correctly URL encoded in the connection string
-      await  sql.connect('Server=localhost,1433;Database=parqueos;User Id=sa;Password=cer5a37Te9;Encrypt=false')
-      const result = await sql.query(`select * from Usuarios`)
-     
-      return result.recordset
-  } catch (err) {
-      console.log(err)
-  }
-} */

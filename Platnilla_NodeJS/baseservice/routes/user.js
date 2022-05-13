@@ -50,7 +50,7 @@ app.get("/informeEstacionamientos", informeEstacionamientos); //listo
 app.get("/franjasHorarias", franjasHorarias); //listo 
 app.get("/consultaFuncionario", consultaFuncionario); //listo
 app.get("/pintarEditarUsuario", pintarEditarUsuario); //listo
-app.post("/guardarEditarUsuario", guardarEditarUsuario);
+app.post("/guardarEditarUsuario", guardarEditarUsuario); //listo
 app.post("/registrarUsuarioTotal", registrarUsuarioTotal); //listo
 app.post("/deshabilitarUsuario", deshabilitarUsuario); //listo
 function deshabilitarUsuario(req, res, next) {
@@ -307,9 +307,6 @@ function login(req, res, next) {
                 case 0:
                     username = req.query.username;
                     password = req.query.password;
-                    console.log("login req");
-                    console.log(username);
-                    console.log(password);
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorUsuario.login(username, password)
                             .then(function (data) {

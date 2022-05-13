@@ -287,10 +287,7 @@ async function login(
 ) {
   let username: string = req.query.username as string;
   let password: string = req.query.password as string;
-  console.log("login req");
-  console.log(username);
 
-  console.log(password);
 
   await Control.getInstance()
     .$gestorUsuario.login(username, password)

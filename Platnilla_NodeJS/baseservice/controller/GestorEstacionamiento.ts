@@ -42,7 +42,6 @@ export class GestorEstacionamiento {
   }
 
   public inicio(): Promise<string> {
-    console.log("llega bien A");
     return this.daoEstacionamiento.getAllEStacionamientos();
   }
 

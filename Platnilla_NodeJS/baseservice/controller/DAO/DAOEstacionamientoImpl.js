@@ -18,7 +18,6 @@ var DAOEStacionamientoImpl = /** @class */ (function () {
         throw new Error("Method not implemented.");
     };
     DAOEStacionamientoImpl.prototype.getAllEStacionamientos = function () {
-        console.log("llega bien b");
         return SQLConnection_1.SQLConnection.getInstance().inicio();
     };
     DAOEStacionamientoImpl.prototype.estacionamientoInfo = function (estacionamientoId) {

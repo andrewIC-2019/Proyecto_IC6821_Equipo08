@@ -17,8 +17,6 @@ export class DAOEStacionamientoImpl implements DAOTransaccional {
   }
 
   public getAllEStacionamientos(): Promise<string> {
-    console.log("llega bien b");
-
     return SQLConnection.getInstance().inicio();
   }
 
