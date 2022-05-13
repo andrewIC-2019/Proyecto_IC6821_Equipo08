@@ -155,7 +155,7 @@ export class DAOUsuariosImpl implements DAOTransaccional {
     );
   }
 
-  public eliminarUsuario(identificacion: string): Promise<string> {
-    return SQLConnection.getInstance().eliminarUsuario(identificacion);
+  public eliminarUsuario(usuarioId: number): Promise<string> {
+    return SQLConnection.getInstance().eliminarUsuario(usuarioId);
   }
 }

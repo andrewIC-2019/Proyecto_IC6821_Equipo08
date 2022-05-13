@@ -45,28 +45,28 @@ var app = express();
 exports.user = app;
 var log = new common_1.Logger();
 app.get("/login", login); //listo
-app.get("/informeFuncionarios", informeFuncionarios);
-app.get("/informeEstacionamientos", informeEstacionamientos);
-app.get("/franjasHorarias", franjasHorarias);
-app.get("/consultaFuncionario", consultaFuncionario);
+app.get("/informeFuncionarios", informeFuncionarios); //listo 
+app.get("/informeEstacionamientos", informeEstacionamientos); //listo 
+app.get("/franjasHorarias", franjasHorarias); //listo 
+app.get("/consultaFuncionario", consultaFuncionario); //listo
 app.get("/pintarEditarUsuario", pintarEditarUsuario); //listo
 app.post("/guardarEditarUsuario", guardarEditarUsuario);
 app.post("/registrarUsuarioTotal", registrarUsuarioTotal); //listo
-app.post("/deshabilitarUsuario", deshabilitarUsuario);
+app.post("/deshabilitarUsuario", deshabilitarUsuario); //listo
 function deshabilitarUsuario(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var identificacion;
+        var usuarioId;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    identificacion = req.body.identificacion;
+                    usuarioId = req.body.usuarioId;
                     return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorUsuario.eliminarUsuario(identificacion)
+                            .$gestorUsuario.eliminarUsuario(usuarioId)
                             .then(function (data) {
                             if (!data) {
-                                data = '{"response": false}';
+                                data = '0';
                             }
-                            res.json(JSON.parse(data));
+                            res.json({ done: data == '1' });
                         })
                             .catch(function (err) {
                             log.error(err);
@@ -286,16 +286,7 @@ function informeFuncionarios(req, res, next) {
                 case 0: return [4 /*yield*/, controller_1.Control.getInstance()
                         .$gestorUsuario.informeFuncionarios()
                         .then(function (data) {
-                        if (data) {
-                            if (!data) {
-                                data = '{"response": false}';
-                            }
-                            res.json(JSON.parse(data));
-                        }
-                        if (!data) {
-                            data = '{"response": false}';
-                        }
-                        res.json(JSON.parse(data));
+                        res.json(data);
                     })
                         .catch(function (err) {
                         log.error(err);

@@ -41,8 +41,8 @@ var DAOUsuariosImpl = /** @class */ (function () {
     DAOUsuariosImpl.prototype.registrarUsuarioTotal = function (correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno) {
         return SQLConnection_1.SQLConnection.getInstance().registrarUsuarioTotal(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno);
     };
-    DAOUsuariosImpl.prototype.eliminarUsuario = function (identificacion) {
-        return SQLConnection_1.SQLConnection.getInstance().eliminarUsuario(identificacion);
+    DAOUsuariosImpl.prototype.eliminarUsuario = function (usuarioId) {
+        return SQLConnection_1.SQLConnection.getInstance().eliminarUsuario(usuarioId);
     };
     return DAOUsuariosImpl;
 }());

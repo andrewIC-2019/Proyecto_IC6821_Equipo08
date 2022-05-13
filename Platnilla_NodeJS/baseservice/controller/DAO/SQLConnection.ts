@@ -184,8 +184,8 @@ export class SQLConnection implements DataSource {
     );
   }
 
-  eliminarUsuario(identificacion: string): Promise<string> {
-    return eliminarUsuario(identificacion);
+  eliminarUsuario(usuarioId: number): Promise<string> {
+    return eliminarUsuario(usuarioId);
   }
 
   eliminarEstacionamiento(estacionamientoId: string): Promise<string> {
@@ -536,13 +536,14 @@ async function eliminarEstacionamiento(
   return result.returnValue;
 }
 
-async function eliminarUsuario(identificacion: string): Promise<string> {
+async function eliminarUsuario(usuarioId: number): Promise<string> {
   //do connection
   let pool = await new sql.connect(config);
+  console.log(usuarioId);
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("identificacion", sql.NVarChar(60), identificacion)
+    .input("usuarioId", sql.Int, usuarioId)
     .execute("deshabilitarUsuario");
   console.log("deshabilitarUsuario");
   console.log(result);
@@ -652,28 +653,28 @@ async function guardarEditarUsuario(
   let result = await pool
     .request()
     .input("usuarioId", sql.Int, usuarioId)
-    .input("correo", sql.NVarChar(200), correo)
-    .input("password", sql.NVarChar(200), password)
-    .input("telefono", sql.NVarChar(40), telefono)
-    .input("departamento", sql.NVarChar(8), departamento)
-    .input("placa1", sql.NVarChar(20), placa1)
-    .input("placa2", sql.NVarChar(20), placa2)
-    .input("placa3", sql.NVarChar(20), placa3)
-    .input("placa4", sql.NVarChar(20), placa4)
-    .input("lunesA", sql.NVarChar(20), lunesA)
-    .input("lunesB", sql.NVarChar(20), lunesB)
-    .input("martesA", sql.NVarChar(20), martesA)
-    .input("martesB", sql.NVarChar(20), martesB)
-    .input("miercolesA", sql.NVarChar(20), miercolesA)
-    .input("miercolesB", sql.NVarChar(20), miercolesB)
-    .input("juevesA", sql.NVarChar(20), juevesA)
-    .input("juevesB", sql.NVarChar(20), juevesB)
-    .input("viernesA", sql.NVarChar(20), viernesA)
-    .input("viernesB", sql.NVarChar(20), viernesB)
-    .input("sabadoA", sql.NVarChar(20), sabadoA)
-    .input("sabadoB", sql.NVarChar(20), sabadoB)
-    .input("domingoA", sql.NVarChar(20), domingoA)
-    .input("domingoB", sql.NVarChar(20), domingoB)
+    .input("correo", sql.NVarChar, correo)
+    .input("password", sql.NVarChar, password)
+    .input("telefono", sql.NVarChar, telefono)
+    .input("departamento", sql.NVarChar, departamento)
+    .input("placa1", sql.NVarChar, placa1)
+    .input("placa2", sql.NVarChar, placa2)
+    .input("placa3", sql.NVarChar, placa3)
+    .input("placa4", sql.NVarChar, placa4)
+    .input("lunesA", sql.NVarChar, lunesA)
+    .input("lunesB", sql.NVarChar, lunesB)
+    .input("martesA", sql.NVarChar, martesA)
+    .input("martesB", sql.NVarChar, martesB)
+    .input("miercolesA", sql.NVarChar, miercolesA)
+    .input("miercolesB", sql.NVarChar, miercolesB)
+    .input("juevesA", sql.NVarChar, juevesA)
+    .input("juevesB", sql.NVarChar, juevesB)
+    .input("viernesA", sql.NVarChar, viernesA)
+    .input("viernesB", sql.NVarChar, viernesB)
+    .input("sabadoA", sql.NVarChar, sabadoA)
+    .input("sabadoB", sql.NVarChar, sabadoB)
+    .input("domingoA", sql.NVarChar, domingoA)
+    .input("domingoB", sql.NVarChar, domingoB)
     .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
     .execute("sp_guardarEditarUsuario");
   console.log("sp_guardarEditarUsuario");
@@ -720,8 +721,20 @@ async function consultaFuncionario(identificacion: string): Promise<string> {
     .execute("sp_consultaFuncionario");
   console.log("sp_consultaFuncionario");
   console.log(result);
-
-  return result.recordsets[0];
+  let str: string = "{";
+  for (var i in result.recordsets) {
+    for (var key in result.recordsets[i][0]) {
+      let tmpStr: string = result.recordsets[i][0][key];
+      tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+      str += '"' + i + '": "' + tmpStr + '",';
+      let tmp: any = JSON.parse(result.recordsets[i][0][key]);
+    }
+  }
+  str = str.slice(0, -1);
+  str += "}";
+  console.log("str****************");
+  console.log(str);
+  return str;
 }
 
 async function estacionamientoInfo(estacionamientoId: string): Promise<string> {
@@ -767,12 +780,14 @@ async function informeEstacionamientos(): Promise<string> {
   console.log("sp_informeEstacionamientos");
   console.log(result);
 
-  let str: string;
+  let str : string;
   let obj: any = result.recordsets[0][0];
   for (var key in obj) {
     str = obj[key];
   }
   return str;
+
+  return str
 }
 
 async function informeFuncionarios(): Promise<string> {
@@ -783,12 +798,8 @@ async function informeFuncionarios(): Promise<string> {
   console.log("sp_informeFuncionarios");
   console.log(result);
 
-  let str: string;
-  let obj: any = result.recordsets[0][0];
-  for (var key in obj) {
-    str = obj[key];
-  }
-  return str;
+
+  return result.recordsets[0];
 }
 
 //this function is the same as test but without then and catch

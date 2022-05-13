@@ -8,29 +8,29 @@ const app = express();
 const log = new Logger();
 
 app.get("/login", login); //listo
-app.get("/informeFuncionarios", informeFuncionarios);
-app.get("/informeEstacionamientos", informeEstacionamientos);
-app.get("/franjasHorarias", franjasHorarias);
-app.get("/consultaFuncionario", consultaFuncionario);
+app.get("/informeFuncionarios", informeFuncionarios);//listo 
+app.get("/informeEstacionamientos", informeEstacionamientos);//listo 
+app.get("/franjasHorarias", franjasHorarias);//listo 
+app.get("/consultaFuncionario", consultaFuncionario);//listo
 app.get("/pintarEditarUsuario", pintarEditarUsuario); //listo
-app.post("/guardarEditarUsuario", guardarEditarUsuario);
+app.post("/guardarEditarUsuario", guardarEditarUsuario);//listo
 app.post("/registrarUsuarioTotal", registrarUsuarioTotal); //listo
-app.post("/deshabilitarUsuario", deshabilitarUsuario);
+app.post("/deshabilitarUsuario", deshabilitarUsuario);//listo
 
 async function deshabilitarUsuario(
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
 ) {
-  let identificacion: string = req.body.identificacion;
+  let usuarioId: number = req.body.usuarioId;
 
   await Control.getInstance()
-    .$gestorUsuario.eliminarUsuario(identificacion)
+    .$gestorUsuario.eliminarUsuario(usuarioId)
     .then((data) => {
       if (!data) {
-        data = '{"response": false}';
+        data = '0';
       }
-      res.json(JSON.parse(data));
+      res.json({done: data == '1'});
     })
     .catch((err) => {
       log.error(err);
@@ -271,16 +271,8 @@ async function informeFuncionarios(
   await Control.getInstance()
     .$gestorUsuario.informeFuncionarios()
     .then((data) => {
-      if (data) {
-        if (!data) {
-          data = '{"response": false}';
-        }
-        res.json(JSON.parse(data));
-      }
-      if (!data) {
-        data = '{"response": false}';
-      }
-      res.json(JSON.parse(data));
+
+      res.json(data);
     })
     .catch((err) => {
       log.error(err);

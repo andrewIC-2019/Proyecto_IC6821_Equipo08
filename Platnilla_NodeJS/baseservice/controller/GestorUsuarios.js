@@ -69,8 +69,8 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.registrarUsuarioTotal = function (correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno) {
         return this.daoUsuario.registrarUsuarioTotal(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno);
     };
-    GestorUsuario.prototype.eliminarUsuario = function (identificacion) {
-        return this.daoUsuario.eliminarUsuario(identificacion);
+    GestorUsuario.prototype.eliminarUsuario = function (usuarioId) {
+        return this.daoUsuario.eliminarUsuario(usuarioId);
     };
     return GestorUsuario;
 }());

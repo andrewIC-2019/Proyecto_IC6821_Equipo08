@@ -91,8 +91,8 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.registrarUsuarioTotal = function (correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno) {
         return registrarUsuarioTotal(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno);
     };
-    SQLConnection.prototype.eliminarUsuario = function (identificacion) {
-        return eliminarUsuario(identificacion);
+    SQLConnection.prototype.eliminarUsuario = function (usuarioId) {
+        return eliminarUsuario(usuarioId);
     };
     SQLConnection.prototype.eliminarEstacionamiento = function (estacionamientoId) {
         return eliminarEstacionamiento(estacionamientoId);
@@ -287,7 +287,7 @@ function eliminarEstacionamiento(estacionamientoId) {
         });
     });
 }
-function eliminarUsuario(identificacion) {
+function eliminarUsuario(usuarioId) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result;
         return __generator(this, function (_a) {
@@ -295,9 +295,10 @@ function eliminarUsuario(identificacion) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
                 case 1:
                     pool = _a.sent();
+                    console.log(usuarioId);
                     return [4 /*yield*/, pool
                             .request()
-                            .input("identificacion", sql.NVarChar(60), identificacion)
+                            .input("usuarioId", sql.Int, usuarioId)
                             .execute("deshabilitarUsuario")];
                 case 2:
                     result = _a.sent();
@@ -368,28 +369,28 @@ function guardarEditarUsuario(usuarioId, correo, password, telefono, departament
                     return [4 /*yield*/, pool
                             .request()
                             .input("usuarioId", sql.Int, usuarioId)
-                            .input("correo", sql.NVarChar(200), correo)
-                            .input("password", sql.NVarChar(200), password)
-                            .input("telefono", sql.NVarChar(40), telefono)
-                            .input("departamento", sql.NVarChar(8), departamento)
-                            .input("placa1", sql.NVarChar(20), placa1)
-                            .input("placa2", sql.NVarChar(20), placa2)
-                            .input("placa3", sql.NVarChar(20), placa3)
-                            .input("placa4", sql.NVarChar(20), placa4)
-                            .input("lunesA", sql.NVarChar(20), lunesA)
-                            .input("lunesB", sql.NVarChar(20), lunesB)
-                            .input("martesA", sql.NVarChar(20), martesA)
-                            .input("martesB", sql.NVarChar(20), martesB)
-                            .input("miercolesA", sql.NVarChar(20), miercolesA)
-                            .input("miercolesB", sql.NVarChar(20), miercolesB)
-                            .input("juevesA", sql.NVarChar(20), juevesA)
-                            .input("juevesB", sql.NVarChar(20), juevesB)
-                            .input("viernesA", sql.NVarChar(20), viernesA)
-                            .input("viernesB", sql.NVarChar(20), viernesB)
-                            .input("sabadoA", sql.NVarChar(20), sabadoA)
-                            .input("sabadoB", sql.NVarChar(20), sabadoB)
-                            .input("domingoA", sql.NVarChar(20), domingoA)
-                            .input("domingoB", sql.NVarChar(20), domingoB)
+                            .input("correo", sql.NVarChar, correo)
+                            .input("password", sql.NVarChar, password)
+                            .input("telefono", sql.NVarChar, telefono)
+                            .input("departamento", sql.NVarChar, departamento)
+                            .input("placa1", sql.NVarChar, placa1)
+                            .input("placa2", sql.NVarChar, placa2)
+                            .input("placa3", sql.NVarChar, placa3)
+                            .input("placa4", sql.NVarChar, placa4)
+                            .input("lunesA", sql.NVarChar, lunesA)
+                            .input("lunesB", sql.NVarChar, lunesB)
+                            .input("martesA", sql.NVarChar, martesA)
+                            .input("martesB", sql.NVarChar, martesB)
+                            .input("miercolesA", sql.NVarChar, miercolesA)
+                            .input("miercolesB", sql.NVarChar, miercolesB)
+                            .input("juevesA", sql.NVarChar, juevesA)
+                            .input("juevesB", sql.NVarChar, juevesB)
+                            .input("viernesA", sql.NVarChar, viernesA)
+                            .input("viernesB", sql.NVarChar, viernesB)
+                            .input("sabadoA", sql.NVarChar, sabadoA)
+                            .input("sabadoB", sql.NVarChar, sabadoB)
+                            .input("domingoA", sql.NVarChar, domingoA)
+                            .input("domingoB", sql.NVarChar, domingoB)
                             .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
                             .execute("sp_guardarEditarUsuario")];
                 case 2:
@@ -437,7 +438,7 @@ function pintarEditarUsuario(usuarioId) {
 }
 function consultaFuncionario(identificacion) {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, result;
+        var pool, result, str, i, key, tmpStr, tmp;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
@@ -451,7 +452,20 @@ function consultaFuncionario(identificacion) {
                     result = _a.sent();
                     console.log("sp_consultaFuncionario");
                     console.log(result);
-                    return [2 /*return*/, result.recordsets[0]];
+                    str = "{";
+                    for (i in result.recordsets) {
+                        for (key in result.recordsets[i][0]) {
+                            tmpStr = result.recordsets[i][0][key];
+                            tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+                            str += '"' + i + '": "' + tmpStr + '",';
+                            tmp = JSON.parse(result.recordsets[i][0][key]);
+                        }
+                    }
+                    str = str.slice(0, -1);
+                    str += "}";
+                    console.log("str****************");
+                    console.log(str);
+                    return [2 /*return*/, str];
             }
         });
     });
@@ -527,7 +541,7 @@ function informeEstacionamientos() {
 }
 function informeFuncionarios() {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, result, str, obj, key;
+        var pool, result;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
@@ -538,11 +552,7 @@ function informeFuncionarios() {
                     result = _a.sent();
                     console.log("sp_informeFuncionarios");
                     console.log(result);
-                    obj = result.recordsets[0][0];
-                    for (key in obj) {
-                        str = obj[key];
-                    }
-                    return [2 /*return*/, str];
+                    return [2 /*return*/, result.recordsets[0]];
             }
         });
     });

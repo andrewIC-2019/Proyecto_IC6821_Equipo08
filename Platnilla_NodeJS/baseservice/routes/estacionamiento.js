@@ -49,7 +49,7 @@ app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal); //lis
 app.get("/estacionamientoInfo", estacionamientoInfo); //listo
 app.post("/deshabilitarEstacionamiento", deshabilitarEstacionamiento); //listo
 app.get("/pintarEditarEstacionamiento", pintarEditarEstacionamiento); //listo
-app.post("/guardarEditarEstacionamiento", guardarEditarEstacionamiento);
+app.post("/guardarEditarEstacionamiento", guardarEditarEstacionamiento); //listo
 app.get("/estacionamientosTipoSubcontratados", estacionamientosTipoSubcontratados //listo
 );
 function estacionamientosTipoSubcontratados(req, res, next) {

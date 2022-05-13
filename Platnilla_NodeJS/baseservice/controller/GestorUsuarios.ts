@@ -186,7 +186,7 @@ export class GestorUsuario {
     );
   }
 
-  public eliminarUsuario(identificacion: string): Promise<string> {
-    return this.daoUsuario.eliminarUsuario(identificacion);
+  public eliminarUsuario(usuarioId: number): Promise<string> {
+    return this.daoUsuario.eliminarUsuario(usuarioId);
   }
 }
