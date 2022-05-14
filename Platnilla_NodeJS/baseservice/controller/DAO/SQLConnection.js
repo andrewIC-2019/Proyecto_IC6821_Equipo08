@@ -378,7 +378,7 @@ function guardarEditarUsuario(usuarioId, correo, password, telefono, departament
 }
 function pintarEditarUsuario(usuarioId) {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, result, str, json, i, key, tmpStr, tmp;
+        var pool, result, str, json, i, key, tmpStr;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
@@ -396,7 +396,6 @@ function pintarEditarUsuario(usuarioId) {
                             tmpStr = result.recordsets[i][0][key];
                             tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
                             str += '"' + i + '": "' + tmpStr + '",';
-                            tmp = JSON.parse(result.recordsets[i][0][key]);
                         }
                     }
                     str = str.slice(0, -1);
