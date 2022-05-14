@@ -7,15 +7,15 @@ const router = express.Router();
 const app = express();
 const log = new Logger();
 
-app.get("/login", login); //listo
-app.get("/informeFuncionarios", informeFuncionarios);//listo 
-app.get("/informeEstacionamientos", informeEstacionamientos);//listo 
-app.get("/franjasHorarias", franjasHorarias);//listo 
-app.get("/consultaFuncionario", consultaFuncionario);//listo x2
-app.get("/pintarEditarUsuario", pintarEditarUsuario); //listo
-app.post("/guardarEditarUsuario", guardarEditarUsuario);//listo
-app.post("/registrarUsuarioTotal", registrarUsuarioTotal); //listo
-app.post("/deshabilitarUsuario", deshabilitarUsuario);//listo
+app.get("/login", login);
+app.get("/informeFuncionarios", informeFuncionarios);
+app.get("/informeEstacionamientos", informeEstacionamientos);
+app.get("/franjasHorarias", franjasHorarias);
+app.get("/consultaFuncionario", consultaFuncionario);//si no hay datos manda string????
+app.get("/pintarEditarUsuario", pintarEditarUsuario);
+app.post("/guardarEditarUsuario", guardarEditarUsuario);
+app.post("/registrarUsuarioTotal", registrarUsuarioTotal); 
+app.post("/deshabilitarUsuario", deshabilitarUsuario);
 
 async function deshabilitarUsuario(
   req: express.Request,

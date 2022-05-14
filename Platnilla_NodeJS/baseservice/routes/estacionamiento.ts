@@ -6,15 +6,15 @@ import { Control } from "../controller";
 const app = express();
 const log = new Logger();
 
-app.get("/inicio", inicio); //listo x2
-app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal); //listo x2
-app.get("/estacionamientoInfo", estacionamientoInfo); //listo x2
-app.post("/deshabilitarEstacionamiento", deshabilitarEstacionamiento); //listo x2
-app.get("/pintarEditarEstacionamiento", pintarEditarEstacionamiento); //listo x2
-app.post("/guardarEditarEstacionamiento", guardarEditarEstacionamiento); //listo
+app.get("/inicio", inicio);
+app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal);
+app.get("/estacionamientoInfo", estacionamientoInfo);
+app.post("/deshabilitarEstacionamiento", deshabilitarEstacionamiento);
+app.get("/pintarEditarEstacionamiento", pintarEditarEstacionamiento);
+app.post("/guardarEditarEstacionamiento", guardarEditarEstacionamiento);
 app.get(
   "/estacionamientosTipoSubcontratados",
-  estacionamientosTipoSubcontratados//listo
+  estacionamientosTipoSubcontratados
 );
 
 async function estacionamientosTipoSubcontratados(

@@ -127,6 +127,7 @@ function estacionamientosTipoSubcontratados(subcontratados) {
                             str = result.recordset[0][key];
                         }
                     }
+                    console.log(str);
                     return [2 /*return*/, str];
             }
         });
@@ -383,7 +384,7 @@ function guardarEditarUsuario(usuarioId, correo, password, telefono, departament
 }
 function pintarEditarUsuario(usuarioId) {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, result, str, json, i, key, tmpStr;
+        var pool, result, str, i, key, tmpStr;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
@@ -395,16 +396,18 @@ function pintarEditarUsuario(usuarioId) {
                             .execute("sp_pintarEditarUsuario")];
                 case 2:
                     result = _a.sent();
-                    str = "{";
-                    for (i in result.recordsets) {
-                        for (key in result.recordsets[i][0]) {
-                            tmpStr = result.recordsets[i][0][key];
-                            tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
-                            str += '"' + i + '": "' + tmpStr + '",';
+                    if (result.recordsets && result.returnValue) {
+                        str = "{";
+                        for (i in result.recordsets) {
+                            for (key in result.recordsets[i][0]) {
+                                tmpStr = result.recordsets[i][0][key];
+                                tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+                                str += '"' + i + '": "' + tmpStr + '",';
+                            }
                         }
+                        str = str.slice(0, -1);
+                        str += "}";
                     }
-                    str = str.slice(0, -1);
-                    str += "}";
                     return [2 /*return*/, str];
             }
         });
@@ -424,21 +427,10 @@ function consultaFuncionario(identificacion) {
                             .execute("sp_consultaFuncionario")];
                 case 2:
                     result = _a.sent();
-                    console.log(result);
-                    console.log(result);
-                    /*  if (result.recordsets && result.returnValue) {
-                      str = "{";
-                      for (var i in result.recordsets) {
-                        for (var key in result.recordsets[i][0]) {
-                          let tmpStr: string = result.recordsets[i][0][key];
-                          tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
-                          str += '"' + i + '": "' + tmpStr + '",';
-                        }
-                      }
-                      str = str.slice(0, -1);
-                      str += "}";
-                    } */
-                    return [2 /*return*/, result.recordsets];
+                    if (result.recordsets && result.returnValue) {
+                        str = result.recordsets;
+                    }
+                    return [2 /*return*/, str];
             }
         });
     });
@@ -457,8 +449,6 @@ function estacionamientoInfo(estacionamientoId) {
                             .execute("sp_estacionamientoinfo")];
                 case 2:
                     result = _a.sent();
-                    console.log(estacionamientoId);
-                    console.log(result);
                     if (result.recordsets && result.returnValue) {
                         obj = result.recordsets[0][0];
                         for (key in obj) {
@@ -565,11 +555,7 @@ function login(username, password) {
                             .execute("sp_login")];
                 case 2:
                     result = _a.sent();
-                    if (result.returnValue == 0) {
-                        return [2 /*return*/, "{}"];
-                    }
-                    else {
-                        str = void 0;
+                    if (result.recordsets && result.returnValue) {
                         obj = result.recordsets[0][0];
                         for (key in obj) {
                             str = obj[key];

@@ -44,14 +44,13 @@ var controller_1 = require("../controller");
 var app = express();
 exports.estacionamiento = app;
 var log = new common_1.Logger();
-app.get("/inicio", inicio); //listo x2
-app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal); //listo x2
-app.get("/estacionamientoInfo", estacionamientoInfo); //listo x2
-app.post("/deshabilitarEstacionamiento", deshabilitarEstacionamiento); //listo x2
-app.get("/pintarEditarEstacionamiento", pintarEditarEstacionamiento); //listo x2
-app.post("/guardarEditarEstacionamiento", guardarEditarEstacionamiento); //listo
-app.get("/estacionamientosTipoSubcontratados", estacionamientosTipoSubcontratados //listo
-);
+app.get("/inicio", inicio);
+app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal);
+app.get("/estacionamientoInfo", estacionamientoInfo);
+app.post("/deshabilitarEstacionamiento", deshabilitarEstacionamiento);
+app.get("/pintarEditarEstacionamiento", pintarEditarEstacionamiento);
+app.post("/guardarEditarEstacionamiento", guardarEditarEstacionamiento);
+app.get("/estacionamientosTipoSubcontratados", estacionamientosTipoSubcontratados);
 function estacionamientosTipoSubcontratados(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var subcontratados;
