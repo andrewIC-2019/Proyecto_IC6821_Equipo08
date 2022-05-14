@@ -105,9 +105,9 @@ async function registrarUsuarioTotal(
     )
     .then((data) => {
       if (!data) {
-        data = '{"response": false}';
-      }
-      res.json(JSON.parse(data));
+        data = '-1';
+      } 
+      res.json({usuarioId: data});
     })
     .catch((err) => {
       log.error(err);

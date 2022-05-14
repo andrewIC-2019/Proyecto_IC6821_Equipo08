@@ -3,7 +3,6 @@ import * as bodyParser from 'body-parser';
 import { Logger } from '../common';
 import {weatherouter} from './weather';
 import {articlesrouter} from './articlesrouter';
-import {test} from './test';
 import {user} from './user';
 import {estacionamiento} from './estacionamiento';
 /*
@@ -35,7 +34,6 @@ class Routes {
     private routes(): void {
         this.express.use('/weather', weatherouter);
         this.express.use('/articles', articlesrouter);
-        this.express.use('/test', test);
         this.express.use('/user', user);
         this.express.use('/estacionamiento', estacionamiento);
         this.logger.info("Routes loaded");

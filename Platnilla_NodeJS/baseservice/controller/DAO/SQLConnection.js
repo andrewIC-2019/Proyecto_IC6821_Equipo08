@@ -184,7 +184,8 @@ function pintarEditarEstacionamiento(estacionamientoId) {
                     pool = _a.sent();
                     return [4 /*yield*/, pool
                             .request()
-                            .input("estacionamientoId", sql.Int, estacionamientoId)];
+                            .input("estacionamientoId", sql.Int, estacionamientoId)
+                            .execute("sp_pintarEditarEstacionamiento")];
                 case 2:
                     result = _a.sent();
                     str = "{";

@@ -117,9 +117,9 @@ function registrarUsuarioTotal(req, res, next) {
                             .$gestorUsuario.registrarUsuarioTotal(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, notificarCorreoAlterno)
                             .then(function (data) {
                             if (!data) {
-                                data = '{"response": false}';
+                                data = '-1';
                             }
-                            res.json(JSON.parse(data));
+                            res.json({ usuarioId: data });
                         })
                             .catch(function (err) {
                             log.error(err);

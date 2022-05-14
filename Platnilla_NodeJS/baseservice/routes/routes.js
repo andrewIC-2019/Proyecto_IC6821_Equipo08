@@ -5,7 +5,6 @@ var bodyParser = require("body-parser");
 var common_1 = require("../common");
 var weather_1 = require("./weather");
 var articlesrouter_1 = require("./articlesrouter");
-var test_1 = require("./test");
 var user_1 = require("./user");
 var estacionamiento_1 = require("./estacionamiento");
 /*
@@ -29,7 +28,6 @@ var Routes = /** @class */ (function () {
     Routes.prototype.routes = function () {
         this.express.use('/weather', weather_1.weatherouter);
         this.express.use('/articles', articlesrouter_1.articlesrouter);
-        this.express.use('/test', test_1.test);
         this.express.use('/user', user_1.user);
         this.express.use('/estacionamiento', estacionamiento_1.estacionamiento);
         this.logger.info("Routes loaded");
