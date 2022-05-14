@@ -330,14 +330,18 @@ async function estacionamientosTipoSubcontratados(
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("subcontratados", sql.Bit, subcontratados)
+    .input("subcontratados", sql.NVarChar, subcontratados)
     .execute("sp_estacionamientosTipoSubcontratados");
+console.log(subcontratados)
+console.log(result.recordsets)
 
   let str: string;
-  for (var key in result.recordset[0]) {
-    str = result.recordset[0][key];
+  if (result.recordsets && result.returnValue) {
+    for (var key in result.recordset[0]) {
+      str = result.recordset[0][key];
+    }
   }
-
+  
   return str;
 }
 
@@ -420,16 +424,20 @@ async function pintarEditarEstacionamiento(
     .input("estacionamientoId", sql.Int, estacionamientoId)
     .execute("sp_pintarEditarEstacionamiento");
 
-  let str: string = "{";
-  for (var i in result.recordsets) {
-    for (var key in result.recordsets[i][0]) {
-      let tmpStr: string = result.recordsets[i][0][key];
-      tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
-      str += '"' + i + '": "' + tmpStr + '",';
+  let str: string;
+  if (result.recordsets && result.returnValue) {
+    str = "{"
+    for (var i in result.recordsets) {
+      for (var key in result.recordsets[i][0]) {
+        let tmpStr: string = result.recordsets[i][0][key];
+        tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+        str += '"' + i + '": "' + tmpStr + '",';
+      }
     }
+    str = str.slice(0, -1);
+    str += "}";
   }
-  str = str.slice(0, -1);
-  str += "}";
+  
 
   return str;
 }
@@ -496,7 +504,7 @@ async function registrarEstacionamientoTotal(
     .input("sabadoB", sql.NVarChar(20), sabadoB)
     .input("domingoA", sql.NVarChar(20), domingoA)
     .input("domingoB", sql.NVarChar(20), domingoB)
-    .input("esInstitucional", sql.Bit, esInstitucional)
+    .input("esInstitucional", sql.NVarChar, esInstitucional)
 
     .execute("sp_registrarEstacionamientoTotal");
 
@@ -592,7 +600,7 @@ async function registrarUsuarioTotal(
     .input("sabadoB", sql.NVarChar(20), sabadoB)
     .input("domingoA", sql.NVarChar(20), domingoA)
     .input("domingoB", sql.NVarChar(20), domingoB)
-    .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
+    .input("notificarCorreoAlterno", sql.NVarChar, notificarCorreoAlterno)
     .execute("sp_registrarUsuarioTotal");
 
   return result.returnValue;
@@ -652,7 +660,7 @@ async function guardarEditarUsuario(
     .input("sabadoB", sql.NVarChar, sabadoB)
     .input("domingoA", sql.NVarChar, domingoA)
     .input("domingoB", sql.NVarChar, domingoB)
-    .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
+    .input("notificarCorreoAlterno", sql.NVarChar, notificarCorreoAlterno)
     .execute("sp_guardarEditarUsuario");
 
   return '{"done": true}';
@@ -693,9 +701,9 @@ async function consultaFuncionario(identificacion: string): Promise<string> {
   console.log(result);
   let str: string;
 
-  console.log(result)
+  console.log(result);
 
- /*  if (result.recordsets && result.returnValue) {
+  /*  if (result.recordsets && result.returnValue) {
     str = "{";
     for (var i in result.recordsets) {
       for (var key in result.recordsets[i][0]) {
@@ -708,7 +716,6 @@ async function consultaFuncionario(identificacion: string): Promise<string> {
     str += "}";
   } */
 
-
   return result.recordsets;
 }
 
@@ -720,8 +727,8 @@ async function estacionamientoInfo(estacionamientoId: string): Promise<string> {
     .request()
     .input("estacionamientoId", sql.Int, estacionamientoId)
     .execute("sp_estacionamientoinfo");
-console.log(estacionamientoId)
-console.log(result)
+  console.log(estacionamientoId);
+  console.log(result);
   let str: string;
   if (result.recordsets && result.returnValue) {
     let obj: any = result.recordsets[0][0];

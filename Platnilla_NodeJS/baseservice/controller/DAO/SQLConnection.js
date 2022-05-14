@@ -116,12 +116,16 @@ function estacionamientosTipoSubcontratados(subcontratados) {
                     pool = _a.sent();
                     return [4 /*yield*/, pool
                             .request()
-                            .input("subcontratados", sql.Bit, subcontratados)
+                            .input("subcontratados", sql.NVarChar, subcontratados)
                             .execute("sp_estacionamientosTipoSubcontratados")];
                 case 2:
                     result = _a.sent();
-                    for (key in result.recordset[0]) {
-                        str = result.recordset[0][key];
+                    console.log(subcontratados);
+                    console.log(result.recordsets);
+                    if (result.recordsets && result.returnValue) {
+                        for (key in result.recordset[0]) {
+                            str = result.recordset[0][key];
+                        }
                     }
                     return [2 /*return*/, str];
             }
@@ -188,16 +192,18 @@ function pintarEditarEstacionamiento(estacionamientoId) {
                             .execute("sp_pintarEditarEstacionamiento")];
                 case 2:
                     result = _a.sent();
-                    str = "{";
-                    for (i in result.recordsets) {
-                        for (key in result.recordsets[i][0]) {
-                            tmpStr = result.recordsets[i][0][key];
-                            tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
-                            str += '"' + i + '": "' + tmpStr + '",';
+                    if (result.recordsets && result.returnValue) {
+                        str = "{";
+                        for (i in result.recordsets) {
+                            for (key in result.recordsets[i][0]) {
+                                tmpStr = result.recordsets[i][0][key];
+                                tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+                                str += '"' + i + '": "' + tmpStr + '",';
+                            }
                         }
+                        str = str.slice(0, -1);
+                        str += "}";
                     }
-                    str = str.slice(0, -1);
-                    str += "}";
                     return [2 /*return*/, str];
             }
         });
@@ -240,7 +246,7 @@ function registrarEstacionamientoTotal(nombre, correo, telefono, identificacion,
                             .input("sabadoB", sql.NVarChar(20), sabadoB)
                             .input("domingoA", sql.NVarChar(20), domingoA)
                             .input("domingoB", sql.NVarChar(20), domingoB)
-                            .input("esInstitucional", sql.Bit, esInstitucional)
+                            .input("esInstitucional", sql.NVarChar, esInstitucional)
                             .execute("sp_registrarEstacionamientoTotal")];
                 case 2:
                     result = _a.sent();
@@ -324,7 +330,7 @@ function registrarUsuarioTotal(correoInstitucional, identificacion, correo, pass
                             .input("sabadoB", sql.NVarChar(20), sabadoB)
                             .input("domingoA", sql.NVarChar(20), domingoA)
                             .input("domingoB", sql.NVarChar(20), domingoB)
-                            .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
+                            .input("notificarCorreoAlterno", sql.NVarChar, notificarCorreoAlterno)
                             .execute("sp_registrarUsuarioTotal")];
                 case 2:
                     result = _a.sent();
@@ -366,7 +372,7 @@ function guardarEditarUsuario(usuarioId, correo, password, telefono, departament
                             .input("sabadoB", sql.NVarChar, sabadoB)
                             .input("domingoA", sql.NVarChar, domingoA)
                             .input("domingoB", sql.NVarChar, domingoB)
-                            .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
+                            .input("notificarCorreoAlterno", sql.NVarChar, notificarCorreoAlterno)
                             .execute("sp_guardarEditarUsuario")];
                 case 2:
                     result = _a.sent();
@@ -421,17 +427,17 @@ function consultaFuncionario(identificacion) {
                     console.log(result);
                     console.log(result);
                     /*  if (result.recordsets && result.returnValue) {
-                       str = "{";
-                       for (var i in result.recordsets) {
-                         for (var key in result.recordsets[i][0]) {
-                           let tmpStr: string = result.recordsets[i][0][key];
-                           tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
-                           str += '"' + i + '": "' + tmpStr + '",';
-                         }
-                       }
-                       str = str.slice(0, -1);
-                       str += "}";
-                     } */
+                      str = "{";
+                      for (var i in result.recordsets) {
+                        for (var key in result.recordsets[i][0]) {
+                          let tmpStr: string = result.recordsets[i][0][key];
+                          tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+                          str += '"' + i + '": "' + tmpStr + '",';
+                        }
+                      }
+                      str = str.slice(0, -1);
+                      str += "}";
+                    } */
                     return [2 /*return*/, result.recordsets];
             }
         });

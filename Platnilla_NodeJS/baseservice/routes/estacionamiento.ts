@@ -8,9 +8,9 @@ const log = new Logger();
 
 app.get("/inicio", inicio); //listo x2
 app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal); //listo x2
-app.get("/estacionamientoInfo", estacionamientoInfo); //listo
-app.post("/deshabilitarEstacionamiento", deshabilitarEstacionamiento); //listo
-app.get("/pintarEditarEstacionamiento", pintarEditarEstacionamiento); //listo
+app.get("/estacionamientoInfo", estacionamientoInfo); //listo x2
+app.post("/deshabilitarEstacionamiento", deshabilitarEstacionamiento); //listo x2
+app.get("/pintarEditarEstacionamiento", pintarEditarEstacionamiento); //listo x2
 app.post("/guardarEditarEstacionamiento", guardarEditarEstacionamiento); //listo
 app.get(
   "/estacionamientosTipoSubcontratados",
