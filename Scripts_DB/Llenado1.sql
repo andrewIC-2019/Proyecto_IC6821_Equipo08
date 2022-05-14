@@ -97,6 +97,9 @@ INSERT INTO dbo.TiposFuncionarios(tipoFuncionario) VALUES
 -- Adicionalmente...
 
 /*
+
+-- Favor NO CORRER! (sirve como ejemplo unicamente)
+
 INSERT INTO dbo.Horarios (diaSemana, horaInicio, horaFinal) VALUES
 (1, '07:30', '16:30'),
 (2, '07:30', '16:30'),

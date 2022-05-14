@@ -8,6 +8,8 @@
 --		Se llamara dentro del proceso de registro de usuario, para asignarle los permisos pertinentes
 
 DROP PROCEDURE IF EXISTS dbo.sp_permisosUsuario
+GO
+
 
 CREATE PROCEDURE dbo.sp_permisosUsuario
 	@usuarioId bigint,
@@ -34,6 +36,7 @@ GO
 -- Se utiliza al registrarEstacionamiento
 
 DROP PROCEDURE IF EXISTS dbo.sp_ubicaciones
+GO
 
 CREATE PROCEDURE dbo.sp_ubicaciones
 	@provincia tinyint, 
@@ -54,6 +57,7 @@ GO
 -- Utilizado en dbo.sp_registrarEstacionamientoTotal
 
 DROP PROCEDURE IF EXISTS dbo.sp_registrarEstacionamiento
+GO
 
 CREATE PROCEDURE dbo.sp_registrarEstacionamiento
 	@tipoEstacionamiento smallint,
@@ -71,7 +75,7 @@ CREATE PROCEDURE dbo.sp_registrarEstacionamiento
 	@correo nvarchar(200),
 	@telefono nvarchar(40),
 	@identificacion nvarchar(60),
-	@imageUrl nvarchar(128),
+	@imageUrl nvarchar(800),
 	@descripcion nvarchar(250)
 AS
 	-- Registra la ubicacion
@@ -115,6 +119,7 @@ NULL, NULL, 'Cuenta con espacios exclusivos para las jefaturas y vehiculos ofici
 -- SP Horarios y Usuario ASOCIA
 
 DROP PROCEDURE IF EXISTS dbo.sp_registrarHorario
+GO
 
 CREATE PROCEDURE dbo.sp_registrarHorario
 	@usuarioId bigint,
@@ -165,6 +170,7 @@ GO
 -- SP Horarios y Estacionamiento (ASOCIA) 
 
 DROP PROCEDURE IF EXISTS dbo.sp_registrarHorarioEstacionamiento
+GO
 
 CREATE PROCEDURE dbo.sp_registrarHorarioEstacionamiento
 	@estacionamientoId int,
@@ -216,6 +222,7 @@ GO
 --		Asocia un vehiculo junto a un usuario
 
 DROP PROCEDURE IF EXISTS dbo.sp_RegistrarVehiculo
+GO
 
 CREATE PROCEDURE dbo.sp_RegistrarVehiculo
 	@usuarioId bigint,
@@ -268,6 +275,7 @@ GO
 -- Utilizado en el SP completo
 
 DROP PROCEDURE IF EXISTS dbo.sp_RegistrarFuncionario
+GO
 
 CREATE PROCEDURE dbo.sp_RegistrarFuncionario
 	@tipoFuncionario int,
@@ -351,6 +359,7 @@ SELECT @impreso
 -- Pantalla 0: login (Inicio de Sesion)
 
 DROP PROCEDURE IF EXISTS dbo.sp_login
+GO
 
 CREATE PROCEDURE dbo.sp_login
 	@user nvarchar(200),
@@ -368,6 +377,7 @@ AS
 		SELECT @temporal=[password] FROM dbo.Usuarios WHERE usuarioId = @elUsuario
 		IF @temporal = HASHBYTES('SHA2_256', @pass) BEGIN
 			SELECT usuarioId, apellido1, apellido2, nombre, esAdministrador, correo FROM dbo.Usuarios WHERE usuarioId = @elUsuario FOR JSON AUTO
+			RETURN 1
 		END ELSE BEGIN
 			RETURN 0
 		END
@@ -388,11 +398,13 @@ EXEC dbo.sp_login 'mcampos.71@itcr.ac.cr', 'actualizada'
 --		Tarjetas Estacionamientos
 
 DROP PROCEDURE IF EXISTS dbo.sp_inicio
+GO
 
 CREATE PROCEDURE dbo.sp_inicio
 AS
 	SELECT estacionamientoId, nombre, espaciosTotales = cantEspacios+cantEspaciosEspeciales+cantEspaciosJefaturas+cantEspaciosVisitantes+cantEspaciosOficiales, telefono, imageUrl from dbo.Estacionamientos
 	WHERE deshabilitado = 0 FOR JSON PATH
+	RETURN 1
 GO
 
 /*
@@ -409,12 +421,14 @@ EXEC dbo.sp_inicio
 --		Informacion Estacionamiento
 
 DROP PROCEDURE IF EXISTS dbo.sp_estacionamientoinfo
+GO
 
 CREATE PROCEDURE dbo.sp_estacionamientoinfo 
 	@estacionamientoId INT
 AS
 	SELECT nombre, descripcion, direccionExacta, formaAcceso, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosOficiales, cantEspaciosVisitantes, imageUrl
 	FROM dbo.Estacionamientos e INNER JOIN dbo.Ubicaciones u ON e.ubicacion = u.ubicacionId WHERE estacionamientoId = @estacionamientoId  AND deshabilitado = 0 FOR JSON PATH
+	RETURN 1
 GO
 
 /*
@@ -434,11 +448,14 @@ EXEC dbo.sp_estacionamientoinfo 7
 -- [] Informe detallado de estacionamientos
 
 DROP PROCEDURE IF EXISTS dbo.sp_informeEstacionamientos
+GO
+
 
 CREATE PROCEDURE dbo.sp_informeEstacionamientos
 AS
 	SELECT nombre, correo, telefono, descripcion, direccionExacta, cantEspacios, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosOficiales, cantEspaciosVisitantes
 	FROM dbo.Estacionamientos e INNER JOIN dbo.Ubicaciones u ON e.ubicacion = u.ubicacionId WHERE deshabilitado = 0 FOR JSON PATH
+	RETURN 1
 GO
 
 /*
@@ -451,12 +468,14 @@ EXEC dbo.sp_informeEstacionamientos
 -- [] Informe detallado de funcionarios
 
 DROP PROCEDURE IF EXISTS dbo.sp_informeFuncionarios
+GO
 
 CREATE PROCEDURE dbo.sp_informeFuncionarios
 
 AS
 	SELECT identificacion, apellido1, apellido2, nombre, correoInstitucional, telefono
-	FROM dbo.Usuarios WHERE deshabilitado = 0 ORDER BY apellido1 FOR JSON path
+	FROM dbo.Usuarios WHERE deshabilitado = 0 ORDER BY apellido1 FOR JSON PATH
+	RETURN 1
 GO
 
 /*
@@ -476,6 +495,7 @@ GO
 -- SELECT horarioId, funcionarios = count(horarioId) FROM dbo.Horarios_Por_Usuario GROUP BY horarioId ORDER BY funcionarios DESC
 
 DROP PROCEDURE IF EXISTS dbo.sp_franjasHorarias
+GO
 
 CREATE PROCEDURE dbo.sp_franjasHorarias
 
@@ -485,7 +505,8 @@ AS
 	WHERE deshabilitado=0 GROUP BY horarioId) hua 
 	INNER JOIN dbo.Horarios h ON hua.horarioId = h.horarioId
 	INNER JOIN dbo.Dias d ON h.diaSemana = d.diaId
-	ORDER BY diaSemana, funcionarios DESC
+	ORDER BY diaSemana, funcionarios DESC FOR JSON PATH
+	RETURN 1
 GO
 
 /*
@@ -494,12 +515,13 @@ GO
 
 	EXEC dbo.sp_franjasHorarias
 */
-
+SELECT * FROM dbo.Estacionamientos
 
 
 -- [] Consulta de un funcionario por identificacion
 
 DROP PROCEDURE IF EXISTS dbo.sp_consultaFuncionario
+GO
 
 CREATE PROCEDURE dbo.sp_consultaFuncionario
 	@identificacion nvarchar(60)
@@ -520,7 +542,9 @@ AS
 		SELECT dia, horaInicio, horaFinal FROM dbo.Horarios_Por_Usuario hu 
 		INNER JOIN dbo.Horarios h ON hu.horarioId = h.horarioId
 		INNER JOIN dbo.Dias d ON h.diaSemana = d.diaId
-		WHERE usuarioId = @usuarioId AND hu.deshabilitado = 0 FOR JSON AUTO
+		WHERE usuarioId = @usuarioId AND hu.deshabilitado = 0 FOR JSON PATH
+
+		RETURN 1
 	END ELSE BEGIN
 		RETURN 0
 	END
@@ -550,6 +574,7 @@ EXEC dbo.sp_consultaFuncionario '965310025'
 --		traer: para pintar en las cajas
 
 DROP PROCEDURE IF EXISTS dbo.sp_pintarEditarUsuario
+GO
 
 -- Pinta solo en pantalla, los valores que se presentaran y que eventualmente puede editar
 
@@ -569,6 +594,8 @@ AS
 	INNER JOIN dbo.Dias d ON h.diaSemana = d.diaId
 	WHERE usuarioId = @usuarioId FOR JSON AUTO
 
+	RETURN 1
+
 GO
 
 -- ejemplo de ejecucion: @usuarioId
@@ -578,6 +605,7 @@ GO
 --		guardar: para salvar los cambios, en caso de que el boton se oprima
 
 DROP PROCEDURE IF EXISTS dbo.sp_guardarEditarUsuario
+GO
 
 CREATE PROCEDURE dbo.sp_guardarEditarUsuario
 	@usuarioId bigint,
@@ -666,6 +694,8 @@ AS
 		EXEC dbo.sp_registrarHorario @usuarioId, 7, @domingoA, @domingoB
 	END
 
+	RETURN 1
+
 GO
 
 /*
@@ -680,6 +710,7 @@ NULL, NULL, '07:30', '16:30', '07:30', '16:30', NULL, NULL, NULL, NULL, NULL, NU
 -- ==========================================
 
 DROP PROCEDURE dbo.sp_registrarUsuarioTotal
+GO
 
 CREATE PROCEDURE dbo.sp_registrarUsuarioTotal
 	@correoInstitucional nvarchar(200),
@@ -808,6 +839,7 @@ SELECT @otraSalida
 -- ==========================================
 
 DROP PROCEDURE IF EXISTS dbo.sp_registrarEstacionamientoTotal
+GO
 
 CREATE PROCEDURE dbo.sp_registrarEstacionamientoTotal
 	@nombre nvarchar(200),
@@ -893,8 +925,11 @@ GO
 
 -- Ejemplo de ejecucion
 
-EXEC dbo.sp_registrarEstacionamientoTotal 'Parqueo Amón', 'parqueo.amon@email.cr', '75643461', NULL, 'Diagonal a casa verde', 'Dar la vuelta por el edificio principal, sentido S-N', 'Parqueo cercano al campus',
-1, 1, 1, 0, 7, NULL, '06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '08:00', '16:00', NULL, NULL, 0
+EXEC dbo.sp_registrarEstacionamientoTotal 'Parqueo Amón2', 'parqueo.amon@email.cr', '75643462', NULL, 'Diagonal a casa verd2e', 'Dar la vuelta por el edificio principal, sentido S-N2', 'Parqueo cercano al campus2',
+1, 1, 1, 0, 7, 'https://uc905e507265cf72e311859374ed.previews.dropboxusercontent.com/p/thumb/ABhIgcjAJXv8k4siO1HiGTPNXePMIt8QbCiYXVl17E9zpJSLT9osxPUDlcr6gGHTJfx0rvGXQ4P0vfIHIrpoPQ5Y7yCmaBcLDPilYGYBZPgcrxzoUs2CGSStm1kdLwxekiQ7nYOR6fwGW-c0T5wtwRGb8ehEIK7pMohYhJl2qmaX1gPGlefKgnQ_usdMuY4tnAKyNXyE-N12y8y1786sRO1JpxiabYn72hNdqiGK8Jp13JcIEAeePQSliayjYjbj05EtTO88nFVCxaAUelH1xF8fRTGojcVLwoOSl1FBk-KJ0wb3wrwW3ZWfzZjnz7vvgwnEW4DbuLzK9r2LcH1iFV0JrOlSWjIOP57Iw0r67e5k9gXksr1cZS8H6sF4wlg-V2s/p.jpeg',
+'06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '08:00', '16:00', NULL, NULL, 0
+
+SELECT * FROM dbo.Estacionamientos
 */
 
 
@@ -905,6 +940,7 @@ EXEC dbo.sp_registrarEstacionamientoTotal 'Parqueo Amón', 'parqueo.amon@email.cr
 --		traer: para pintar en las cajas
 
 DROP PROCEDURE IF EXISTS dbo.sp_pintarEditarEstacionamiento
+GO
 
 CREATE PROCEDURE dbo.sp_pintarEditarEstacionamiento
 	@estacionamientoId bigint
@@ -915,7 +951,9 @@ AS
 	SELECT diaSemana, horaInicio, horaFinal FROM dbo.Horarios_Por_Estacionamiento he
 	INNER JOIN dbo.Horarios h ON he.horarioId = h.horarioId
 	INNER JOIN dbo.Dias d ON h.diaSemana = d.diaId
-	WHERE estacionamientoId = @estacionamientoId FOR JSON AUTO
+	WHERE estacionamientoId = @estacionamientoId FOR JSON PATH
+
+	RETURN 1
 
 GO
 
@@ -928,6 +966,7 @@ EXEC dbo.sp_pintarEditarEstacionamiento 8
 --		guardar: para salvar los cambios, en caso de que el boton se oprima
 
 DROP PROCEDURE IF EXISTS dbo.sp_guardarEditarEstacionamiento
+GO
 
 CREATE PROCEDURE dbo.sp_guardarEditarEstacionamiento
 	@estacionamientoId int,
@@ -1006,6 +1045,8 @@ AS
 		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 7, @domingoA, @domingoB
 	END
 
+	RETURN 1
+
 GO
 
 /*
@@ -1030,6 +1071,7 @@ NULL, NULL, '07:30', '16:30', '07:30', '16:30', NULL, NULL, NULL, NULL, NULL, NU
 
 
 DROP PROCEDURE IF EXISTS dbo.sp_estacionamientosTipoSubcontratados
+GO
 	
 -- Bandera
 -- 0: Institucional
@@ -1050,6 +1092,8 @@ AS
 
 	END
 
+	RETURN 1
+
 GO
 
 /*
@@ -1063,6 +1107,7 @@ EXEC dbo.sp_estacionamientosTipoSubcontratados 0
 
 
 DROP PROCEDURE IF EXISTS dbo.deshabilitarEstacionamiento
+GO
 	
 CREATE PROCEDURE dbo.deshabilitarEstacionamiento	
 	@estacionamientoId nvarchar(60)
@@ -1084,6 +1129,7 @@ EXEC dbo.deshabilitarEstacionamiento 3
 -- ..............................................................................................
 
 DROP PROCEDURE IF EXISTS dbo.deshabilitarUsuario
+GO
 	
 CREATE PROCEDURE dbo.deshabilitarUsuario	
 	@usuarioId BIGINT
