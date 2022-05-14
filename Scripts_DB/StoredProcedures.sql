@@ -474,7 +474,7 @@ CREATE PROCEDURE dbo.sp_informeFuncionarios
 
 AS
 	SELECT identificacion, apellido1, apellido2, nombre, correoInstitucional, telefono
-	FROM dbo.Usuarios WHERE deshabilitado = 0 ORDER BY apellido1 FOR JSON PATH
+	FROM dbo.Usuarios WHERE deshabilitado = 0 ORDER BY apellido1
 	RETURN 1
 GO
 
@@ -515,7 +515,7 @@ GO
 
 	EXEC dbo.sp_franjasHorarias
 */
-SELECT * FROM dbo.Estacionamientos
+
 
 
 -- [] Consulta de un funcionario por identificacion
@@ -533,16 +533,16 @@ AS
 	IF @usuarioId > 0 BEGIN
 		SELECT identificacion, apellido1, apellido2, nombre, telefono, correoInstitucional, departamento = codigoDivision FROM dbo.Usuarios u
 		INNER JOIN dbo.Divisiones d ON u.division = d.divisionId
-		WHERE identificacion = @identificacion FOR JSON PATH
+		WHERE identificacion = @identificacion
 
 		SELECT placa FROM dbo.Vehiculos_Por_Usuario vu 
 		INNER JOIN dbo.Vehiculos v ON vu.vehiculoId = v.vehiculoId 
-		WHERE usuarioId = @usuarioId AND vu.deshabilitado = 0 FOR JSON AUTO
+		WHERE usuarioId = @usuarioId AND vu.deshabilitado = 0
 
 		SELECT dia, horaInicio, horaFinal FROM dbo.Horarios_Por_Usuario hu 
 		INNER JOIN dbo.Horarios h ON hu.horarioId = h.horarioId
 		INNER JOIN dbo.Dias d ON h.diaSemana = d.diaId
-		WHERE usuarioId = @usuarioId AND hu.deshabilitado = 0 FOR JSON PATH
+		WHERE usuarioId = @usuarioId AND hu.deshabilitado = 0
 
 		RETURN 1
 	END ELSE BEGIN
