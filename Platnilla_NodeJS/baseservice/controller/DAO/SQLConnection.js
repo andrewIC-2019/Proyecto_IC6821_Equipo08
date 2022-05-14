@@ -176,7 +176,7 @@ function guardarEditarEstacionamiento(estacionamientoId, identificacion, nombre,
 }
 function pintarEditarEstacionamiento(estacionamientoId) {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, result, str, json, i, key, tmpStr;
+        var pool, result, str, i, key, tmpStr;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
@@ -406,7 +406,7 @@ function pintarEditarUsuario(usuarioId) {
 }
 function consultaFuncionario(identificacion) {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, result, str, i, key, tmpStr;
+        var pool, result, str;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
@@ -418,17 +418,22 @@ function consultaFuncionario(identificacion) {
                             .execute("sp_consultaFuncionario")];
                 case 2:
                     result = _a.sent();
-                    str = "{";
-                    for (i in result.recordsets) {
-                        for (key in result.recordsets[i][0]) {
-                            tmpStr = result.recordsets[i][0][key];
-                            tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
-                            str += '"' + i + '": "' + tmpStr + '",';
-                        }
-                    }
-                    str = str.slice(0, -1);
-                    str += "}";
-                    return [2 /*return*/, str];
+                    console.log(result);
+                    console.log(result);
+                    /*  if (result.recordsets && result.returnValue) {
+                       str = "{";
+                       for (var i in result.recordsets) {
+                         for (var key in result.recordsets[i][0]) {
+                           let tmpStr: string = result.recordsets[i][0][key];
+                           tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+                           str += '"' + i + '": "' + tmpStr + '",';
+                         }
+                       }
+                       str = str.slice(0, -1);
+                       str += "}";
+                     } */
+                    console.log(result.recordsets);
+                    return [2 /*return*/, result.recordsets];
             }
         });
     });
@@ -447,9 +452,13 @@ function estacionamientoInfo(estacionamientoId) {
                             .execute("sp_estacionamientoinfo")];
                 case 2:
                     result = _a.sent();
-                    obj = result.recordsets[0][0];
-                    for (key in obj) {
-                        str = obj[key];
+                    console.log(estacionamientoId);
+                    console.log(result);
+                    if (result.recordsets && result.returnValue) {
+                        obj = result.recordsets[0][0];
+                        for (key in obj) {
+                            str = obj[key];
+                        }
                     }
                     return [2 /*return*/, str];
             }
@@ -524,9 +533,11 @@ function inicio() {
                     return [4 /*yield*/, pool.request().execute("sp_inicio")];
                 case 2:
                     result = _a.sent();
-                    obj = result.recordsets[0][0];
-                    for (key in obj) {
-                        str = obj[key];
+                    if (result.recordsets && result.returnValue) {
+                        obj = result.recordsets[0][0];
+                        for (key in obj) {
+                            str = obj[key];
+                        }
                     }
                     return [2 /*return*/, str];
             }

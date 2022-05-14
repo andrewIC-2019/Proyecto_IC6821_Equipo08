@@ -6,8 +6,8 @@ import { Control } from "../controller";
 const app = express();
 const log = new Logger();
 
-app.get("/inicio", inicio); //listo
-app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal); //listo
+app.get("/inicio", inicio); //listo x2
+app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal); //listo x2
 app.get("/estacionamientoInfo", estacionamientoInfo); //listo
 app.post("/deshabilitarEstacionamiento", deshabilitarEstacionamiento); //listo
 app.get("/pintarEditarEstacionamiento", pintarEditarEstacionamiento); //listo
@@ -203,9 +203,9 @@ async function registrarEstacionamientoTotal(
     )
     .then((data) => {
       if (!data) {
-        data = '{"response": false}';
+        data = '-1';
       }
-      res.json(JSON.parse(data));
+      res.json({estacionamientoId : data});
     })
     .catch((err) => {
       log.error(err);

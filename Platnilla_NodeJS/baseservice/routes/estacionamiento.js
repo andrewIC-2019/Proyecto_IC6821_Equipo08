@@ -44,8 +44,8 @@ var controller_1 = require("../controller");
 var app = express();
 exports.estacionamiento = app;
 var log = new common_1.Logger();
-app.get("/inicio", inicio); //listo
-app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal); //listo
+app.get("/inicio", inicio); //listo x2
+app.post("/registrarEstacionamientoTotal", registrarEstacionamientoTotal); //listo x2
 app.get("/estacionamientoInfo", estacionamientoInfo); //listo
 app.post("/deshabilitarEstacionamiento", deshabilitarEstacionamiento); //listo
 app.get("/pintarEditarEstacionamiento", pintarEditarEstacionamiento); //listo
@@ -195,9 +195,9 @@ function registrarEstacionamientoTotal(req, res, next) {
                             .$gestorEstacionamiento.registrarEstacionamientoTotal(nombre, correo, telefono, identificacion, direccionExacta, formaAcceso, descripcion, cantEspaciosEspeciales, cantEspaciosJefaturas, cantEspaciosVisitantes, cantEspaciosOficiales, cantEspacios, imageUrl, lunesA, lunesB, martesA, martesB, miercolesA, miercolesB, juevesA, juevesB, viernesA, viernesB, sabadoA, sabadoB, domingoA, domingoB, esInstitucional)
                             .then(function (data) {
                             if (!data) {
-                                data = '{"response": false}';
+                                data = '-1';
                             }
-                            res.json(JSON.parse(data));
+                            res.json({ estacionamientoId: data });
                         })
                             .catch(function (err) {
                             log.error(err);

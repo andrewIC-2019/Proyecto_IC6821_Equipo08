@@ -406,7 +406,6 @@ async function guardarEditarEstacionamiento(
     .input("domingoB", sql.NVarChar, domingoB)
     .execute("sp_guardarEditarEstacionamiento");
 
-  
   return "1";
 }
 
@@ -422,7 +421,6 @@ async function pintarEditarEstacionamiento(
     .execute("sp_pintarEditarEstacionamiento");
 
   let str: string = "{";
-  let json: any;
   for (var i in result.recordsets) {
     for (var key in result.recordsets[i][0]) {
       let tmpStr: string = result.recordsets[i][0][key];
@@ -502,7 +500,6 @@ async function registrarEstacionamientoTotal(
 
     .execute("sp_registrarEstacionamientoTotal");
 
-
   return result.returnValue;
 }
 
@@ -517,7 +514,6 @@ async function eliminarEstacionamiento(
     .input("estacionamientoId", sql.NVarChar(60), estacionamientoId)
     .execute("deshabilitarEstacionamiento");
 
-
   return result.returnValue;
 }
 
@@ -530,7 +526,6 @@ async function eliminarUsuario(usuarioId: number): Promise<string> {
     .request()
     .input("usuarioId", sql.Int, usuarioId)
     .execute("deshabilitarUsuario");
-
 
   return result.returnValue;
 }
@@ -660,7 +655,6 @@ async function guardarEditarUsuario(
     .input("notificarCorreoAlterno", sql.Bit, notificarCorreoAlterno)
     .execute("sp_guardarEditarUsuario");
 
-
   return '{"done": true}';
 }
 
@@ -672,7 +666,6 @@ async function pintarEditarUsuario(usuarioId: string): Promise<string> {
     .request()
     .input("usuarioId", sql.Int, usuarioId)
     .execute("sp_pintarEditarUsuario");
-
 
   let str: string = "{";
   let json: any;
@@ -697,19 +690,26 @@ async function consultaFuncionario(identificacion: string): Promise<string> {
     .request()
     .input("identificacion", sql.NVarChar(60), identificacion)
     .execute("sp_consultaFuncionario");
+  console.log(result);
+  let str: string;
 
-  let str: string = "{";
-  for (var i in result.recordsets) {
-    for (var key in result.recordsets[i][0]) {
-      let tmpStr: string = result.recordsets[i][0][key];
-      tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
-      str += '"' + i + '": "' + tmpStr + '",';
+  console.log(result)
+
+ /*  if (result.recordsets && result.returnValue) {
+    str = "{";
+    for (var i in result.recordsets) {
+      for (var key in result.recordsets[i][0]) {
+        let tmpStr: string = result.recordsets[i][0][key];
+        tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+        str += '"' + i + '": "' + tmpStr + '",';
+      }
     }
-  }
-  str = str.slice(0, -1);
-  str += "}";
+    str = str.slice(0, -1);
+    str += "}";
+  } */
+  console.log(result.recordsets)
 
-  return str;
+  return result.recordsets;
 }
 
 async function estacionamientoInfo(estacionamientoId: string): Promise<string> {
@@ -720,12 +720,14 @@ async function estacionamientoInfo(estacionamientoId: string): Promise<string> {
     .request()
     .input("estacionamientoId", sql.Int, estacionamientoId)
     .execute("sp_estacionamientoinfo");
-
-
+console.log(estacionamientoId)
+console.log(result)
   let str: string;
-  let obj: any = result.recordsets[0][0];
-  for (var key in obj) {
-    str = obj[key];
+  if (result.recordsets && result.returnValue) {
+    let obj: any = result.recordsets[0][0];
+    for (var key in obj) {
+      str = obj[key];
+    }
   }
   return str;
 }
@@ -735,7 +737,6 @@ async function franjasHorarias(): Promise<string> {
   let pool = await new sql.connect(config);
   //do reques from pool, with parameters and execute sp
   let result = await pool.request().execute("sp_franjasHorarias");
-
 
   let str: string;
   let obj: any = result.recordsets[0][0];
@@ -751,15 +752,14 @@ async function informeEstacionamientos(): Promise<string> {
   //do reques from pool, with parameters and execute sp
   let result = await pool.request().execute("sp_informeEstacionamientos");
 
-
-  let str : string;
+  let str: string;
   let obj: any = result.recordsets[0][0];
   for (var key in obj) {
     str = obj[key];
   }
   return str;
 
-  return str
+  return str;
 }
 
 async function informeFuncionarios(): Promise<string> {
@@ -779,10 +779,13 @@ async function inicio(): Promise<string> {
   let result = await pool.request().execute("sp_inicio");
 
   let str: string;
-  let obj: any = result.recordsets[0][0];
-  for (var key in obj) {
-    str = obj[key];
+  if (result.recordsets && result.returnValue) {
+    let obj: any = result.recordsets[0][0];
+    for (var key in obj) {
+      str = obj[key];
+    }
   }
+
   return str;
 }
 
@@ -796,7 +799,6 @@ async function login(username: string, password: string): Promise<string> {
     .input("user", sql.NVarChar(200), username)
     .input("pass", sql.NVarChar(200), password)
     .execute("sp_login");
-
 
   if (result.returnValue == 0) {
     return "{}";

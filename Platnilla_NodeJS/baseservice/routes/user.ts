@@ -11,7 +11,7 @@ app.get("/login", login); //listo
 app.get("/informeFuncionarios", informeFuncionarios);//listo 
 app.get("/informeEstacionamientos", informeEstacionamientos);//listo 
 app.get("/franjasHorarias", franjasHorarias);//listo 
-app.get("/consultaFuncionario", consultaFuncionario);//listo
+app.get("/consultaFuncionario", consultaFuncionario);//listo x2
 app.get("/pintarEditarUsuario", pintarEditarUsuario); //listo
 app.post("/guardarEditarUsuario", guardarEditarUsuario);//listo
 app.post("/registrarUsuarioTotal", registrarUsuarioTotal); //listo
@@ -217,7 +217,8 @@ async function consultaFuncionario(
       if (!data) {
         data = '{"response": false}';
       }
-      res.json(JSON.parse(data));
+      console.log(data)
+      res.json(data);
     })
     .catch((err) => {
       log.error(err);
