@@ -707,7 +707,7 @@ async function consultaFuncionario(identificacion: string): Promise<string> {
     str = str.slice(0, -1);
     str += "}";
   } */
-  console.log(result.recordsets)
+
 
   return result.recordsets;
 }

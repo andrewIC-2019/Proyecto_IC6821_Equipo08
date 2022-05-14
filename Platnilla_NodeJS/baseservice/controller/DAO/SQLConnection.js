@@ -432,7 +432,6 @@ function consultaFuncionario(identificacion) {
                        str = str.slice(0, -1);
                        str += "}";
                      } */
-                    console.log(result.recordsets);
                     return [2 /*return*/, result.recordsets];
             }
         });
