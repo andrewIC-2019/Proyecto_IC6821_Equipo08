@@ -176,7 +176,7 @@ function guardarEditarEstacionamiento(estacionamientoId, identificacion, nombre,
 }
 function pintarEditarEstacionamiento(estacionamientoId) {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, result, str, json, i, key, tmpStr, tmp;
+        var pool, result, str, json, i, key, tmpStr;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
@@ -194,7 +194,6 @@ function pintarEditarEstacionamiento(estacionamientoId) {
                             tmpStr = result.recordsets[i][0][key];
                             tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
                             str += '"' + i + '": "' + tmpStr + '",';
-                            tmp = JSON.parse(result.recordsets[i][0][key]);
                         }
                     }
                     str = str.slice(0, -1);
@@ -407,7 +406,7 @@ function pintarEditarUsuario(usuarioId) {
 }
 function consultaFuncionario(identificacion) {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, result, str, i, key, tmpStr, tmp;
+        var pool, result, str, i, key, tmpStr;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
@@ -425,7 +424,6 @@ function consultaFuncionario(identificacion) {
                             tmpStr = result.recordsets[i][0][key];
                             tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
                             str += '"' + i + '": "' + tmpStr + '",';
-                            tmp = JSON.parse(result.recordsets[i][0][key]);
                         }
                     }
                     str = str.slice(0, -1);

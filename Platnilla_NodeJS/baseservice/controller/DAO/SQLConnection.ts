@@ -704,7 +704,6 @@ async function consultaFuncionario(identificacion: string): Promise<string> {
       let tmpStr: string = result.recordsets[i][0][key];
       tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
       str += '"' + i + '": "' + tmpStr + '",';
-      let tmp: any = JSON.parse(result.recordsets[i][0][key]);
     }
   }
   str = str.slice(0, -1);
