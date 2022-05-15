@@ -104,7 +104,6 @@ GO
 
 /*
 -- Ejemplo de como se debe llamar
-
 EXEC dbo.sp_registrarEstacionamiento 1, 1, 1, 1, 'Sobre calle 5, Costado sur del edificio principal', 'Parqueo Principal CTLSJ',
 'Sobre Avenida 7 o 9, tomar calle 5, entrada al costado sur del edificio principal', 0, 2, 6, 0, 2, 'ctlsanjose@itcr.ac.cr', '2550 0001',
 NULL, NULL, 'Cuenta con espacios exclusivos para las jefaturas y vehiculos oficiales'
@@ -113,7 +112,7 @@ NULL, NULL, 'Cuenta con espacios exclusivos para las jefaturas y vehiculos ofici
 -- ..............................................................................................
 
 -- Horarios:
---		La idea seria buscar si ya está, si no, entonces crearlo
+--		La idea seria buscar si ya estÃ¡, si no, entonces crearlo
 --		Me devuelve el horarioId
 
 -- SP Horarios y Usuario ASOCIA
@@ -156,12 +155,9 @@ AS
 GO
 
 /*
-
 -- Ejemplo de como se debe llamar
-
 EXEC dbo.sp_registrarHorario 1, 3, '17:00', '21:00'
 GO
-
 */
 
 -- ..............................................................................................
@@ -207,12 +203,9 @@ AS
 GO
 
 /*
-
 -- Ejemplo de como se debe llamar
-
 EXEC dbo.sp_registrarHorarioEstacionamiento 1, 1, '07:00', '22:00'
 GO
-
 */
 
 -- ..............................................................................................
@@ -240,6 +233,18 @@ AS
 		RETURN 0					-- Si ya el usuario tenia ese carro, entonces no sigue el registro
 	END
 
+	-- NUEVO
+
+	-- Validacion no mas de 4
+	DECLARE @cantidadAsociados INT
+	SELECT @cantidadAsociados = COUNT(vehiculoId) FROM dbo.Vehiculos_Por_Usuario WHERE usuarioId = @usuarioId AND deshabilitado = 0
+
+	IF @cantidadAsociados>3 BEGIN
+		RETURN 0					-- Ya el usuario agoto los 4 vehiculos que puede asociar
+	END
+
+	-- NUEVO
+
 	IF @Existe<1 BEGIN						-- si no esta resgistrada, lo inserta mediante transaccion
 		BEGIN TRANSACTION
 			INSERT INTO dbo.Vehiculos (placa, tipoVehiculo)
@@ -260,12 +265,9 @@ AS
 GO
 
 /*
-
 -- Ejemplo de como se deberia llamar
-
 EXEC dbo.sp_RegistrarVehiculo 2, 'AAAMRF152', 1
 GO
-
 */
 
 -- ..............................................................................................
@@ -316,13 +318,10 @@ AS
 GO
 
 /*
-
 Ejemplo de como podria llamarse, y salvar el id
-
 DECLARE @impreso INT
 EXEC @impreso = dbo.sp_RegistrarFuncionario NULL, 12, '741025896', 'Fabiola', 'Perez', 'Martinez', '30258756', 'fperez.92@itcr.ac.cr', 'fperez.92@email.cr', 1, 'fperez.92'
 SELECT @impreso
-
 */
 
 
@@ -340,14 +339,12 @@ SELECT @impreso
 -- ==========================================================================================================================================================================
 
 /*
-
 ||::::::::::::::::::::::::::::::::::::::::::::::::::::::::::||
 ||															||
 ||			SPs para ser utilizados desde el				||
 ||						API									||
 ||															||
 ||::::::::::::::::::::::::::::::::::::::::::::::::::::::::::||
-
 */
 
 
@@ -385,11 +382,8 @@ AS
 GO
 
 /*
-
 -- Ejemplo de ejecucion: correoInstitucional, password
-
 EXEC dbo.sp_login 'mcampos.71@itcr.ac.cr', 'actualizada'
-
 */
 
 -- *******************************************************************************************************************************
@@ -408,11 +402,8 @@ AS
 GO
 
 /*
-
 -- Ejemplo de ejecucion: (no recibe parametros, ya que solo pinta las tarjetas)
-
 EXEC dbo.sp_inicio
-
 */
 
 -- *******************************************************************************************************************************
@@ -432,11 +423,8 @@ AS
 GO
 
 /*
-
 -- Ejemplo de ejecucion: estacionamientoId
-
 EXEC dbo.sp_estacionamientoinfo 7
-
 */
 
 -- *******************************************************************************************************************************
@@ -459,9 +447,7 @@ AS
 GO
 
 /*
-
 -- Ejemplo de ejecucion: No recibe parametro alguno ya que es un detalle de todos
-
 EXEC dbo.sp_informeEstacionamientos
 */
 
@@ -479,16 +465,13 @@ AS
 GO
 
 /*
-
 -- Ejemplo de ejecucion: No recibe parametros es un informe de todos
-
 	EXEC dbo.sp_informeFuncionarios
-
 */
 
 
 
--- [] Estadística de franjas horarias
+-- [] EstadÃ­stica de franjas horarias
 
 -- Mas simples
 -- SELECT usuarioId, horarioId FROM dbo.Horarios_Por_Usuario WHERE deshabilitado = 0
@@ -505,14 +488,13 @@ AS
 	WHERE deshabilitado=0 GROUP BY horarioId) hua 
 	INNER JOIN dbo.Horarios h ON hua.horarioId = h.horarioId
 	INNER JOIN dbo.Dias d ON h.diaSemana = d.diaId
+	WHERE horaInicio != '00:00' AND horaFinal != '00:00'
 	ORDER BY diaSemana, funcionarios DESC FOR JSON PATH
 	RETURN 1
 GO
 
 /*
-
 -- Ejemplo de ejecucion: No recibe parametro alguno ya que es un reporte cuyas operaciones son globales
-
 	EXEC dbo.sp_franjasHorarias
 */
 
@@ -551,11 +533,8 @@ AS
 GO
 
 /*
-
 -- Ejemplo de ejecucion: Identificacion
-
 EXEC dbo.sp_consultaFuncionario '965310025'
-
 */
 
 -- FOR JSON PATH: Fijo
@@ -563,9 +542,9 @@ EXEC dbo.sp_consultaFuncionario '965310025'
 
 
 
--- °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+-- Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°
 --	Nuevo	Nuevo	Nuevo	Nuevo	Nuevo	Nuevo	Nuevo	Nuevo
--- °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+-- Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°Â°
 
 -- ==========================================
 --		FORMULARIO MODIFICAR MI INFORMACION
@@ -699,6 +678,15 @@ AS
 		EXEC dbo.sp_registrarHorario @usuarioId, 7, @domingoA, @domingoB
 	END
 
+	-- en caso de algun error
+
+	DECLARE @departamentoFinal INT
+	SELECT @departamentoFinal = division FROM dbo.Usuarios WHERE usuarioId = @usuarioId
+
+	IF @departamentoFinal IS NULL BEGIN
+		UPDATE dbo.Usuarios SET division = 1 WHERE usuarioId= @usuarioId
+	END
+
 	RETURN 1
 
 GO
@@ -812,29 +800,33 @@ AS
 		EXEC dbo.sp_registrarHorario @nuevoUsuarioId, 7, @domingoA, @domingoB
 	END
 
+
+	-- division en caso de que no sirva
+
+	DECLARE @departamentoFinal INT
+	SELECT @departamentoFinal = division FROM dbo.Usuarios WHERE usuarioId = @nuevoUsuarioId
+
+	IF @departamentoFinal IS NULL BEGIN
+		UPDATE dbo.Usuarios SET division = 1 WHERE usuarioId= @nuevoUsuarioId
+	END
+
 	RETURN @nuevoUsuarioId -- Se completo exitosamente
 
 GO
 
 /*
-
 -- Ejemplo de ejecucion
-
 DECLARE @otraSalida BIGINT
 EXEC @otraSalida = dbo.sp_registrarUsuarioTotal 'jsolis.67@itcr.ac.cr', '812547785', 'jsolis.67@email.cr', 'jsolis.67', '74120336', 'Jorge', 'Solis', 'Thames', 'DIR',
 'RJST670', NULL, NULL, NULL,
 '07:30', '16:30', NULL, NULL, '07:30', '16:30', NULL, NULL, '07:30', '16:30', NULL, NULL, NULL, NULL, 0
 SELECT @otraSalida
-
-
 -- Ejemplo de ejecucion
-
 DECLARE @otraSalida BIGINT
-EXEC @otraSalida = dbo.sp_registrarUsuarioTotal 'aarias.19@itcr.ac.cr', '818049752', 'aarias.19@email.cr', 'aarias.19', '42361203', 'Andrés', 'Arias', 'Siles', 'IC',
+EXEC @otraSalida = dbo.sp_registrarUsuarioTotal 'aarias.19@itcr.ac.cr', '818049752', 'aarias.19@email.cr', 'aarias.19', '42361203', 'AndrÃ©s', 'Arias', 'Siles', 'IC',
 '232056', 'GTR232', NULL, NULL,
 '13:00', '16:30', '07:30', '16:30', '07:30', '16:30', '07:30', '16:30',  '07:30', '12:00', NULL, NULL, NULL, NULL, 1
 SELECT @otraSalida
-
 */
 
 
@@ -927,13 +919,10 @@ AS
 GO
 
 /*
-
 -- Ejemplo de ejecucion
-
-EXEC dbo.sp_registrarEstacionamientoTotal 'Parqueo Amón2', 'parqueo.amon@email.cr', '75643462', NULL, 'Diagonal a casa verd2e', 'Dar la vuelta por el edificio principal, sentido S-N2', 'Parqueo cercano al campus2',
+EXEC dbo.sp_registrarEstacionamientoTotal 'Parqueo AmÃ³n2', 'parqueo.amon@email.cr', '75643462', NULL, 'Diagonal a casa verd2e', 'Dar la vuelta por el edificio principal, sentido S-N2', 'Parqueo cercano al campus2',
 1, 1, 1, 0, 7, 'https://uc905e507265cf72e311859374ed.previews.dropboxusercontent.com/p/thumb/ABhIgcjAJXv8k4siO1HiGTPNXePMIt8QbCiYXVl17E9zpJSLT9osxPUDlcr6gGHTJfx0rvGXQ4P0vfIHIrpoPQ5Y7yCmaBcLDPilYGYBZPgcrxzoUs2CGSStm1kdLwxekiQ7nYOR6fwGW-c0T5wtwRGb8ehEIK7pMohYhJl2qmaX1gPGlefKgnQ_usdMuY4tnAKyNXyE-N12y8y1786sRO1JpxiabYn72hNdqiGK8Jp13JcIEAeePQSliayjYjbj05EtTO88nFVCxaAUelH1xF8fRTGojcVLwoOSl1FBk-KJ0wb3wrwW3ZWfzZjnz7vvgwnEW4DbuLzK9r2LcH1iFV0JrOlSWjIOP57Iw0r67e5k9gXksr1cZS8H6sF4wlg-V2s/p.jpeg',
 '06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '08:00', '16:00', NULL, NULL, 0
-
 SELECT * FROM dbo.Estacionamientos
 */
 
@@ -1064,7 +1053,7 @@ GO
 
 /*
 -- ejemplo de ejecucion
-EXEC dbo.sp_guardarEditarEstacionamiento 6, '75643457', 'Parqueo Nuevo Amón', 'nuevoamon@email.cr','96213505', '200m norte del morazán', 'Sobre la calle del casino, sentido O - E, mano derecha', 'Parqueo bajo techo',
+EXEC dbo.sp_guardarEditarEstacionamiento 6, '75643457', 'Parqueo Nuevo AmÃ³n', 'nuevoamon@email.cr','96213505', '200m norte del morazÃ¡n', 'Sobre la calle del casino, sentido O - E, mano derecha', 'Parqueo bajo techo',
 1, 1, 1, 1, 6, NULL,
 NULL, NULL, '07:30', '16:30', '07:30', '16:30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
 */
@@ -1111,7 +1100,6 @@ GO
 
 /*
 -- ejemplo de ejecucion
-
 EXEC dbo.sp_estacionamientosTipoSubcontratados 1
 */
 
@@ -1130,11 +1118,8 @@ AS
 GO
 
 /*
-
 Ejemplo de ejecucion: 
-
 EXEC dbo.deshabilitarEstacionamiento 3
-
 */
 
 
@@ -1152,11 +1137,8 @@ AS
 GO
 
 /*
-
 Ejemplo de ejecucion: 
-
 EXEC dbo.deshabilitarUsuario 2
-
 */
 
 
@@ -1170,11 +1152,8 @@ AS
 GO
 
 /*
-
 Ejemplo de ejecucion: 
-
 EXEC dbo.sp_departamentos
-
 */
 
-select * from Divisiones
+--select * from Divisiones
