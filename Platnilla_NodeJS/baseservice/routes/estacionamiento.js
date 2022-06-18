@@ -51,6 +51,35 @@ app.post("/deshabilitarEstacionamiento", deshabilitarEstacionamiento);
 app.get("/pintarEditarEstacionamiento", pintarEditarEstacionamiento);
 app.post("/guardarEditarEstacionamiento", guardarEditarEstacionamiento);
 app.get("/estacionamientosTipoSubcontratados", estacionamientosTipoSubcontratados);
+app.post("/crearEspacios", crearEspacios);
+function crearEspacios(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var estacionamiento, tipo, cantidad;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    estacionamiento = req.body.estacionamiento;
+                    tipo = req.body.tipo;
+                    cantidad = req.body.cantidad;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorEstacionamiento.crearEspacios(estacionamiento, tipo, cantidad)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function estacionamientosTipoSubcontratados(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var subcontratados;

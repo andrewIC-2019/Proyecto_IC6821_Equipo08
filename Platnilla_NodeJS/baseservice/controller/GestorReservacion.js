@@ -40,6 +40,15 @@ var GestorReservacion = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    GestorReservacion.prototype.verificacionFranjas = function (usuario, entrada, salida) {
+        return this.daoRservacion.verificacionFranjas(usuario, entrada, salida);
+    };
+    GestorReservacion.prototype.verificacionDiaLaboral = function (jefe, dia) {
+        return this.daoRservacion.verificacionDiaLaboral(jefe, dia);
+    };
+    GestorReservacion.prototype.getDisponiblesTipo = function (tipo) {
+        return this.daoRservacion.getDisponiblesTipo(tipo);
+    };
     return GestorReservacion;
 }());
 exports.GestorReservacion = GestorReservacion;

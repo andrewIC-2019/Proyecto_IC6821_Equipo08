@@ -36,4 +36,16 @@ export class GestorReservacion {
   public set $daoRservacion(value: DAOReservacionImpl) {
     this.daoRservacion = value;
   }
+
+  public verificacionFranjas(usuario: string, entrada: string, salida: string): Promise<string> {
+    return this.daoRservacion.verificacionFranjas(usuario, entrada, salida);
+  }
+
+  public verificacionDiaLaboral(jefe: string, dia: string): Promise<string> {
+    return this.daoRservacion.verificacionDiaLaboral(jefe, dia);
+  }
+
+  public getDisponiblesTipo(tipo: string): Promise<string> {
+    return this.daoRservacion.getDisponiblesTipo(tipo);
+  }
 }

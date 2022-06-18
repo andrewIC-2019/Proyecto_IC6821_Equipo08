@@ -158,4 +158,8 @@ export class DAOEStacionamientoImpl implements DAOTransaccional {
   public estacionamientosTipoSubcontratados(subcontratados: string): Promise<string> {
     return SQLConnection.getInstance().estacionamientosTipoSubcontratados(subcontratados);
   }
+
+  public crearEspacios(estacionamiento: number, tipo: string, cantidad: number): Promise<string> {
+    return SQLConnection.getInstance().crearEspacios(estacionamiento, tipo, cantidad);
+  }
 }

@@ -158,4 +158,8 @@ export class DAOUsuariosImpl implements DAOTransaccional {
   public eliminarUsuario(usuarioId: number): Promise<string> {
     return SQLConnection.getInstance().eliminarUsuario(usuarioId);
   }
+
+  public diasSemana(): Promise<string> {
+    return SQLConnection.getInstance().diasSemana();
+  }
 }

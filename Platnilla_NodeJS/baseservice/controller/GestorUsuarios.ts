@@ -189,4 +189,8 @@ export class GestorUsuario {
   public eliminarUsuario(usuarioId: number): Promise<string> {
     return this.daoUsuario.eliminarUsuario(usuarioId);
   }
+
+  public diasSemana(): Promise<string> {
+    return this.daoUsuario.diasSemana();
+  }
 }

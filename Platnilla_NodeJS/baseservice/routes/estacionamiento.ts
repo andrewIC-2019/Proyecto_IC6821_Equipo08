@@ -16,6 +16,29 @@ app.get(
   "/estacionamientosTipoSubcontratados",
   estacionamientosTipoSubcontratados
 );
+app.post("/crearEspacios", crearEspacios)
+
+async function crearEspacios(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  let estacionamiento: number = req.body.estacionamiento;
+  let tipo: string = req.body.tipo;
+  let cantidad: number = req.body.cantidad;
+  await Control.getInstance()
+    .$gestorEstacionamiento.crearEspacios(estacionamiento, tipo, cantidad)
+    .then((data) => {
+      if (!data) {
+        data = '{"response": false}';
+      }
+      res.json(JSON.parse(data));
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function estacionamientosTipoSubcontratados(
   req: express.Request,

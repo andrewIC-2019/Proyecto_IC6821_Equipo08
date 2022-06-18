@@ -44,6 +44,9 @@ var DAOUsuariosImpl = /** @class */ (function () {
     DAOUsuariosImpl.prototype.eliminarUsuario = function (usuarioId) {
         return SQLConnection_1.SQLConnection.getInstance().eliminarUsuario(usuarioId);
     };
+    DAOUsuariosImpl.prototype.diasSemana = function () {
+        return SQLConnection_1.SQLConnection.getInstance().diasSemana();
+    };
     return DAOUsuariosImpl;
 }());
 exports.DAOUsuariosImpl = DAOUsuariosImpl;

@@ -49,10 +49,34 @@ app.get("/informeFuncionarios", informeFuncionarios);
 app.get("/informeEstacionamientos", informeEstacionamientos);
 app.get("/franjasHorarias", franjasHorarias);
 app.get("/consultaFuncionario", consultaFuncionario); //si no hay datos manda string????
-app.get("/pintarEditarUsuario", pintarEditarUsuario); //listo
+app.get("/pintarEditarUsuario", pintarEditarUsuario);
 app.post("/guardarEditarUsuario", guardarEditarUsuario);
 app.post("/registrarUsuarioTotal", registrarUsuarioTotal);
 app.post("/deshabilitarUsuario", deshabilitarUsuario);
+app.get("/diasSemana", diasSemana);
+function diasSemana(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, controller_1.Control.getInstance()
+                        .$gestorUsuario.diasSemana()
+                        .then(function (data) {
+                        if (!data) {
+                            data = '0';
+                        }
+                        res.json({ done: data == '1' });
+                    })
+                        .catch(function (err) {
+                        log.error(err);
+                        return "";
+                    })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function deshabilitarUsuario(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var usuarioId;

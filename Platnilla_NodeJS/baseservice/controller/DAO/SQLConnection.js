@@ -88,6 +88,9 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.eliminarUsuario = function (usuarioId) {
         return eliminarUsuario(usuarioId);
     };
+    SQLConnection.prototype.diasSemana = function () {
+        return diasSemana();
+    };
     SQLConnection.prototype.eliminarEstacionamiento = function (estacionamientoId) {
         return eliminarEstacionamiento(estacionamientoId);
     };
@@ -103,9 +106,144 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.estacionamientosTipoSubcontratados = function (subcontratados) {
         return estacionamientosTipoSubcontratados(subcontratados);
     };
+    SQLConnection.prototype.crearEspacios = function (estacionamiento, tipo, cantidad) {
+        return crearEspacios(estacionamiento, tipo, cantidad);
+    };
+    SQLConnection.prototype.verificacionFranjas = function (usuario, entrada, salida) {
+        return verificacionFranjas(usuario, entrada, salida);
+    };
+    SQLConnection.prototype.verificacionDiaLaboral = function (jefe, dia) {
+        return verificacionDiaLaboral(jefe, dia);
+    };
+    SQLConnection.prototype.getDisponiblesTipo = function (tipo) {
+        return getDisponiblesTipo(tipo);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+function getDisponiblesTipo(tipo) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result, str, i, key, tmpStr;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("tipo", sql.NVarChar, tipo)
+                            .execute("sp_getDisponiblesTipo")];
+                case 2:
+                    result = _a.sent();
+                    if (result.recordsets && result.returnValue) {
+                        str = "{";
+                        for (i in result.recordsets) {
+                            for (key in result.recordsets[i][0]) {
+                                tmpStr = result.recordsets[i][0][key];
+                                tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+                                str += '"' + i + '": "' + tmpStr + '",';
+                            }
+                        }
+                        str = str.slice(0, -1);
+                        str += "}";
+                    }
+                    return [2 /*return*/, str];
+            }
+        });
+    });
+}
+function diasSemana() {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result, str, i, key, tmpStr;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .execute("sp_diasSemana")];
+                case 2:
+                    result = _a.sent();
+                    if (result.recordsets && result.returnValue) {
+                        str = "{";
+                        for (i in result.recordsets) {
+                            for (key in result.recordsets[i][0]) {
+                                tmpStr = result.recordsets[i][0][key];
+                                tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+                                str += '"' + i + '": "' + tmpStr + '",';
+                            }
+                        }
+                        str = str.slice(0, -1);
+                        str += "}";
+                    }
+                    return [2 /*return*/, str];
+            }
+        });
+    });
+}
+function verificacionDiaLaboral(jefe, dia) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("jefe", sql.NVarChar, jefe)
+                            .input("dia", sql.NVarChar, dia)
+                            .execute("sp_verificacionDiaLaboral")];
+                case 2:
+                    result = _a.sent();
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
+function verificacionFranjas(usuario, entrada, salida) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("usuario", sql.NVarChar, usuario)
+                            .input("entrada", sql.NVarChar, entrada)
+                            .input("salida", sql.NVarChar, salida)
+                            .execute("sp_verificacionFranjas")];
+                case 2:
+                    result = _a.sent();
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
+function crearEspacios(estacionamiento, tipo, cantidad) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("estacionamiento", sql.NVarChar, estacionamiento)
+                            .input("tipo", sql.NVarChar, tipo)
+                            .input("cantidad", sql.NVarChar, cantidad)
+                            .execute("sp_crearEspacios")];
+                case 2:
+                    result = _a.sent();
+                    return [2 /*return*/, "{ok: true}"];
+            }
+        });
+    });
+}
 function estacionamientosTipoSubcontratados(subcontratados) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result, str, key;
@@ -120,14 +258,11 @@ function estacionamientosTipoSubcontratados(subcontratados) {
                             .execute("sp_estacionamientosTipoSubcontratados")];
                 case 2:
                     result = _a.sent();
-                    console.log(subcontratados);
-                    console.log(result.recordsets);
                     if (result.recordsets && result.returnValue) {
                         for (key in result.recordset[0]) {
                             str = result.recordset[0][key];
                         }
                     }
-                    console.log(str);
                     return [2 /*return*/, str];
             }
         });

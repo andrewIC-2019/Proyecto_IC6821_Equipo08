@@ -16,6 +16,27 @@ app.get("/pintarEditarUsuario", pintarEditarUsuario);
 app.post("/guardarEditarUsuario", guardarEditarUsuario);
 app.post("/registrarUsuarioTotal", registrarUsuarioTotal); 
 app.post("/deshabilitarUsuario", deshabilitarUsuario);
+app.get("/diasSemana", diasSemana);
+
+async function diasSemana(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+
+  await Control.getInstance()
+    .$gestorUsuario.diasSemana()
+    .then((data) => {
+      if (!data) {
+        data = '0';
+      }
+      res.json({done: data == '1'});
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function deshabilitarUsuario(
   req: express.Request,

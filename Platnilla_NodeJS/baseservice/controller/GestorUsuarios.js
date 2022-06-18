@@ -72,6 +72,9 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.eliminarUsuario = function (usuarioId) {
         return this.daoUsuario.eliminarUsuario(usuarioId);
     };
+    GestorUsuario.prototype.diasSemana = function () {
+        return this.daoUsuario.diasSemana();
+    };
     return GestorUsuario;
 }());
 exports.GestorUsuario = GestorUsuario;

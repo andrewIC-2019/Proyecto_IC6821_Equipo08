@@ -5,6 +5,7 @@ import {weatherouter} from './weather';
 import {articlesrouter} from './articlesrouter';
 import {user} from './user';
 import {estacionamiento} from './estacionamiento';
+import {reservaciones} from './reservacion';
 /*
 LUEGO DE LA APLICACION, CAE AL ENRUTADOR, ME LLEVA A LOS
 CONTROLADORES
@@ -36,6 +37,7 @@ class Routes {
         this.express.use('/articles', articlesrouter);
         this.express.use('/user', user);
         this.express.use('/estacionamiento', estacionamiento);
+        this.express.use('/reservaciones', reservaciones);
         this.logger.info("Routes loaded");
     }
 }

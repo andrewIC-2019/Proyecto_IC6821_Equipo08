@@ -181,6 +181,10 @@ export class SQLConnection implements DataSource {
     return eliminarUsuario(usuarioId);
   }
 
+  diasSemana(): Promise<string> {
+    return diasSemana();
+  }
+
   eliminarEstacionamiento(estacionamientoId: string): Promise<string> {
     return eliminarEstacionamiento(estacionamientoId);
   }
@@ -320,6 +324,129 @@ export class SQLConnection implements DataSource {
   ): Promise<string> {
     return estacionamientosTipoSubcontratados(subcontratados);
   }
+
+  public crearEspacios(
+    estacionamiento: number, tipo: string, cantidad: number
+  ): Promise<string> {
+    return crearEspacios(estacionamiento, tipo, cantidad);
+  }
+
+  public verificacionFranjas(
+    usuario: string, entrada: string, salida: string
+  ): Promise<string> {
+    return verificacionFranjas(usuario, entrada, salida);
+  }
+
+  public verificacionDiaLaboral(
+    jefe: string, dia: string
+  ): Promise<string> {
+    return verificacionDiaLaboral(jefe, dia);
+  }
+
+  public getDisponiblesTipo(
+    tipo: string
+  ): Promise<string> {
+    return getDisponiblesTipo(tipo);
+  }
+}
+
+async function getDisponiblesTipo(
+  tipo: string
+  ): Promise<string> {
+    //do connection
+    let pool = await new sql.connect(config);
+    //do reques from pool, with parameters and execute sp
+    let result = await pool
+      .request()
+      .input("tipo", sql.NVarChar, tipo)
+      .execute("sp_getDisponiblesTipo");
+      let str: string;
+      if (result.recordsets && result.returnValue) {
+        str = "{";
+        for (var i in result.recordsets) {
+          for (var key in result.recordsets[i][0]) {
+            let tmpStr: string = result.recordsets[i][0][key];
+            tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+            str += '"' + i + '": "' + tmpStr + '",';
+          }
+        }
+        str = str.slice(0, -1);
+        str += "}";
+      }
+    
+      return str;
+  }
+
+async function diasSemana(
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .execute("sp_diasSemana");
+    let str: string;
+    if (result.recordsets && result.returnValue) {
+      str = "{";
+      for (var i in result.recordsets) {
+        for (var key in result.recordsets[i][0]) {
+          let tmpStr: string = result.recordsets[i][0][key];
+          tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+          str += '"' + i + '": "' + tmpStr + '",';
+        }
+      }
+      str = str.slice(0, -1);
+      str += "}";
+    }
+  
+    return str;
+}
+
+async function verificacionDiaLaboral(
+  jefe: string, dia: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("jefe", sql.NVarChar, jefe)
+    .input("dia", sql.NVarChar, dia)
+    .execute("sp_verificacionDiaLaboral");
+
+  return result.returnValue;
+}
+
+async function verificacionFranjas(
+  usuario: string, entrada: string, salida: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("usuario", sql.NVarChar, usuario)
+    .input("entrada", sql.NVarChar, entrada)
+    .input("salida", sql.NVarChar, salida)
+    .execute("sp_verificacionFranjas");
+
+  return result.returnValue;
+}
+
+async function crearEspacios(
+  estacionamiento: number, tipo: string, cantidad: number
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("estacionamiento", sql.NVarChar, estacionamiento)
+    .input("tipo", sql.NVarChar, tipo)
+    .input("cantidad", sql.NVarChar, cantidad)
+    .execute("sp_crearEspacios");
+
+  return "{ok: true}";
 }
 
 async function estacionamientosTipoSubcontratados(

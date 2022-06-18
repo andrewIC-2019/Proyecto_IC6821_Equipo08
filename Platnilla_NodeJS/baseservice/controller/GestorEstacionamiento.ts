@@ -188,4 +188,8 @@ export class GestorEstacionamiento {
   public estacionamientosTipoSubcontratados(subcontratados: string): Promise<string> {
     return this.daoEstacionamiento.estacionamientosTipoSubcontratados(subcontratados);
   }
+
+  public crearEspacios(estacionamiento: number, tipo: string, cantidad: number): Promise<string> {
+    return this.daoEstacionamiento.crearEspacios(estacionamiento, tipo, cantidad);
+  }
 }

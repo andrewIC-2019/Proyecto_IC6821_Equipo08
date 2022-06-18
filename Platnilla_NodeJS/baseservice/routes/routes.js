@@ -7,6 +7,7 @@ var weather_1 = require("./weather");
 var articlesrouter_1 = require("./articlesrouter");
 var user_1 = require("./user");
 var estacionamiento_1 = require("./estacionamiento");
+var reservacion_1 = require("./reservacion");
 /*
 LUEGO DE LA APLICACION, CAE AL ENRUTADOR, ME LLEVA A LOS
 CONTROLADORES
@@ -30,6 +31,7 @@ var Routes = /** @class */ (function () {
         this.express.use('/articles', articlesrouter_1.articlesrouter);
         this.express.use('/user', user_1.user);
         this.express.use('/estacionamiento', estacionamiento_1.estacionamiento);
+        this.express.use('/reservaciones', reservacion_1.reservaciones);
         this.logger.info("Routes loaded");
     };
     return Routes;

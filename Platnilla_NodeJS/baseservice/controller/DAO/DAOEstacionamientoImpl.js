@@ -38,6 +38,9 @@ var DAOEStacionamientoImpl = /** @class */ (function () {
     DAOEStacionamientoImpl.prototype.estacionamientosTipoSubcontratados = function (subcontratados) {
         return SQLConnection_1.SQLConnection.getInstance().estacionamientosTipoSubcontratados(subcontratados);
     };
+    DAOEStacionamientoImpl.prototype.crearEspacios = function (estacionamiento, tipo, cantidad) {
+        return SQLConnection_1.SQLConnection.getInstance().crearEspacios(estacionamiento, tipo, cantidad);
+    };
     return DAOEStacionamientoImpl;
 }());
 exports.DAOEStacionamientoImpl = DAOEStacionamientoImpl;

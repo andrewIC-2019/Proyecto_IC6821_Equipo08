@@ -65,6 +65,9 @@ var GestorEstacionamiento = /** @class */ (function () {
     GestorEstacionamiento.prototype.estacionamientosTipoSubcontratados = function (subcontratados) {
         return this.daoEstacionamiento.estacionamientosTipoSubcontratados(subcontratados);
     };
+    GestorEstacionamiento.prototype.crearEspacios = function (estacionamiento, tipo, cantidad) {
+        return this.daoEstacionamiento.crearEspacios(estacionamiento, tipo, cantidad);
+    };
     return GestorEstacionamiento;
 }());
 exports.GestorEstacionamiento = GestorEstacionamiento;
