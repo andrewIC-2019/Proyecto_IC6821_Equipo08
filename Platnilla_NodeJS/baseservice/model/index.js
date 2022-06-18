@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Reservacion = exports.Estacionamiento = exports.TVehiculo = exports.Vehiculo = void 0;
+var Vehiculo_1 = require("./Vehiculo");
+Object.defineProperty(exports, "Vehiculo", { enumerable: true, get: function () { return Vehiculo_1.Vehiculo; } });
+var TVehiculo_1 = require("./TVehiculo");
+Object.defineProperty(exports, "TVehiculo", { enumerable: true, get: function () { return TVehiculo_1.TVehiculo; } });
+var Estacionamiento_1 = require("./Estacionamiento");
+Object.defineProperty(exports, "Estacionamiento", { enumerable: true, get: function () { return Estacionamiento_1.Estacionamiento; } });
+var Reservacion_1 = require("./Reservacion");
+Object.defineProperty(exports, "Reservacion", { enumerable: true, get: function () { return Reservacion_1.Reservacion; } });
