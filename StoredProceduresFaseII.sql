@@ -346,7 +346,7 @@ AS
 	END CATCH;
 
 	SELECT @relacionParticulares AS Particulares, @relacionEspeciales AS Especiales, @relacionJefaturas AS Jefaturas, @relacionVisitantes AS Visitantes, @relacionOficiales AS Oficiales FOR JSON PATH
-
+	RETURN 1
 GO
 
 /*
@@ -379,6 +379,8 @@ AS
 	INNER JOIN dbo.Divisiones d ON u.division = d.divisionId
 	WHERE estacionamientoId = @estacionamiento AND r.deshabilitado = 0
 	GROUP BY codigoDivision, descripcion FOR JSON PATH
+
+	RETURN 1
 GO
 
 /*
@@ -415,11 +417,109 @@ AS
 	ON t1.estacionamiento = t2.estacionamiento
 	FOR JSON PATH
 
+	RETURN 1
 GO
 
+/*
+-- Ejemplo de Ejecucion
 EXEC dbo.sp_ocupacionTotalXDepartamento 1
+*/
 
 
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+--		III Parte
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+-- ----------------------------------------
+-- El perfil de funcionario estándar puede visualizar las reservaciones que tiene en un rango de fechas
+-- brindado detalle de los estacionamientos y franjas horarias ordenado cronológicamente.
+-- Brinda las que esten activas en ese intervalo de tiempo
+-- ----------------------------------------
+
+
+DROP PROCEDURE IF EXISTS dbo.verMisReservas
+GO
+
+CREATE PROCEDURE dbo.verMisReservas
+	@usuario BIGINT,
+	@limiteA DATETIME,
+	@limiteB DATETIME
+AS
+	SELECT r.reservacionId, r.horaInicio, r.horaFinal, r.tipoEspacioId, e.nombre, u.direccionExacta, e.telefono FROM dbo.Reservaciones r
+	INNER JOIN dbo.Estacionamientos e ON r.estacionamientoId = e.estacionamientoId
+	INNER JOIN dbo.Ubicaciones u ON e.ubicacion = u.ubicacionId
+	WHERE r.usuarioId = @usuario AND r.horaInicio<=@limiteB AND r.horaFinal>=@limiteA   AND r.deshabilitado = 0 
+	ORDER BY r.horaInicio, r.horaFinal FOR JSON PATH
+
+	RETURN 1
+GO
+
+/*
+-- Ejemplo de Ejecucion
+EXEC dbo.verMisReservas 1, '2022-06-18 21:59:59', '2022-06-18 23:00:00'
+*/
+
+
+-- ----------------------------------------
+-- El perfil de operador del estacionamiento puede consultar todo el detalle del estacionamiento que tiene a cargo.
+-- Ve la info mediante:
+--		EXEC dbo.sp_estacionamientoinfo estacionamientoId
+--		Para ver las reservas activas, se utiliza:
+-- ----------------------------------------
+
+
+DROP PROCEDURE IF EXISTS dbo.verReservasEstacionamiento
+GO
+
+CREATE PROCEDURE dbo.verReservasEstacionamiento
+	@estacionamiento BIGINT
+AS
+	SELECT r.reservacionId, r.horaInicio, r.horaFinal, r.tipoEspacioId, CONCAT(u.nombre, ' ', u.apellido1, ' ', u.apellido2) AS Usuario FROM dbo.Reservaciones r
+	INNER JOIN dbo.Usuarios u ON r.usuarioId = u.usuarioId
+	WHERE r.estacionamientoId = @estacionamiento AND r.deshabilitado = 0
+	ORDER BY r.horaInicio, r.horaFinal FOR JSON PATH
+
+	RETURN 1
+GO
+
+/*
+Ejemplo de ejecucion
+EXEC dbo.verReservasEstacionamiento 1
+*/
+
+
+-- ---------------------------------------
+-- FIRMA
+-- Recuerde que carros oficiales y visitantes salen de los estacionamientos por medio del operador de este,
+-- sea un estacionamiento propio o subcontratado.
+-- ---------------------------------------
+
+-- Oficiales Entrada
+DROP PROCEDURE IF EXISTS dbo.sp_RegistrarOficial
+GO
+
+CREATE PROCEDURE dbo.sp_RegistrarOficial
+	@estacionamientoId INT,
+	@placa NVARCHAR(20),
+	@conductor NVARCHAR(120),
+	@entrada DATETIME
+AS
+	-- Retornaria un JSON con la info
+GO
+
+-- Oficiales Salida
+DROP PROCEDURE IF EXISTS dbo.sp_SalidaOficial
+GO
+
+CREATE PROCEDURE dbo.sp_SalidaOficial
+	@estacionamientoId INT,
+	@placa NVARCHAR(20),
+	@conductor NVARCHAR(120),
+	@salida DATETIME
+AS
+	-- Return 1
+GO
 
 
 -- --------------
