@@ -202,6 +202,11 @@ export class GestorUsuario {
     return this.daoUsuario.ocupacionXDepartamento(estacionamiento);
   }
 
+  public ocupacionTotalXDepartamento(departamento: string): Promise<string> {
+    return this.daoUsuario.ocupacionTotalXDepartamento(departamento);
+  }
+
+
 
 
 }

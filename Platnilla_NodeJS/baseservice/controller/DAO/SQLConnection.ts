@@ -367,6 +367,12 @@ export class SQLConnection implements DataSource {
     return ocupacionXDepartamento(estacionamiento);
   }
 
+  public ocupacionTotalXDepartamento(
+    departamento: string
+  ): Promise<string> {
+    return ocupacionTotalXDepartamento(departamento);
+  }
+
 
 
 
@@ -382,6 +388,32 @@ export class SQLConnection implements DataSource {
 
 
 
+async function ocupacionTotalXDepartamento(
+  departamento: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("departamento", sql.NVarChar, departamento)
+    .execute("sp_ocupacionTotalXDepartamento");
+  let str: string;
+  if (result.recordsets && result.returnValue) {
+    str = "{";
+    for (var i in result.recordsets) {
+      for (var key in result.recordsets[i][0]) {
+        let tmpStr: string = result.recordsets[i][0][key];
+        tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+        str += '"' + i + '": "' + tmpStr + '",';
+      }
+    }
+    str = str.slice(0, -1);
+    str += "}";
+  }
+
+  return str;
+}
 
 async function ocupacionXDepartamento(
   estacionamiento: string

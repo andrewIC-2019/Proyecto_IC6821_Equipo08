@@ -19,7 +19,30 @@ app.post("/deshabilitarUsuario", deshabilitarUsuario);
 app.get("/diasSemana", diasSemana);
 app.get("/ocupacionXTipo", ocupacionXTipo);
 app.get("/ocupacionXDepartamento", ocupacionXDepartamento);
+app.get("/ocupacionTotalXDepartamento", ocupacionTotalXDepartamento);
 
+
+async function ocupacionTotalXDepartamento(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+
+  let departamento: string = req.query.departamento as string;
+
+  await Control.getInstance()
+    .$gestorUsuario.ocupacionTotalXDepartamento(departamento)
+    .then((data) => {
+      if (!data) {
+        data = '0';
+      }
+      res.json(JSON.parse(data));
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function ocupacionXDepartamento(
   req: express.Request,
