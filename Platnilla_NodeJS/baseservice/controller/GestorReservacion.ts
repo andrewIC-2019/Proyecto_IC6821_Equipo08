@@ -3,8 +3,12 @@ import { DTOReservacion } from "./DTOReservacion";
 
 export class GestorReservacion {
   private dtoReservacion: DTOReservacion;
-  private daoRservacion: DAOReservacionImpl;
+  private daoReservacion: DAOReservacionImpl;
 
+  constructor() {
+    this.dtoReservacion = new DTOReservacion();
+    this.daoReservacion = new DAOReservacionImpl();
+  }
   /**
    * Getter $dtoReservacion
    * @return {DTOReservacion}
@@ -18,7 +22,7 @@ export class GestorReservacion {
    * @return {DAOReservacionImpl}
    */
   public get $daoRservacion(): DAOReservacionImpl {
-    return this.daoRservacion;
+    return this.daoReservacion;
   }
 
   /**
@@ -34,18 +38,18 @@ export class GestorReservacion {
    * @param {DAOReservacionImpl} value
    */
   public set $daoRservacion(value: DAOReservacionImpl) {
-    this.daoRservacion = value;
+    this.daoReservacion = value;
   }
 
   public verificacionFranjas(usuario: string, entrada: string, salida: string): Promise<string> {
-    return this.daoRservacion.verificacionFranjas(usuario, entrada, salida);
+    return this.daoReservacion.verificacionFranjas(usuario, entrada, salida);
   }
 
   public verificacionDiaLaboral(jefe: string, dia: string): Promise<string> {
-    return this.daoRservacion.verificacionDiaLaboral(jefe, dia);
+    return this.daoReservacion.verificacionDiaLaboral(jefe, dia);
   }
 
   public getDisponiblesTipo(tipo: string): Promise<string> {
-    return this.daoRservacion.getDisponiblesTipo(tipo);
+    return this.daoReservacion.getDisponiblesTipo(tipo);
   }
 }

@@ -46,7 +46,7 @@ async function verificacionDiaLaboral(
       if (!data) {
         data = '{"response": false}';
       }
-      res.json(JSON.parse(data));
+      res.json({done : data == "1"});
     })
     .catch((err) => {
       log.error(err);
@@ -69,7 +69,7 @@ async function verificacionFranjas(
         if (!data) {
           data = '{"response": false}';
         }
-        res.json(JSON.parse(data));
+        res.json({done : data == "1"});
       })
       .catch((err) => {
         log.error(err);

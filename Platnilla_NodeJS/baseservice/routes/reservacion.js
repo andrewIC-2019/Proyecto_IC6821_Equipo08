@@ -87,7 +87,7 @@ function verificacionDiaLaboral(req, res, next) {
                             if (!data) {
                                 data = '{"response": false}';
                             }
-                            res.json(JSON.parse(data));
+                            res.json({ done: data == "1" });
                         })
                             .catch(function (err) {
                             log.error(err);
@@ -115,7 +115,7 @@ function verificacionFranjas(req, res, next) {
                             if (!data) {
                                 data = '{"response": false}';
                             }
-                            res.json(JSON.parse(data));
+                            res.json({ done: data == "1" });
                         })
                             .catch(function (err) {
                             log.error(err);

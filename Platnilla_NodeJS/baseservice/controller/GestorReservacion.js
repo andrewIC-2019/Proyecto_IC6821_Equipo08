@@ -1,8 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GestorReservacion = void 0;
+var DAORservacionImpl_1 = require("./DAO/DAORservacionImpl");
+var DTOReservacion_1 = require("./DTOReservacion");
 var GestorReservacion = /** @class */ (function () {
     function GestorReservacion() {
+        this.dtoReservacion = new DTOReservacion_1.DTOReservacion();
+        this.daoReservacion = new DAORservacionImpl_1.DAOReservacionImpl();
     }
     Object.defineProperty(GestorReservacion.prototype, "$dtoReservacion", {
         /**
@@ -28,26 +32,26 @@ var GestorReservacion = /** @class */ (function () {
          * @return {DAOReservacionImpl}
          */
         get: function () {
-            return this.daoRservacion;
+            return this.daoReservacion;
         },
         /**
          * Setter $daoRservacion
          * @param {DAOReservacionImpl} value
          */
         set: function (value) {
-            this.daoRservacion = value;
+            this.daoReservacion = value;
         },
         enumerable: false,
         configurable: true
     });
     GestorReservacion.prototype.verificacionFranjas = function (usuario, entrada, salida) {
-        return this.daoRservacion.verificacionFranjas(usuario, entrada, salida);
+        return this.daoReservacion.verificacionFranjas(usuario, entrada, salida);
     };
     GestorReservacion.prototype.verificacionDiaLaboral = function (jefe, dia) {
-        return this.daoRservacion.verificacionDiaLaboral(jefe, dia);
+        return this.daoReservacion.verificacionDiaLaboral(jefe, dia);
     };
     GestorReservacion.prototype.getDisponiblesTipo = function (tipo) {
-        return this.daoRservacion.getDisponiblesTipo(tipo);
+        return this.daoReservacion.getDisponiblesTipo(tipo);
     };
     return GestorReservacion;
 }());

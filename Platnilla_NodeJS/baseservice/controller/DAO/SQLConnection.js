@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SQLConnection = void 0;
 var sql = require("mssql");
-var connection = sql.connect("Server=localhost,1433;Database=parqueos;User Id=sa;Password=cer5a37Te9;Encrypt=false");
+var connection = sql.connect("Server=localhost,1433;Database=parqueos;User Id=sa;Password=1234Pass;Encrypt=false");
 var config = {
     user: "sa",
     password: "cer5a37Te9",
@@ -197,6 +197,7 @@ function verificacionDiaLaboral(jefe, dia) {
                             .execute("sp_verificacionDiaLaboral")];
                 case 2:
                     result = _a.sent();
+                    console.log(result);
                     return [2 /*return*/, result.returnValue];
             }
         });
@@ -233,9 +234,9 @@ function crearEspacios(estacionamiento, tipo, cantidad) {
                     pool = _a.sent();
                     return [4 /*yield*/, pool
                             .request()
-                            .input("estacionamiento", sql.NVarChar, estacionamiento)
+                            .input("estacionamiento", sql.Int, estacionamiento)
                             .input("tipo", sql.NVarChar, tipo)
-                            .input("cantidad", sql.NVarChar, cantidad)
+                            .input("cantidad", sql.Int, cantidad)
                             .execute("sp_crearEspacios")];
                 case 2:
                     result = _a.sent();
@@ -249,7 +250,10 @@ function estacionamientosTipoSubcontratados(subcontratados) {
         var pool, result, str, key;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 0:
+                    //do connection
+                    console.log("previo");
+                    return [4 /*yield*/, new sql.connect(config)];
                 case 1:
                     pool = _a.sent();
                     return [4 /*yield*/, pool
@@ -690,6 +694,7 @@ function login(username, password) {
                             .execute("sp_login")];
                 case 2:
                     result = _a.sent();
+                    console.log(result);
                     if (result.recordsets && result.returnValue) {
                         obj = result.recordsets[0][0];
                         for (key in obj) {

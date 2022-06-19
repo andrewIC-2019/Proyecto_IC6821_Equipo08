@@ -64,7 +64,7 @@ function diasSemana(req, res, next) {
                         if (!data) {
                             data = '0';
                         }
-                        res.json({ done: data == '1' });
+                        res.json(JSON.parse(data));
                     })
                         .catch(function (err) {
                         log.error(err);

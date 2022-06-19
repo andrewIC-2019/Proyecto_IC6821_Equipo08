@@ -14,7 +14,7 @@ app.get("/franjasHorarias", franjasHorarias);
 app.get("/consultaFuncionario", consultaFuncionario);//si no hay datos manda string????
 app.get("/pintarEditarUsuario", pintarEditarUsuario);
 app.post("/guardarEditarUsuario", guardarEditarUsuario);
-app.post("/registrarUsuarioTotal", registrarUsuarioTotal); 
+app.post("/registrarUsuarioTotal", registrarUsuarioTotal);
 app.post("/deshabilitarUsuario", deshabilitarUsuario);
 app.get("/diasSemana", diasSemana);
 
@@ -30,7 +30,7 @@ async function diasSemana(
       if (!data) {
         data = '0';
       }
-      res.json({done: data == '1'});
+      res.json(JSON.parse(data));
     })
     .catch((err) => {
       log.error(err);
@@ -51,7 +51,7 @@ async function deshabilitarUsuario(
       if (!data) {
         data = '0';
       }
-      res.json({done: data == '1'});
+      res.json({ done: data == '1' });
     })
     .catch((err) => {
       log.error(err);
@@ -127,8 +127,8 @@ async function registrarUsuarioTotal(
     .then((data) => {
       if (!data) {
         data = '-1';
-      } 
-      res.json({usuarioId: data});
+      }
+      res.json({ usuarioId: data });
     })
     .catch((err) => {
       log.error(err);
@@ -309,7 +309,6 @@ async function login(
 ) {
   let username: string = req.query.username as string;
   let password: string = req.query.password as string;
-
 
   await Control.getInstance()
     .$gestorUsuario.login(username, password)

@@ -23,9 +23,9 @@ async function crearEspacios(
   res: express.Response,
   next: express.NextFunction
 ) {
-  let estacionamiento: number = req.body.estacionamiento;
+  let estacionamiento: string = req.body.estacionamiento;
   let tipo: string = req.body.tipo;
-  let cantidad: number = req.body.cantidad;
+  let cantidad: string = req.body.cantidad;
   await Control.getInstance()
     .$gestorEstacionamiento.crearEspacios(estacionamiento, tipo, cantidad)
     .then((data) => {
