@@ -1,0 +1,495 @@
+-- Stored Procedures Fase II --
+
+-- --------------------------
+--  Operador Estacionamiento
+-- --------------------------
+
+-- Para ver el detalle de su estacionamiento, usar:
+
+--		EXEC dbo.sp_estacionamientoinfo [idDelEstacionamientoAsociado]
+
+
+-- ----------------------------------------
+--  Crea los espacios del estacionamiento
+--  - estacionamientoId
+--  - tipo de espacios
+--  - cantidad de ese espacio
+-- ----------------------------------------
+
+DROP PROCEDURE IF EXISTS dbo.sp_crearEspacios
+GO
+
+CREATE PROCEDURE sp_crearEspacios
+	@estacionamiento int,
+	@tipo nvarchar(20),
+	@cantidad int
+AS
+	DECLARE @i INT
+	SET @i = 1
+	WHILE @i <= @cantidad
+	BEGIN
+		INSERT INTO dbo.Espacios_Estacionamientos (estacionamientoId, tipo) VALUES
+		(@estacionamiento, @tipo)
+		SET @i = @i + 1
+	END
+GO
+
+-- Truncate tabla Espacios_Estacionamientos
+
+--	BEGIN TRANSACTION
+--		DELETE FROM dbo.Espacios_Estacionamientos
+--		DBCC CHECKIDENT ('dbo.Espacios_Estacionamientos', RESEED, 0)
+--	COMMIT
+
+
+-- EXEC sp_crearEspacios 1, 1, 4
+
+
+
+-- ----------------------------------------
+--  Verifica que el horario indicado se encuentra dentro de esas franjas
+--  - usuario
+--  - inicio de la reserva
+--  - salida de la reserva
+-- ----------------------------------------
+
+
+
+DROP PROCEDURE IF EXISTS dbo.sp_verificacionFranjas
+GO
+
+
+CREATE PROCEDURE sp_verificacionFranjas
+	@usuario bigint,
+	@entrada datetime,
+	@salida datetime
+AS
+
+	-- Obtiene el dia de la semana de la reservacion
+	DECLARE @diaSemanaAnalizando tinyint
+	SELECT @diaSemanaAnalizando = DATEPART(WEEKDAY, GETDATE())-1
+	IF (@diaSemanaAnalizando = 0) 
+	BEGIN 
+		SET @diaSemanaAnalizando = 7
+	END
+
+	DECLARE @horariosCompatibles INT;
+
+	-- Obtiene los horarios actuales del usuario, en el dia especifico
+
+	WITH Horarios_CTE(diaSemana, horaInicio, horaFinal)
+	AS
+	(
+		SELECT diaSemana, horaInicio, horaFinal FROM dbo.Horarios_Por_Usuario hu 
+		INNER JOIN dbo.Horarios h ON hu.horarioId = h.horarioId
+		WHERE usuarioId = @usuario AND hu.deshabilitado = 0 AND diaSemana = @diaSemanaAnalizando
+	)
+
+	
+	SELECT @horariosCompatibles = COUNT(*) FROM Horarios_CTE WHERE  horaInicio <= CAST(@entrada AS TIME) AND horaFinal >= CAST(@salida AS TIME)
+
+	IF (@horariosCompatibles < 1) BEGIN
+		RETURN 0
+	END ELSE BEGIN
+		RETURN 1
+	END
+GO
+
+DECLARE @entrada datetime = '2022-06-16 07:30:00'
+DECLARE @salida datetime = '2022-06-17 16:30:00'
+
+EXEC sp_verificacionFranjas 3, @entrada, @salida
+
+
+
+-- ----------------------------------------
+--  Verifica que el dia indicado sea laboral para la jefatura
+--  - jefe
+--  - dia reserva
+-- ----------------------------------------
+
+
+
+DROP PROCEDURE IF EXISTS dbo.sp_verificacionDiaLaboral
+GO
+
+
+CREATE PROCEDURE dbo.sp_verificacionDiaLaboral
+	@jefe bigint,
+	@dia nvarchar(40)
+AS
+
+	-- Obtiene el dia de la semana de la reservacion
+	DECLARE @diaSemanaAnalizando tinyint
+	SELECT @diaSemanaAnalizando = diaId - 1 FROM dbo.Dias WHERE dia = @dia
+	IF (@diaSemanaAnalizando = 0) 
+	BEGIN 
+		SET @diaSemanaAnalizando = 7
+	END
+
+	DECLARE @horariosCompatibles INT;
+
+	-- Obtiene los horarios actuales del usuario, en el dia especifico
+
+	WITH Horarios_CTE(diaSemana, horaInicio, horaFinal)
+	AS
+	(
+		SELECT diaSemana, horaInicio, horaFinal FROM dbo.Horarios_Por_Usuario hu 
+		INNER JOIN dbo.Horarios h ON hu.horarioId = h.horarioId
+		WHERE usuarioId = @jefe AND hu.deshabilitado = 0 AND diaSemana = @diaSemanaAnalizando
+	)
+
+	
+	SELECT @horariosCompatibles = COUNT(*) FROM Horarios_CTE
+
+	IF (@horariosCompatibles < 1) BEGIN
+		RETURN 0
+	END ELSE BEGIN
+		RETURN 1
+	END
+GO
+
+
+DECLARE @impreso int
+EXEC @impreso = dbo.sp_verificacionDiaLaboral 3, 'Lunes'
+SELECT @impreso
+
+
+
+-- ----------------------------------------
+--  Obtiene todos los dias de la semana
+--  Similar al sp que se trae los departamentos
+-- ----------------------------------------
+
+DROP PROCEDURE IF EXISTS dbo.sp_diasSemana
+GO
+
+CREATE PROCEDURE dbo.sp_diasSemana
+AS
+	SELECT diaId, dia FROM Dias FOR JSON AUTO
+	RETURN 1
+GO
+
+/*
+-- Ejemplo de ejecucion: 
+ EXEC dbo.sp_diasSemana
+*/
+
+
+-- ----------------------------------------
+--  Obtiene los parqueos y los espacios designados
+--  a un tipo especifico de espacio
+--  (no contempla reservas)
+-- ----------------------------------------
+
+DROP PROCEDURE IF EXISTS dbo.sp_getDisponiblesTipo
+GO
+
+CREATE PROCEDURE dbo.sp_getDisponiblesTipo
+	@tipo nvarchar(60)
+AS
+	IF (@tipo = 'Particular') BEGIN
+		SELECT estacionamientoId, cantEspacios FROM dbo.Estacionamientos WHERE cantEspacios>0 AND deshabilitado=0 FOR JSON AUTO
+		RETURN 1
+	END
+	IF (@tipo='Oficial') BEGIN
+		SELECT estacionamientoId, cantEspaciosOficiales FROM dbo.Estacionamientos WHERE cantEspaciosOficiales>0 AND deshabilitado=0 FOR JSON AUTO
+		RETURN 1
+	END
+	IF (@tipo = 'Visitante') BEGIN
+		SELECT estacionamientoId, cantEspaciosVisitantes FROM dbo.Estacionamientos WHERE cantEspaciosVisitantes>0 AND deshabilitado=0 FOR JSON AUTO
+		RETURN 1
+	END
+	IF (@tipo = 'Jefatura') BEGIN
+		SELECT estacionamientoId, cantEspaciosJefaturas FROM dbo.Estacionamientos WHERE cantEspaciosJefaturas>0 AND deshabilitado=0 FOR JSON AUTO
+		RETURN 1
+	END
+	IF (@tipo = 'Discapacitado') BEGIN
+		SELECT estacionamientoId, cantEspaciosEspeciales FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0 AND deshabilitado=0 FOR JSON AUTO
+		RETURN 1
+	END
+GO
+
+/*
+-- Ejemplo de Ejecucion
+EXEC dbo.sp_getDisponiblesTipo 'Discapacitado'
+*/
+
+
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+--		II Parte
+-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+-- ----------------------------------------
+--  Simula el paso del tiempo
+--  Recibe una fecha que se utilizara como si
+--	fuese la hora actual; toda reservacion
+--  cuya hora y franja horaria sea menor a la
+--  pivot, se pasara al estado deshabilitado
+-- ----------------------------------------
+
+
+DROP PROCEDURE IF EXISTS dbo.sp_actualizarSalidaReservaciones
+GO
+
+CREATE PROCEDURE dbo.sp_actualizarSalidaReservaciones
+	@horaPivot datetime
+AS
+	UPDATE dbo.Reservaciones SET deshabilitado = 1 WHERE horaFinal < @horaPivot
+	RETURN 1
+GO
+
+/*
+-- Ejemplo de Ejecucion
+EXEC dbo.sp_actualizarSalidaReservaciones '2016-06-13 16:35:00'
+*/
+
+
+-- ----------------------------------------
+--  Reporte del Porcentaje de Ocupacion Por Tipo Espacio
+-- Recibe
+--	- El id del parqueo
+-- Si x tipo de espacios no estan contemplados en ese parqueo, me retorna un  
+-- -1
+-- ----------------------------------------
+
+DROP PROCEDURE IF EXISTS dbo.sp_ocupacionXTipo
+GO
+
+CREATE PROCEDURE dbo.sp_ocupacionXTipo
+	@estacionamiento INT
+AS
+
+	-- obtiene los disponibles de cada tipo en ese parqueo
+
+	DECLARE @totalParticulares INT
+	DECLARE @totalEspeciales INT
+	DECLARE @totalJefaturas INT
+	DECLARE @totalVisitantes INT
+	DECLARE @totalOficiales INT
+	SELECT @totalParticulares = cantEspacios, @totalEspeciales = cantEspaciosEspeciales, @totalJefaturas = cantEspaciosJefaturas,
+	       @totalVisitantes = cantEspaciosVisitantes, @totalOficiales = cantEspaciosOficiales
+	FROM dbo.Estacionamientos WHERE estacionamientoId = @estacionamiento
+
+	-- obtiene los ocupados ya en reservas
+
+	DECLARE @ocupadosParticulares INT
+	DECLARE @ocupadosEspeciales INT
+	DECLARE @ocupadosJefaturas INT
+	DECLARE @ocupadosVisitantes INT
+	DECLARE @ocupadosOficiales INT
+
+	-- Obtiene los particulares
+	SELECT @ocupadosParticulares = COUNT(reservacionId) FROM dbo.Reservaciones WHERE estacionamientoId = @estacionamiento AND tipoEspacioId = 1 AND deshabilitado = 0
+
+
+	-- Obtiene los Especiales/Discapacitados
+	SELECT @ocupadosEspeciales = COUNT(reservacionId) FROM dbo.Reservaciones WHERE estacionamientoId = @estacionamiento AND tipoEspacioId = 5 AND deshabilitado = 0
+
+
+	-- Obtiene los de Jefaturas
+	SELECT @ocupadosJefaturas = COUNT(reservacionId) FROM dbo.Reservaciones WHERE estacionamientoId = @estacionamiento AND tipoEspacioId = 4 AND deshabilitado = 0
+
+	-- Obtiene los de Visitantes
+	SELECT @ocupadosVisitantes = COUNT(reservacionId) FROM dbo.Reservaciones WHERE estacionamientoId = @estacionamiento AND tipoEspacioId = 3 AND deshabilitado = 0
+
+	-- Obtiene los Oficiales
+	SELECT @ocupadosOficiales = COUNT(reservacionId) FROM dbo.Reservaciones WHERE estacionamientoId = @estacionamiento AND tipoEspacioId = 2 AND deshabilitado = 0
+
+
+	-- Calcula el porcentaje de ocupacion: (ocupados/totales)*100
+
+	DECLARE @relacionParticulares INT
+	DECLARE @relacionEspeciales INT
+	DECLARE @relacionJefaturas INT
+	DECLARE @relacionVisitantes INT
+	DECLARE @relacionOficiales INT
+
+	-- En cada uno hay bloques begin-try, quiere decir que no hay espacios de x tipo (o sea, su cantidad es 0)
+	-- entonces dara un  error de division por cero. Se asigna un -1 y eso indicaria que no esta disponible
+
+	BEGIN TRY
+		SELECT @relacionParticulares = (CAST(@ocupadosParticulares AS FLOAT)/CAST(@totalParticulares AS FLOAT))*100;
+	END TRY
+	BEGIN CATCH
+		SELECT @relacionParticulares = -1;
+	END CATCH;
+
+
+	BEGIN TRY
+		SELECT @relacionEspeciales = (CAST(@ocupadosEspeciales AS FLOAT)/CAST(@totalEspeciales AS FLOAT))*100;
+	END TRY
+	BEGIN CATCH
+		SELECT @relacionEspeciales = -1;
+	END CATCH;
+
+	BEGIN TRY
+		SELECT @relacionJefaturas = (CAST(@ocupadosJefaturas AS FLOAT)/CAST(@totalJefaturas AS FLOAT))*100
+	END TRY
+	BEGIN CATCH
+		SELECT @relacionJefaturas = -1;
+	END CATCH;
+
+	BEGIN TRY
+		SELECT @relacionVisitantes = (CAST(@ocupadosVisitantes AS FLOAT)/CAST(@totalVisitantes AS FLOAT))*100;
+	END TRY
+	BEGIN CATCH
+		SELECT @relacionVisitantes = -1;
+	END CATCH;
+
+	BEGIN TRY
+		SELECT @relacionOficiales = (CAST(@ocupadosOficiales AS FLOAT)/CAST(@totalOficiales AS FLOAT))*100;
+	END TRY
+	BEGIN CATCH
+		SELECT @relacionOficiales = -1;
+	END CATCH;
+
+	SELECT @relacionParticulares AS Particulares, @relacionEspeciales AS Especiales, @relacionJefaturas AS Jefaturas, @relacionVisitantes AS Visitantes, @relacionOficiales AS Oficiales FOR JSON PATH
+
+GO
+
+/*
+-- Ejemplo de Ejecucion
+SELECT * FROM dbo.Estacionamientos
+SELECT * FROM dbo.Tipos_Espacios
+EXEC dbo.sp_ocupacionXTipo 1
+*/
+
+
+
+-- ----------------------------------------
+--  Reporte del Porcentaje de Ocupacion de un parqueo Por Departamento
+-- Recibe
+--	- El id del parqueo
+-- ----------------------------------------
+
+DROP PROCEDURE IF EXISTS dbo.sp_ocupacionXDepartamento
+GO
+
+CREATE PROCEDURE dbo.sp_ocupacionXDepartamento
+	@estacionamiento INT
+AS
+	DECLARE @totalReservasEstacionamiento INT
+	SELECT @totalReservasEstacionamiento = count(reservacionId) FROM dbo.Reservaciones WHERE estacionamientoId = @estacionamiento AND deshabilitado = 0
+
+	SELECT codigoDivision, descripcion, CONVERT(numeric(3,0), (CAST(count(reservacionId) AS FLOAT)/CAST(@totalReservasEstacionamiento AS FLOAT))*100)
+	AS Espacios FROM dbo.Reservaciones r
+	INNER JOIN dbo.Usuarios u ON r.usuarioId = u.usuarioId
+	INNER JOIN dbo.Divisiones d ON u.division = d.divisionId
+	WHERE estacionamientoId = @estacionamiento AND r.deshabilitado = 0
+	GROUP BY codigoDivision, descripcion FOR JSON PATH
+GO
+
+/*
+-- Ejemplo de Ejecucion
+EXEC dbo.sp_ocupacionXDepartamento 1
+*/
+
+
+
+-- ----------------------------------------
+--  Reporte del Porcentaje de Ocupacion por Departamento, en todos los parqueos
+-- Recibe
+--	- El id del departamento
+-- ----------------------------------------
+
+DROP PROCEDURE IF EXISTS dbo.sp_ocupacionTotalXDepartamento
+GO
+
+CREATE PROCEDURE dbo.sp_ocupacionTotalXDepartamento
+	@departamento INT
+AS
+
+	SELECT t1.estacionamiento, CONVERT(numeric(3,0), (CAST(ocupacion AS FLOAT)/CAST(total AS FLOAT))*100) AS ocupacion
+	FROM 
+		(SELECT e.nombre AS estacionamiento, COUNT(r.reservacionId) AS ocupacion FROM dbo.Reservaciones r
+		INNER JOIN dbo.Usuarios u ON r.usuarioId = u.usuarioId
+		INNER JOIN dbo.Estacionamientos e ON r.estacionamientoId = e.estacionamientoId
+		WHERE u.division = @departamento
+		GROUP BY e.nombre) t1
+	INNER JOIN
+		(SELECT e.nombre AS estacionamiento, COUNT(reservacionId) AS total FROM dbo.Reservaciones r 
+		INNER JOIN dbo.Estacionamientos e ON r.estacionamientoId = e.estacionamientoId
+		GROUP BY e.nombre) t2
+	ON t1.estacionamiento = t2.estacionamiento
+	FOR JSON PATH
+
+GO
+
+EXEC dbo.sp_ocupacionTotalXDepartamento 1
+
+
+
+
+-- --------------
+
+/*
+-- Obtiene el porcentaje por departamento, respecto a todos los espacios
+SELECT e.nombre AS estacionamiento, CONVERT(numeric(3,0), (CAST(COUNT(r.reservacionId) AS FLOAT)/CAST(cantEspacios+cantEspaciosEspeciales+cantEspaciosJefaturas+cantEspaciosVisitantes+cantEspaciosOficiales AS FLOAT))*100)
+AS ocupacion FROM dbo.Reservaciones r
+INNER JOIN dbo.Usuarios u ON r.usuarioId = u.usuarioId
+INNER JOIN dbo.Estacionamientos e ON r.estacionamientoId = e.estacionamientoId
+WHERE u.division = 1
+GROUP BY e.nombre, cantEspacios,cantEspaciosEspeciales,cantEspaciosJefaturas,cantEspaciosVisitantes,cantEspaciosOficiales
+
+
+-- Ocupacion (en numeros, no %) por departamento
+SELECT e.nombre AS estacionamiento, count(r.reservacionId) AS ocupacion FROM dbo.Reservaciones r
+INNER JOIN dbo.Usuarios u ON r.usuarioId = u.usuarioId
+INNER JOIN dbo.Estacionamientos e ON r.estacionamientoId = e.estacionamientoId
+WHERE u.division = 1
+GROUP BY e.nombre
+*/
+
+
+
+/*
+-- Truncate, ejemplo de registro de reservas
+
+TRUNCATE TABLE dbo.Reservaciones
+GO
+
+INSERT INTO dbo.Reservaciones(usuarioId, estacionamientoId, tipoEspacioId, horaInicio, horaFinal, [timestamp]) VALUES (2, 1, 1,'2022-06-18 08:00', '2022-06-18 22:00', DATEADD(HOUR, -12, GETDATE()))
+INSERT INTO dbo.Reservaciones(usuarioId, estacionamientoId, tipoEspacioId, horaInicio, horaFinal, [timestamp]) VALUES (3, 1, 2,'2022-06-18 08:00', '2022-06-18 22:00', DATEADD(HOUR, -12, GETDATE()))
+
+SELECT * FROM dbo.Reservaciones
+
+*/
+
+
+/*
+
+	-- Realiza los calculos
+	DECLARE @relacionParticulares INT = (CAST(@ocupadosParticulares AS FLOAT)/CAST(@totalParticulares AS FLOAT))*100
+	DECLARE @relacionEspeciales INT = (CAST(@ocupadosEspeciales AS FLOAT)/CAST(@totalEspeciales AS FLOAT))*100
+	DECLARE @relacionJefaturas INT = (CAST(@ocupadosJefaturas AS FLOAT)/CAST(@totalJefaturas AS FLOAT))*100
+	DECLARE @relacionVisitantes INT = (CAST(@ocupadosVisitantes AS FLOAT)/CAST(@totalVisitantes AS FLOAT))*100
+	DECLARE @relacionOficiales INT = (CAST(@ocupadosOficiales AS FLOAT)/CAST(@totalOficiales AS FLOAT))*100
+
+
+	DECLARE @relacionParticulares INT = (3.0/9.0)*100
+	DECLARE @relacionEspeciales INT = (1.0/1.0)*100
+	DECLARE @relacionJefaturas INT = (12.0/14.0)*100
+	DECLARE @relacionVisitantes INT = (2.0/4.0)*100
+	DECLARE @relacionOficiales INT = (0.0/-1.0)*100
+
+	DECLARE @relacionParticulares INT
+	BEGIN TRY
+		SELECT @relacionParticulares = (2.0/0.0)*100;
+	END TRY
+	BEGIN CATCH
+		SELECT @relacionParticulares = -1;
+	END CATCH;
+
+	SELECT @relacionParticulares
+
+
+	SELECT @relacionParticulares AS Particulares, @relacionEspeciales AS Especiales, @relacionJefaturas AS Jefaturas, @relacionVisitantes AS Visitantes, @relacionOficiales AS Oficiales FOR JSON PATH
+
+*/
+
+
+-- Agregar:
+-- esJefatura
+-- esDiscapacitado
