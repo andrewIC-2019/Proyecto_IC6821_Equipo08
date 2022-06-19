@@ -210,6 +210,9 @@ export class GestorUsuario {
     return this.daoUsuario.verMisReservas(usuario, limiteA, limiteB);
   }
 
+  public verReservasEstacionamiento(estacionamiento: string): Promise<string> {
+    return this.daoUsuario.verReservasEstacionamiento(estacionamiento);
+  }
 
 
 

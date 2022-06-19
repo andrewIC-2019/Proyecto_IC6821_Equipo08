@@ -21,7 +21,31 @@ app.get("/ocupacionXTipo", ocupacionXTipo);
 app.get("/ocupacionXDepartamento", ocupacionXDepartamento);
 app.get("/ocupacionTotalXDepartamento", ocupacionTotalXDepartamento);
 app.get("/verMisReservas", verMisReservas);
+app.get("/verReservasEstacionamiento", verReservasEstacionamiento);
 
+
+
+async function verReservasEstacionamiento(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+
+  let estacionamiento: string = req.query.estacionamiento as string;
+
+  await Control.getInstance()
+    .$gestorUsuario.verReservasEstacionamiento(estacionamiento)
+    .then((data) => {
+      if (!data) {
+        data = '0';
+      }
+      res.json(JSON.parse(data));
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function verMisReservas(
   req: express.Request,

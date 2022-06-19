@@ -379,7 +379,11 @@ export class SQLConnection implements DataSource {
     return verMisReservas(usuario, limiteA, limiteB);
   }
 
-
+  public verReservasEstacionamiento(
+    estacionamiento: string
+  ): Promise<string> {
+    return verReservasEstacionamiento(estacionamiento);
+  }
 
 
 
@@ -395,6 +399,34 @@ export class SQLConnection implements DataSource {
 
 
 
+
+
+async function verReservasEstacionamiento(
+  estacionamiento: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("estacionamiento", sql.NVarChar, estacionamiento)
+    .execute("verReservasEstacionamiento");
+  let str: string;
+  if (result.recordsets && result.returnValue) {
+    str = "{";
+    for (var i in result.recordsets) {
+      for (var key in result.recordsets[i][0]) {
+        let tmpStr: string = result.recordsets[i][0][key];
+        tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+        str += '"' + i + '": "' + tmpStr + '",';
+      }
+    }
+    str = str.slice(0, -1);
+    str += "}";
+  }
+
+  return str;
+}
 
 async function verMisReservas(
   usuario: string, limiteA: string, limiteB: string

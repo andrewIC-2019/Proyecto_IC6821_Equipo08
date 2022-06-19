@@ -59,6 +59,9 @@ var DAOUsuariosImpl = /** @class */ (function () {
     DAOUsuariosImpl.prototype.verMisReservas = function (usuario, limiteA, limiteB) {
         return SQLConnection_1.SQLConnection.getInstance().verMisReservas(usuario, limiteA, limiteB);
     };
+    DAOUsuariosImpl.prototype.verReservasEstacionamiento = function (estacionamiento) {
+        return SQLConnection_1.SQLConnection.getInstance().verReservasEstacionamiento(estacionamiento);
+    };
     return DAOUsuariosImpl;
 }());
 exports.DAOUsuariosImpl = DAOUsuariosImpl;

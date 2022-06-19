@@ -179,6 +179,10 @@ export class DAOUsuariosImpl implements DAOTransaccional {
     return SQLConnection.getInstance().verMisReservas(usuario, limiteA, limiteB);
   }
 
+  public verReservasEstacionamiento(estacionamiento: string): Promise<string> {
+    return SQLConnection.getInstance().verReservasEstacionamiento(estacionamiento);
+  }
+
 
 
 }

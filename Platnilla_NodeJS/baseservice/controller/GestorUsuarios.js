@@ -87,6 +87,9 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.verMisReservas = function (usuario, limiteA, limiteB) {
         return this.daoUsuario.verMisReservas(usuario, limiteA, limiteB);
     };
+    GestorUsuario.prototype.verReservasEstacionamiento = function (estacionamiento) {
+        return this.daoUsuario.verReservasEstacionamiento(estacionamiento);
+    };
     return GestorUsuario;
 }());
 exports.GestorUsuario = GestorUsuario;
