@@ -197,4 +197,11 @@ export class GestorUsuario {
   public ocupacionXTipo(estacionamiento: string): Promise<string> {
     return this.daoUsuario.ocupacionXTipo(estacionamiento);
   }
+
+  public ocupacionXDepartamento(estacionamiento: string): Promise<string> {
+    return this.daoUsuario.ocupacionXDepartamento(estacionamiento);
+  }
+
+
+
 }

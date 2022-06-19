@@ -50,6 +50,9 @@ var DAOUsuariosImpl = /** @class */ (function () {
     DAOUsuariosImpl.prototype.ocupacionXTipo = function (estacionamiento) {
         return SQLConnection_1.SQLConnection.getInstance().ocupacionXTipo(estacionamiento);
     };
+    DAOUsuariosImpl.prototype.ocupacionXDepartamento = function (estacionamiento) {
+        return SQLConnection_1.SQLConnection.getInstance().ocupacionXDepartamento(estacionamiento);
+    };
     return DAOUsuariosImpl;
 }());
 exports.DAOUsuariosImpl = DAOUsuariosImpl;

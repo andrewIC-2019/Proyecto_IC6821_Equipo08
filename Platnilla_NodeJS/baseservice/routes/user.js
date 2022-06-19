@@ -55,6 +55,33 @@ app.post("/registrarUsuarioTotal", registrarUsuarioTotal);
 app.post("/deshabilitarUsuario", deshabilitarUsuario);
 app.get("/diasSemana", diasSemana);
 app.get("/ocupacionXTipo", ocupacionXTipo);
+app.get("/ocupacionXDepartamento", ocupacionXDepartamento);
+function ocupacionXDepartamento(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var estacionamiento;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    estacionamiento = req.query.estacionamiento;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.ocupacionXDepartamento(estacionamiento)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '0';
+                            }
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function ocupacionXTipo(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var estacionamiento;
