@@ -206,6 +206,11 @@ export class GestorUsuario {
     return this.daoUsuario.ocupacionTotalXDepartamento(departamento);
   }
 
+  public verMisReservas(usuario: string, limiteA: string, limiteB: string): Promise<string> {
+    return this.daoUsuario.verMisReservas(usuario, limiteA, limiteB);
+  }
+
+
 
 
 

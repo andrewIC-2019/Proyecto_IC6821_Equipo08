@@ -84,6 +84,9 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.ocupacionTotalXDepartamento = function (departamento) {
         return this.daoUsuario.ocupacionTotalXDepartamento(departamento);
     };
+    GestorUsuario.prototype.verMisReservas = function (usuario, limiteA, limiteB) {
+        return this.daoUsuario.verMisReservas(usuario, limiteA, limiteB);
+    };
     return GestorUsuario;
 }());
 exports.GestorUsuario = GestorUsuario;

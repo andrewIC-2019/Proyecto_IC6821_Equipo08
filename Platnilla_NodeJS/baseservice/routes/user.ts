@@ -20,7 +20,32 @@ app.get("/diasSemana", diasSemana);
 app.get("/ocupacionXTipo", ocupacionXTipo);
 app.get("/ocupacionXDepartamento", ocupacionXDepartamento);
 app.get("/ocupacionTotalXDepartamento", ocupacionTotalXDepartamento);
+app.get("/verMisReservas", verMisReservas);
 
+
+async function verMisReservas(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+
+  let usuario: string = req.query.usuario as string;
+  let limiteA: string = req.query.limiteA as string;
+  let limiteB: string = req.query.limiteB as string;
+
+  await Control.getInstance()
+    .$gestorUsuario.verMisReservas(usuario, limiteA, limiteB)
+    .then((data) => {
+      if (!data) {
+        data = '0';
+      }
+      res.json(JSON.parse(data));
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function ocupacionTotalXDepartamento(
   req: express.Request,

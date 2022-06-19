@@ -56,6 +56,9 @@ var DAOUsuariosImpl = /** @class */ (function () {
     DAOUsuariosImpl.prototype.ocupacionTotalXDepartamento = function (departamento) {
         return SQLConnection_1.SQLConnection.getInstance().ocupacionTotalXDepartamento(departamento);
     };
+    DAOUsuariosImpl.prototype.verMisReservas = function (usuario, limiteA, limiteB) {
+        return SQLConnection_1.SQLConnection.getInstance().verMisReservas(usuario, limiteA, limiteB);
+    };
     return DAOUsuariosImpl;
 }());
 exports.DAOUsuariosImpl = DAOUsuariosImpl;

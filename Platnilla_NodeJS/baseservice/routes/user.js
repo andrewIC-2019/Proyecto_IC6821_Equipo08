@@ -57,6 +57,35 @@ app.get("/diasSemana", diasSemana);
 app.get("/ocupacionXTipo", ocupacionXTipo);
 app.get("/ocupacionXDepartamento", ocupacionXDepartamento);
 app.get("/ocupacionTotalXDepartamento", ocupacionTotalXDepartamento);
+app.get("/verMisReservas", verMisReservas);
+function verMisReservas(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var usuario, limiteA, limiteB;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    usuario = req.query.usuario;
+                    limiteA = req.query.limiteA;
+                    limiteB = req.query.limiteB;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.verMisReservas(usuario, limiteA, limiteB)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '0';
+                            }
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function ocupacionTotalXDepartamento(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var departamento;
