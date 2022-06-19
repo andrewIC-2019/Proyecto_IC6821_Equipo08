@@ -218,6 +218,9 @@ export class GestorUsuario {
     return this.daoUsuario.registrarOficial(estacionamientoId, placa, conductor, entrada);
   }
 
+  public salidaOficial(estacionamientoId: string, placa: string, conductor: string,  salida: string): Promise<string> {
+    return this.daoUsuario.salidaOficial(estacionamientoId, placa, conductor, salida);
+  }
 
 
 

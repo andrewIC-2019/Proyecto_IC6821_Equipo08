@@ -65,6 +65,9 @@ var DAOUsuariosImpl = /** @class */ (function () {
     DAOUsuariosImpl.prototype.registrarOficial = function (estacionamientoId, placa, conductor, entrada) {
         return SQLConnection_1.SQLConnection.getInstance().registrarOficial(estacionamientoId, placa, conductor, entrada);
     };
+    DAOUsuariosImpl.prototype.salidaOficial = function (estacionamientoId, placa, conductor, salida) {
+        return SQLConnection_1.SQLConnection.getInstance().salidaOficial(estacionamientoId, placa, conductor, salida);
+    };
     return DAOUsuariosImpl;
 }());
 exports.DAOUsuariosImpl = DAOUsuariosImpl;

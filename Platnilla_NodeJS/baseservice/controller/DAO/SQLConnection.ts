@@ -390,6 +390,12 @@ export class SQLConnection implements DataSource {
   ): Promise<string> {
     return registrarOficial(estacionamientoId, placa, conductor, entrada);
   }
+
+  public salidaOficial(
+    estacionamientoId: string, placa: string, conductor: string,  salida: string
+  ): Promise<string> {
+    return salidaOficial(estacionamientoId, placa, conductor, salida);
+  }
   
 
 
@@ -406,7 +412,22 @@ export class SQLConnection implements DataSource {
 
 
 
+async function salidaOficial(
+  estacionamientoId: string, placa: string, conductor: string,  salida: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+    .input("placa", sql.NVarChar, placa)
+    .input("conductor", sql.NVarChar, conductor)
+    .input("salida", sql.NVarChar, salida)
+    .execute("sp_SalidaOficial");
 
+  return result.returnValue;
+}
 
 async function registrarOficial(
   estacionamientoId: string, placa: string, conductor: string,  entrada: string

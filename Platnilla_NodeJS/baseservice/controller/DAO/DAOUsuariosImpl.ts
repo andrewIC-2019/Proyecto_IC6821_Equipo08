@@ -187,6 +187,10 @@ export class DAOUsuariosImpl implements DAOTransaccional {
     return SQLConnection.getInstance().registrarOficial(estacionamientoId, placa, conductor, entrada);
   }
 
+  public salidaOficial(estacionamientoId: string, placa: string, conductor: string,  salida: string): Promise<string> {
+    return SQLConnection.getInstance().salidaOficial(estacionamientoId, placa, conductor, salida);
+  }
+
 
 
 }

@@ -60,6 +60,36 @@ app.get("/ocupacionTotalXDepartamento", ocupacionTotalXDepartamento);
 app.get("/verMisReservas", verMisReservas);
 app.get("/verReservasEstacionamiento", verReservasEstacionamiento);
 app.post("/registrarOficial", registrarOficial);
+app.post("/salidaOficial", salidaOficial);
+function salidaOficial(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var estacionamientoId, placa, conductor, salida;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    estacionamientoId = req.body.estacionamientoId;
+                    placa = req.body.placa;
+                    conductor = req.body.conductor;
+                    salida = req.body.salida;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.salidaOficial(estacionamientoId, placa, conductor, salida)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '0';
+                            }
+                            res.json({ done: data == '1' });
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function registrarOficial(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var estacionamientoId, placa, conductor, entrada;

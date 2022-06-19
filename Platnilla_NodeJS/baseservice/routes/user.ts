@@ -23,7 +23,32 @@ app.get("/ocupacionTotalXDepartamento", ocupacionTotalXDepartamento);
 app.get("/verMisReservas", verMisReservas);
 app.get("/verReservasEstacionamiento", verReservasEstacionamiento);
 app.post("/registrarOficial", registrarOficial);
+app.post("/salidaOficial", salidaOficial);
 
+
+async function salidaOficial(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  let estacionamientoId: string = req.body.estacionamientoId;
+  let placa: string = req.body.placa;
+  let conductor: string = req.body.conductor;
+  let salida: string = req.body.salida;
+
+  await Control.getInstance()
+    .$gestorUsuario.salidaOficial(estacionamientoId, placa, conductor, salida)
+    .then((data) => {
+      if (!data) {
+        data = '0';
+      }
+      res.json({ done: data == '1' });
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function registrarOficial(
   req: express.Request,

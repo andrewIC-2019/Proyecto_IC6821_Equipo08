@@ -139,9 +139,34 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.registrarOficial = function (estacionamientoId, placa, conductor, entrada) {
         return registrarOficial(estacionamientoId, placa, conductor, entrada);
     };
+    SQLConnection.prototype.salidaOficial = function (estacionamientoId, placa, conductor, salida) {
+        return salidaOficial(estacionamientoId, placa, conductor, salida);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+function salidaOficial(estacionamientoId, placa, conductor, salida) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+                            .input("placa", sql.NVarChar, placa)
+                            .input("conductor", sql.NVarChar, conductor)
+                            .input("salida", sql.NVarChar, salida)
+                            .execute("sp_SalidaOficial")];
+                case 2:
+                    result = _a.sent();
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
 function registrarOficial(estacionamientoId, placa, conductor, entrada) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result, str, i, key, tmpStr;

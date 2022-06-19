@@ -93,6 +93,9 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.registrarOficial = function (estacionamientoId, placa, conductor, entrada) {
         return this.daoUsuario.registrarOficial(estacionamientoId, placa, conductor, entrada);
     };
+    GestorUsuario.prototype.salidaOficial = function (estacionamientoId, placa, conductor, salida) {
+        return this.daoUsuario.salidaOficial(estacionamientoId, placa, conductor, salida);
+    };
     return GestorUsuario;
 }());
 exports.GestorUsuario = GestorUsuario;
