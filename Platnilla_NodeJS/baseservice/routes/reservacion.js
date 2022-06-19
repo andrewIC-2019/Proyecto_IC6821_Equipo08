@@ -47,6 +47,33 @@ var log = new common_1.Logger();
 app.get("/verificacionFranjas", verificacionFranjas);
 app.get("/verificacionDiaLaboral", verificacionDiaLaboral);
 app.get("/getDisponiblesTipo", getDisponiblesTipo);
+app.post("/actualizarSalidaReservaciones", actualizarSalidaReservaciones);
+function actualizarSalidaReservaciones(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var horaPivot;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    horaPivot = req.body.horaPivot;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorReservacion.actualizarSalidaReservaciones(horaPivot)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '0';
+                            }
+                            res.json({ done: data == '1' });
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function getDisponiblesTipo(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var tipo;

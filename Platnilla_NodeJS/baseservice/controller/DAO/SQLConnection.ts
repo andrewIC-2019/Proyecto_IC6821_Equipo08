@@ -348,7 +348,42 @@ export class SQLConnection implements DataSource {
   ): Promise<string> {
     return getDisponiblesTipo(tipo);
   }
+
+  public actualizarSalidaReservaciones(
+    horaPivot: string
+  ): Promise<string> {
+    return actualizarSalidaReservaciones(horaPivot);
+  }
+
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+async function actualizarSalidaReservaciones(
+  horaPivot: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("horaPivot", sql.NVarChar, horaPivot)
+    .execute("sp_actualizarSalidaReservaciones");
+
+  console.log(result)
+  return result.returnValue;
+}
+
 
 async function getDisponiblesTipo(
   tipo: string

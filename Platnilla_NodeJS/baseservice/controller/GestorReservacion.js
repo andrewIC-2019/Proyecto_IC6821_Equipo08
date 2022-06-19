@@ -53,6 +53,9 @@ var GestorReservacion = /** @class */ (function () {
     GestorReservacion.prototype.getDisponiblesTipo = function (tipo) {
         return this.daoReservacion.getDisponiblesTipo(tipo);
     };
+    GestorReservacion.prototype.actualizarSalidaReservaciones = function (horaPivot) {
+        return this.daoReservacion.actualizarSalidaReservaciones(horaPivot);
+    };
     return GestorReservacion;
 }());
 exports.GestorReservacion = GestorReservacion;

@@ -28,5 +28,9 @@ export class DAOReservacionImpl implements DAOTransaccional{
     public getDisponiblesTipo(tipo: string): Promise<string> {
         return SQLConnection.getInstance().getDisponiblesTipo(tipo);
     }
+
+    public actualizarSalidaReservaciones(horaPivot: string): Promise<string> {
+        return SQLConnection.getInstance().actualizarSalidaReservaciones(horaPivot);
+    }
     
 }

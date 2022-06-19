@@ -52,4 +52,8 @@ export class GestorReservacion {
   public getDisponiblesTipo(tipo: string): Promise<string> {
     return this.daoReservacion.getDisponiblesTipo(tipo);
   }
+
+  public actualizarSalidaReservaciones(horaPivot: string): Promise<string> {
+    return this.daoReservacion.actualizarSalidaReservaciones(horaPivot);
+  }
 }

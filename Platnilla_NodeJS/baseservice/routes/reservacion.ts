@@ -10,6 +10,29 @@ const log = new Logger();
 app.get("/verificacionFranjas", verificacionFranjas)
 app.get("/verificacionDiaLaboral", verificacionDiaLaboral)
 app.get("/getDisponiblesTipo", getDisponiblesTipo)
+app.post("/actualizarSalidaReservaciones", actualizarSalidaReservaciones)
+
+
+async function actualizarSalidaReservaciones(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  let horaPivot: string = req.body.horaPivot;
+
+  await Control.getInstance()
+    .$gestorReservacion.actualizarSalidaReservaciones(horaPivot)
+    .then((data) => {
+      if (!data) {
+        data = '0';
+      }
+      res.json({ done: data == '1' });
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function getDisponiblesTipo(
   req: express.Request,

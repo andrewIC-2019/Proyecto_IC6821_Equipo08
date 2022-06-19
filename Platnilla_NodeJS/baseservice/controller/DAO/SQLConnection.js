@@ -118,9 +118,32 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.getDisponiblesTipo = function (tipo) {
         return getDisponiblesTipo(tipo);
     };
+    SQLConnection.prototype.actualizarSalidaReservaciones = function (horaPivot) {
+        return actualizarSalidaReservaciones(horaPivot);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+function actualizarSalidaReservaciones(horaPivot) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("horaPivot", sql.NVarChar, horaPivot)
+                            .execute("sp_actualizarSalidaReservaciones")];
+                case 2:
+                    result = _a.sent();
+                    console.log(result);
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
 function getDisponiblesTipo(tipo) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result, str, i, key, tmpStr;
