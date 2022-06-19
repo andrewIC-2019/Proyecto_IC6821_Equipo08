@@ -121,9 +121,43 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.actualizarSalidaReservaciones = function (horaPivot) {
         return actualizarSalidaReservaciones(horaPivot);
     };
+    SQLConnection.prototype.ocupacionXTipo = function (estacionamiento) {
+        return ocupacionXTipo(estacionamiento);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+function ocupacionXTipo(estacionamiento) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result, str, i, key, tmpStr;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("estacionamiento", sql.NVarChar, estacionamiento)
+                            .execute("sp_ocupacionXTipo")];
+                case 2:
+                    result = _a.sent();
+                    if (result.recordsets && result.returnValue) {
+                        str = "{";
+                        for (i in result.recordsets) {
+                            for (key in result.recordsets[i][0]) {
+                                tmpStr = result.recordsets[i][0][key];
+                                tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+                                str += '"' + i + '": "' + tmpStr + '",';
+                            }
+                        }
+                        str = str.slice(0, -1);
+                        str += "}";
+                    }
+                    return [2 /*return*/, str];
+            }
+        });
+    });
+}
 function actualizarSalidaReservaciones(horaPivot) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result;

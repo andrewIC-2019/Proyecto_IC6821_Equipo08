@@ -47,6 +47,9 @@ var DAOUsuariosImpl = /** @class */ (function () {
     DAOUsuariosImpl.prototype.diasSemana = function () {
         return SQLConnection_1.SQLConnection.getInstance().diasSemana();
     };
+    DAOUsuariosImpl.prototype.ocupacionXTipo = function (estacionamiento) {
+        return SQLConnection_1.SQLConnection.getInstance().ocupacionXTipo(estacionamiento);
+    };
     return DAOUsuariosImpl;
 }());
 exports.DAOUsuariosImpl = DAOUsuariosImpl;

@@ -162,4 +162,8 @@ export class DAOUsuariosImpl implements DAOTransaccional {
   public diasSemana(): Promise<string> {
     return SQLConnection.getInstance().diasSemana();
   }
+
+  public ocupacionXTipo(estacionamiento: string): Promise<string> {
+    return SQLConnection.getInstance().ocupacionXTipo(estacionamiento);
+  }
 }

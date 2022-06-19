@@ -98,15 +98,15 @@ export class GestorUsuario {
     domingoB: string,
     notificarCorreoAlterno: string
   ): Promise<string> {
-    return this.daoUsuario.guardarEditarUsuario( usuarioId, 
+    return this.daoUsuario.guardarEditarUsuario(usuarioId,
       correo,
-      password, 
-      telefono, 
-      departamento, 
-      placa1, 
-      placa2, 
-      placa3, 
-      placa4, 
+      password,
+      telefono,
+      departamento,
+      placa1,
+      placa2,
+      placa3,
+      placa4,
       lunesA,
       lunesB,
       martesA,
@@ -121,7 +121,7 @@ export class GestorUsuario {
       sabadoB,
       domingoA,
       domingoB,
-      notificarCorreoAlterno,);
+      notificarCorreoAlterno);
   }
 
   public registrarUsuarioTotal(
@@ -192,5 +192,9 @@ export class GestorUsuario {
 
   public diasSemana(): Promise<string> {
     return this.daoUsuario.diasSemana();
+  }
+
+  public ocupacionXTipo(estacionamiento: string): Promise<string> {
+    return this.daoUsuario.ocupacionXTipo(estacionamiento);
   }
 }

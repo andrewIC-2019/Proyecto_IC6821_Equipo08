@@ -17,6 +17,30 @@ app.post("/guardarEditarUsuario", guardarEditarUsuario);
 app.post("/registrarUsuarioTotal", registrarUsuarioTotal);
 app.post("/deshabilitarUsuario", deshabilitarUsuario);
 app.get("/diasSemana", diasSemana);
+app.get("/ocupacionXTipo", ocupacionXTipo);
+
+
+async function ocupacionXTipo(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+
+  let estacionamiento: string = req.query.estacionamiento as string;
+
+  await Control.getInstance()
+    .$gestorUsuario.ocupacionXTipo(estacionamiento)
+    .then((data) => {
+      if (!data) {
+        data = '0';
+      }
+      res.json(JSON.parse(data));
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function diasSemana(
   req: express.Request,

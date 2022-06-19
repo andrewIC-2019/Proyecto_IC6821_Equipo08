@@ -75,6 +75,9 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.diasSemana = function () {
         return this.daoUsuario.diasSemana();
     };
+    GestorUsuario.prototype.ocupacionXTipo = function (estacionamiento) {
+        return this.daoUsuario.ocupacionXTipo(estacionamiento);
+    };
     return GestorUsuario;
 }());
 exports.GestorUsuario = GestorUsuario;
