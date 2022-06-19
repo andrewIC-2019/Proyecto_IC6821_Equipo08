@@ -214,6 +214,10 @@ export class GestorUsuario {
     return this.daoUsuario.verReservasEstacionamiento(estacionamiento);
   }
 
+  public registrarOficial(estacionamientoId: string, placa: string, conductor: string,  entrada: string): Promise<string> {
+    return this.daoUsuario.registrarOficial(estacionamientoId, placa, conductor, entrada);
+  }
+
 
 
 

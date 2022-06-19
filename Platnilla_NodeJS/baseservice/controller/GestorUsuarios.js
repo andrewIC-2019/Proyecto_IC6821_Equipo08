@@ -90,6 +90,9 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.verReservasEstacionamiento = function (estacionamiento) {
         return this.daoUsuario.verReservasEstacionamiento(estacionamiento);
     };
+    GestorUsuario.prototype.registrarOficial = function (estacionamientoId, placa, conductor, entrada) {
+        return this.daoUsuario.registrarOficial(estacionamientoId, placa, conductor, entrada);
+    };
     return GestorUsuario;
 }());
 exports.GestorUsuario = GestorUsuario;

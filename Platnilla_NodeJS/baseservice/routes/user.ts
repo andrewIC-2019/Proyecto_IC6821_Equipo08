@@ -22,8 +22,32 @@ app.get("/ocupacionXDepartamento", ocupacionXDepartamento);
 app.get("/ocupacionTotalXDepartamento", ocupacionTotalXDepartamento);
 app.get("/verMisReservas", verMisReservas);
 app.get("/verReservasEstacionamiento", verReservasEstacionamiento);
+app.post("/registrarOficial", registrarOficial);
 
 
+async function registrarOficial(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  let estacionamientoId: string = req.body.estacionamientoId;
+  let placa: string = req.body.placa;
+  let conductor: string = req.body.conductor;
+  let entrada: string = req.body.entrada;
+
+  await Control.getInstance()
+    .$gestorUsuario.registrarOficial(estacionamientoId, placa, conductor, entrada)
+    .then((data) => {
+      if (!data) {
+        data = '{"response": false}';
+      }
+      res.json(JSON.parse(data));
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function verReservasEstacionamiento(
   req: express.Request,
@@ -37,7 +61,7 @@ async function verReservasEstacionamiento(
     .$gestorUsuario.verReservasEstacionamiento(estacionamiento)
     .then((data) => {
       if (!data) {
-        data = '0';
+        data = '{"response": false}';
       }
       res.json(JSON.parse(data));
     })
@@ -61,7 +85,7 @@ async function verMisReservas(
     .$gestorUsuario.verMisReservas(usuario, limiteA, limiteB)
     .then((data) => {
       if (!data) {
-        data = '0';
+        data = '{"response": false}';
       }
       res.json(JSON.parse(data));
     })
@@ -83,7 +107,7 @@ async function ocupacionTotalXDepartamento(
     .$gestorUsuario.ocupacionTotalXDepartamento(departamento)
     .then((data) => {
       if (!data) {
-        data = '0';
+        data = '{"response": false}';
       }
       res.json(JSON.parse(data));
     })
@@ -105,7 +129,7 @@ async function ocupacionXDepartamento(
     .$gestorUsuario.ocupacionXDepartamento(estacionamiento)
     .then((data) => {
       if (!data) {
-        data = '0';
+        data = '{"response": false}';
       }
       res.json(JSON.parse(data));
     })
@@ -127,7 +151,7 @@ async function ocupacionXTipo(
     .$gestorUsuario.ocupacionXTipo(estacionamiento)
     .then((data) => {
       if (!data) {
-        data = '0';
+        data = '{"response": false}';
       }
       res.json(JSON.parse(data));
     })
@@ -147,7 +171,7 @@ async function diasSemana(
     .$gestorUsuario.diasSemana()
     .then((data) => {
       if (!data) {
-        data = '0';
+        data = '{"response": false}';
       }
       res.json(JSON.parse(data));
     })

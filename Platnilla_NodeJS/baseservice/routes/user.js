@@ -59,6 +59,36 @@ app.get("/ocupacionXDepartamento", ocupacionXDepartamento);
 app.get("/ocupacionTotalXDepartamento", ocupacionTotalXDepartamento);
 app.get("/verMisReservas", verMisReservas);
 app.get("/verReservasEstacionamiento", verReservasEstacionamiento);
+app.post("/registrarOficial", registrarOficial);
+function registrarOficial(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var estacionamientoId, placa, conductor, entrada;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    estacionamientoId = req.body.estacionamientoId;
+                    placa = req.body.placa;
+                    conductor = req.body.conductor;
+                    entrada = req.body.entrada;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.registrarOficial(estacionamientoId, placa, conductor, entrada)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function verReservasEstacionamiento(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var estacionamiento;
@@ -70,7 +100,7 @@ function verReservasEstacionamiento(req, res, next) {
                             .$gestorUsuario.verReservasEstacionamiento(estacionamiento)
                             .then(function (data) {
                             if (!data) {
-                                data = '0';
+                                data = '{"response": false}';
                             }
                             res.json(JSON.parse(data));
                         })
@@ -98,7 +128,7 @@ function verMisReservas(req, res, next) {
                             .$gestorUsuario.verMisReservas(usuario, limiteA, limiteB)
                             .then(function (data) {
                             if (!data) {
-                                data = '0';
+                                data = '{"response": false}';
                             }
                             res.json(JSON.parse(data));
                         })
@@ -124,7 +154,7 @@ function ocupacionTotalXDepartamento(req, res, next) {
                             .$gestorUsuario.ocupacionTotalXDepartamento(departamento)
                             .then(function (data) {
                             if (!data) {
-                                data = '0';
+                                data = '{"response": false}';
                             }
                             res.json(JSON.parse(data));
                         })
@@ -150,7 +180,7 @@ function ocupacionXDepartamento(req, res, next) {
                             .$gestorUsuario.ocupacionXDepartamento(estacionamiento)
                             .then(function (data) {
                             if (!data) {
-                                data = '0';
+                                data = '{"response": false}';
                             }
                             res.json(JSON.parse(data));
                         })
@@ -176,7 +206,7 @@ function ocupacionXTipo(req, res, next) {
                             .$gestorUsuario.ocupacionXTipo(estacionamiento)
                             .then(function (data) {
                             if (!data) {
-                                data = '0';
+                                data = '{"response": false}';
                             }
                             res.json(JSON.parse(data));
                         })
@@ -199,7 +229,7 @@ function diasSemana(req, res, next) {
                         .$gestorUsuario.diasSemana()
                         .then(function (data) {
                         if (!data) {
-                            data = '0';
+                            data = '{"response": false}';
                         }
                         res.json(JSON.parse(data));
                     })

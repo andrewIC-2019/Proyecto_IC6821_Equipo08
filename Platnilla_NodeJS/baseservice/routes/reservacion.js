@@ -112,7 +112,7 @@ function verificacionDiaLaboral(req, res, next) {
                             .$gestorReservacion.verificacionDiaLaboral(jefe, dia)
                             .then(function (data) {
                             if (!data) {
-                                data = '{"response": false}';
+                                data = '0';
                             }
                             res.json({ done: data == "1" });
                         })
@@ -140,7 +140,7 @@ function verificacionFranjas(req, res, next) {
                             .$gestorReservacion.verificacionFranjas(usuario, entrada, salida)
                             .then(function (data) {
                             if (!data) {
-                                data = '{"response": false}';
+                                data = '0';
                             }
                             res.json({ done: data == "1" });
                         })

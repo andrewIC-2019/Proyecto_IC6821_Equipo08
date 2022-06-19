@@ -385,6 +385,14 @@ export class SQLConnection implements DataSource {
     return verReservasEstacionamiento(estacionamiento);
   }
 
+  public registrarOficial(
+    estacionamientoId: string, placa: string, conductor: string,  entrada: string
+  ): Promise<string> {
+    return registrarOficial(estacionamientoId, placa, conductor, entrada);
+  }
+  
+
+
 
 
 
@@ -400,6 +408,34 @@ export class SQLConnection implements DataSource {
 
 
 
+async function registrarOficial(
+  estacionamientoId: string, placa: string, conductor: string,  entrada: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+    .input("placa", sql.NVarChar, placa)
+    .input("conductor", sql.NVarChar, conductor)
+    .input("entrada", sql.NVarChar, entrada)
+    .execute("sp_RegistrarOficial");
+  let str: string;
+  if (result.recordsets && result.returnValue) {
+    str = "{";
+    for (var i in result.recordsets) {
+      for (var key in result.recordsets[i][0]) {
+        let tmpStr: string = result.recordsets[i][0][key];
+        tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+        str += '"' + i + '": "' + tmpStr + '",';
+      }
+    }
+    str = str.slice(0, -1);
+    str += "}";
+  }
+  return str;
+}
 
 async function verReservasEstacionamiento(
   estacionamiento: string

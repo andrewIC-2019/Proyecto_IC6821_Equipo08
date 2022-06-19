@@ -67,7 +67,7 @@ async function verificacionDiaLaboral(
     .$gestorReservacion.verificacionDiaLaboral(jefe, dia)
     .then((data) => {
       if (!data) {
-        data = '{"response": false}';
+        data = '0';
       }
       res.json({done : data == "1"});
     })
@@ -90,7 +90,7 @@ async function verificacionFranjas(
       .$gestorReservacion.verificacionFranjas(usuario, entrada, salida)
       .then((data) => {
         if (!data) {
-          data = '{"response": false}';
+          data = '0';
         }
         res.json({done : data == "1"});
       })
