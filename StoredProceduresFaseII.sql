@@ -1,5 +1,7 @@
 -- Stored Procedures Fase II --
 
+USE parqueos
+
 -- --------------------------
 --  Operador Estacionamiento
 -- --------------------------
@@ -394,6 +396,7 @@ EXEC dbo.sp_ocupacionXDepartamento 1
 --  Reporte del Porcentaje de Ocupacion por Departamento, en todos los parqueos
 -- Recibe
 --	- El id del departamento
+--	FUNCIONA PARA ADMIN Y JEFATURA
 -- ----------------------------------------
 
 DROP PROCEDURE IF EXISTS dbo.sp_ocupacionTotalXDepartamento
@@ -522,6 +525,299 @@ AS
 GO
 
 
+-- -----------------------------------------
+--			IV PARTE
+-- -----------------------------------------
+
+-- ----------------------------------------
+--  Reporte del Porcentaje de Ocupacion Por Tipo Espacio
+--	JEFATURA
+-- Recibe
+--	- El id del parqueo
+--	- El departamento al cual pertenece la jefatura
+-- Si x tipo de espacios no estan contemplados en ese parqueo, me retorna un  
+-- -1
+-- ----------------------------------------
+
+DROP PROCEDURE IF EXISTS dbo.sp_ocupacionXTipoJefe
+GO
+
+CREATE PROCEDURE dbo.sp_ocupacionXTipoJefe
+	@estacionamiento INT,
+	@departamento INT
+
+AS
+
+	-- obtiene los disponibles de cada tipo en ese parqueo
+
+	DECLARE @totalParticulares INT
+	DECLARE @totalEspeciales INT
+	DECLARE @totalJefaturas INT
+	DECLARE @totalVisitantes INT
+	DECLARE @totalOficiales INT
+	SELECT @totalParticulares = cantEspacios, @totalEspeciales = cantEspaciosEspeciales, @totalJefaturas = cantEspaciosJefaturas,
+	       @totalVisitantes = cantEspaciosVisitantes, @totalOficiales = cantEspaciosOficiales
+	FROM dbo.Estacionamientos WHERE estacionamientoId = @estacionamiento
+
+	-- obtiene los ocupados ya en reservas
+
+	DECLARE @ocupadosParticulares INT
+	DECLARE @ocupadosEspeciales INT
+	DECLARE @ocupadosJefaturas INT
+	DECLARE @ocupadosVisitantes INT
+	DECLARE @ocupadosOficiales INT
+
+	-- Obtiene los particulares
+	SELECT @ocupadosParticulares = COUNT(reservacionId) FROM dbo.Reservaciones r INNER JOIN dbo.Usuarios u ON r.usuarioId = u.usuarioId
+	WHERE r.estacionamientoId = @estacionamiento AND tipoEspacioId = 1 AND r.deshabilitado = 0 AND u.division = @departamento
+
+
+	-- Obtiene los Especiales/Discapacitados
+	SELECT @ocupadosEspeciales = COUNT(reservacionId) FROM dbo.Reservaciones r INNER JOIN dbo.Usuarios u ON r.usuarioId = u.usuarioId
+	WHERE r.estacionamientoId = @estacionamiento AND tipoEspacioId = 5 AND r.deshabilitado = 0 AND u.division = @departamento
+
+
+	-- Obtiene los de Jefaturas
+	SELECT @ocupadosJefaturas = COUNT(reservacionId) FROM dbo.Reservaciones r INNER JOIN dbo.Usuarios u ON r.usuarioId = u.usuarioId
+	WHERE r.estacionamientoId = @estacionamiento AND tipoEspacioId = 4 AND r.deshabilitado = 0 AND u.division = @departamento
+
+	-- Obtiene los de Visitantes
+	SELECT @ocupadosVisitantes = COUNT(reservacionId) FROM dbo.Reservaciones r INNER JOIN dbo.Usuarios u ON r.usuarioId = u.usuarioId
+	WHERE r.estacionamientoId = @estacionamiento AND r.tipoEspacioId = 3 AND r.deshabilitado = 0 AND u.division = @departamento
+
+	-- Obtiene los Oficiales
+	SELECT @ocupadosOficiales = COUNT(reservacionId) FROM dbo.Reservaciones r INNER JOIN dbo.Usuarios u ON r.usuarioId = u.usuarioId
+	WHERE r.estacionamientoId = @estacionamiento AND r.tipoEspacioId = 2 AND r.deshabilitado = 0 AND u.division = @departamento
+
+
+	-- Calcula el porcentaje de ocupacion: (ocupados/totales)*100
+
+	DECLARE @relacionParticulares INT
+	DECLARE @relacionEspeciales INT
+	DECLARE @relacionJefaturas INT
+	DECLARE @relacionVisitantes INT
+	DECLARE @relacionOficiales INT
+
+	-- En cada uno hay bloques begin-try, quiere decir que no hay espacios de x tipo (o sea, su cantidad es 0)
+	-- entonces dara un  error de division por cero. Se asigna un -1 y eso indicaria que no esta disponible
+
+	BEGIN TRY
+		SELECT @relacionParticulares = (CAST(@ocupadosParticulares AS FLOAT)/CAST(@totalParticulares AS FLOAT))*100;
+	END TRY
+	BEGIN CATCH
+		SELECT @relacionParticulares = -1;
+	END CATCH;
+
+
+	BEGIN TRY
+		SELECT @relacionEspeciales = (CAST(@ocupadosEspeciales AS FLOAT)/CAST(@totalEspeciales AS FLOAT))*100;
+	END TRY
+	BEGIN CATCH
+		SELECT @relacionEspeciales = -1;
+	END CATCH;
+
+	BEGIN TRY
+		SELECT @relacionJefaturas = (CAST(@ocupadosJefaturas AS FLOAT)/CAST(@totalJefaturas AS FLOAT))*100
+	END TRY
+	BEGIN CATCH
+		SELECT @relacionJefaturas = -1;
+	END CATCH;
+
+	BEGIN TRY
+		SELECT @relacionVisitantes = (CAST(@ocupadosVisitantes AS FLOAT)/CAST(@totalVisitantes AS FLOAT))*100;
+	END TRY
+	BEGIN CATCH
+		SELECT @relacionVisitantes = -1;
+	END CATCH;
+
+	BEGIN TRY
+		SELECT @relacionOficiales = (CAST(@ocupadosOficiales AS FLOAT)/CAST(@totalOficiales AS FLOAT))*100;
+	END TRY
+	BEGIN CATCH
+		SELECT @relacionOficiales = -1;
+	END CATCH;
+
+	SELECT @relacionParticulares AS Particulares, @relacionEspeciales AS Especiales, @relacionJefaturas AS Jefaturas, @relacionVisitantes AS Visitantes, @relacionOficiales AS Oficiales FOR JSON PATH
+	RETURN 1
+GO
+
+
+-- ----------------------------------------
+--  Reporte del Porcentaje de Ocupacion de un parqueo Por Departamento
+-- Recibe
+--	- El id del parqueo
+-- ----------------------------------------
+
+DROP PROCEDURE IF EXISTS dbo.sp_ocupacionXDepartamentoJefe
+GO
+
+CREATE PROCEDURE dbo.sp_ocupacionXDepartamentoJefe
+	@estacionamiento INT,
+	@departamento INT
+AS
+	DECLARE @totalReservasEstacionamiento INT
+	SELECT @totalReservasEstacionamiento = count(reservacionId) FROM dbo.Reservaciones WHERE estacionamientoId = @estacionamiento AND deshabilitado = 0
+
+	SELECT codigoDivision, descripcion, CONVERT(numeric(3,0), (CAST(count(reservacionId) AS FLOAT)/CAST(@totalReservasEstacionamiento AS FLOAT))*100)
+	AS Espacios FROM dbo.Reservaciones r
+	INNER JOIN dbo.Usuarios u ON r.usuarioId = u.usuarioId
+	INNER JOIN dbo.Divisiones d ON u.division = d.divisionId
+	WHERE estacionamientoId = @estacionamiento AND r.deshabilitado = 0 AND u.division = @departamento
+	GROUP BY codigoDivision, descripcion FOR JSON PATH
+
+	RETURN 1
+GO
+
+/*
+-- Ejemplo de Ejecucion
+EXEC dbo.sp_ocupacionXDepartamentoJefe 1, 1
+*/
+
+
+
+/*
+-- Ejemplo de Ejecucion
+SELECT * FROM dbo.Estacionamientos
+SELECT * FROM dbo.Tipos_Espacios
+EXEC dbo.sp_ocupacionXTipoJefe 1, 1
+*/
+
+
+
+
+DROP PROCEDURE IF EXISTS dbo.sp_estacionamientosUsuario
+GO
+
+CREATE PROCEDURE dbo.sp_estacionamientosUsuario
+	@objetivo INT,
+	@usuario BIGINT
+AS
+	
+	DECLARE @esAdministrador BIT, @esJefatura BIT, @esDiscapacitado BIT, @esOperador BIT
+	SELECT @esAdministrador = esAdministrador, @esJefatura = esJefatura, @esDiscapacitado = esDiscapacitado, @esOperador = esOperador FROM dbo.Usuarios WHERE usuarioId = @usuario
+
+	DECLARE @esFuncionario BIT = 1
+
+	IF @esAdministrador = 1 OR @esJefatura = 1 OR @esOperador = 1 BEGIN
+		SET @esFuncionario = 0
+	END
+	
+	DECLARE @disponibles INT
+
+	-- Usuario que esta reservando es un jefe
+	IF @esJefatura = 1 BEGIN
+		IF @objetivo = 1 BEGIN		-- jefatura reserva para si mismo
+			IF @esDiscapacitado = 1 BEGIN			-- jefe + discapacidad
+				SELECT estacionamientoId, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0
+			END ELSE BEGIN						-- solo en los de jefatura
+				SELECT estacionamientoId, 'Jefatura' AS tipo, cantEspaciosJefaturas AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosJefaturas>0
+			END
+		END
+		IF @objetivo = 2 BEGIN		-- jefatura reserva para un visitante
+			SELECT estacionamientoId, 'Visitantes' AS tipo, cantEspaciosVisitantes AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosVisitantes>0 AND tipoEstacionamiento = 2
+		END
+	END
+
+	-- Usuario que esta reservando es un administrador
+	IF @esAdministrador = 1 BEGIN
+		IF @objetivo = 1 BEGIN		-- administrador va a reservar para si mismo
+			IF @esDiscapacitado = 1 BEGIN		-- admin + discapacidad
+				SELECT estacionamientoId, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0
+			END ELSE BEGIN					-- solo en los particulares
+				SELECT estacionamientoId, 'Particular' AS tipo, cantEspacios AS cantidad FROM dbo.Estacionamientos WHERE cantEspacios>0
+			END
+		END
+		IF @objetivo = 2 BEGIN		-- administrador reserva para una visita
+			SELECT estacionamientoId, 'Visitantes' AS tipo, cantEspaciosVisitantes AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosVisitantes>0 AND tipoEstacionamiento = 2
+		END
+	END
+
+	-- Usuario que esta reservando es un operador
+	IF @esOperador = 1 BEGIN
+		IF @objetivo = 2 BEGIN		-- operador va a registrar la entrada de un carro oficial
+			SELECT estacionamientoId, 'Oficial' AS tipo, cantEspaciosOficiales AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosOficiales>0
+		END
+	END
+
+	-- Usuario que esta reservando es un funcionario
+	IF @esFuncionario = 1 BEGIN
+		IF @objetivo = 1 BEGIN		-- funcionario va a reservar para si mismo
+			IF @esDiscapacitado = 1 BEGIN		-- funcionario + discapacidad
+				SELECT estacionamientoId, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0
+			END ELSE BEGIN					-- solo en los particulares
+				WITH CTE AS(
+					SELECT estacionamientoId, 'Particular' AS tipo, cantEspacios AS cantidad FROM dbo.Estacionamientos WHERE cantEspacios>0
+				)
+				SELECT 
+			END
+		END
+	END
+
+GO
+
+
+dbo.sp_estacionamientosUsuario 2, 1
+
+/*
+Objetivo (2nd parametro)
+1	Propia
+2	Visitante
+3	Oficial
+
+
+Tipo Espacios:
+1	Particular
+2	Oficial
+3	Visitante
+4	Jefatura
+5	Discapacitado
+
+CREATE TABLE #tmpEstacionamientosUsuario
+(
+	estacionamientoId INT,
+	tipo NVARCHAR(60),
+	cantEspacios INT
+)
+
+
+*/
+
+
+
+
+DROP PROCEDURE IF EXISTS dbo.sp_calcularEspaciosDisponibles
+GO
+
+CREATE PROCEDURE dbo.sp_calcularEspaciosDisponibles
+	@estacionamientoId INT,
+	@tipoEspacioId TINYINT
+AS
+	DECLARE @totales INT, @ocupados INT
+
+	IF @tipoEspacioId = 1 BEGIN
+		SELECT @totales = cantEspacios FROM dbo.Estacionamientos WHERE estacionamientoId = @estacionamientoId
+	END
+	IF @tipoEspacioId = 2 BEGIN
+		SELECT @totales = cantEspaciosOficiales FROM dbo.Estacionamientos WHERE estacionamientoId = @estacionamientoId
+	END
+	IF @tipoEspacioId = 3 BEGIN
+		SELECT @totales = cantEspaciosVisitantes FROM dbo.Estacionamientos WHERE estacionamientoId = @estacionamientoId
+	END
+	IF @tipoEspacioId = 4 BEGIN
+		SELECT @totales = cantEspaciosJefaturas FROM dbo.Estacionamientos WHERE estacionamientoId = @estacionamientoId
+	END
+	IF @tipoEspacioId = 5 BEGIN
+		SELECT @totales = cantEspaciosEspeciales FROM dbo.Estacionamientos WHERE estacionamientoId = @estacionamientoId
+	END
+
+	SELECT @ocupados = COUNT(reservacionId) FROM dbo.Reservaciones WHERE estacionamientoId = @estacionamientoId AND tipoEspacioId = @tipoEspacioId AND deshabilitado = 0
+
+	RETURN @totales - @ocupados
+GO
+
+EXEC dbo.sp_calcularEspaciosDisponibles 2, 2
+
+
 -- --------------
 
 /*
@@ -556,8 +852,7 @@ INSERT INTO dbo.Reservaciones(usuarioId, estacionamientoId, tipoEspacioId, horaI
 SELECT * FROM dbo.Reservaciones
 
 */
-
-
+SELECT * FROM dbo.Tipos_Espacios
 /*
 
 	-- Realiza los calculos
