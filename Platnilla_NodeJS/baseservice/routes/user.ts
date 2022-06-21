@@ -24,7 +24,31 @@ app.get("/verMisReservas", verMisReservas);
 app.get("/verReservasEstacionamiento", verReservasEstacionamiento);
 app.post("/registrarOficial", registrarOficial);
 app.post("/salidaOficial", salidaOficial);
+app.get("/estacionamientosUsuario", estacionamientosUsuario);
 
+
+async function estacionamientosUsuario(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+
+  let objetivo: string = req.query.objetivo as string;
+  let usuario: string = req.query.usuario as string;
+
+  await Control.getInstance()
+    .$gestorUsuario.estacionamientosUsuario(objetivo, usuario)
+    .then((data) => {
+      if (!data) {
+        data = '{"response": false}';
+      }
+      res.json(JSON.parse(data));
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function salidaOficial(
   req: express.Request,

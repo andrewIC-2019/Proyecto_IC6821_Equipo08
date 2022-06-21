@@ -222,6 +222,10 @@ export class GestorUsuario {
     return this.daoUsuario.salidaOficial(estacionamientoId, placa, conductor, salida);
   }
 
+  public estacionamientosUsuario(objetivo: string, usuario: string): Promise<string> {
+    return this.daoUsuario.estacionamientosUsuario(objetivo, usuario);
+  }
+
 
 
 }
