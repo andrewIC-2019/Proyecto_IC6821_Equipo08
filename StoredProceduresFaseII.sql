@@ -683,6 +683,15 @@ EXEC dbo.sp_ocupacionXTipoJefe 1, 1
 */
 
 
+-- ----------------------------------------
+--  dbo.sp_estacionamientosUsuario
+-- Recibe
+--	- El objetivo que tiene el usuario, esto es reserva:
+--		1	Propia
+--		2	Visitante
+--		3	Oficial
+--	- El usuario que esta haciendo la gestion
+-- ----------------------------------------
 
 
 DROP PROCEDURE IF EXISTS dbo.sp_estacionamientosUsuario
@@ -708,13 +717,13 @@ AS
 	IF @esJefatura = 1 BEGIN
 		IF @objetivo = 1 BEGIN		-- jefatura reserva para si mismo
 			IF @esDiscapacitado = 1 BEGIN			-- jefe + discapacidad
-				SELECT estacionamientoId, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0
+				SELECT estacionamientoId, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad, cantEspecialesDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0 FOR JSON PATH
 			END ELSE BEGIN						-- solo en los de jefatura
-				SELECT estacionamientoId, 'Jefatura' AS tipo, cantEspaciosJefaturas AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosJefaturas>0
+				SELECT estacionamientoId, 'Jefatura' AS tipo, cantEspaciosJefaturas AS cantidad, cantJefaturasDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspaciosJefaturas>0 FOR JSON PATH
 			END
 		END
 		IF @objetivo = 2 BEGIN		-- jefatura reserva para un visitante
-			SELECT estacionamientoId, 'Visitantes' AS tipo, cantEspaciosVisitantes AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosVisitantes>0 AND tipoEstacionamiento = 2
+			SELECT estacionamientoId, 'Visitantes' AS tipo, cantEspaciosVisitantes AS cantidad, cantVisitantesDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspaciosVisitantes>0 AND tipoEstacionamiento = 2 FOR JSON PATH
 		END
 	END
 
@@ -722,20 +731,20 @@ AS
 	IF @esAdministrador = 1 BEGIN
 		IF @objetivo = 1 BEGIN		-- administrador va a reservar para si mismo
 			IF @esDiscapacitado = 1 BEGIN		-- admin + discapacidad
-				SELECT estacionamientoId, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0
+				SELECT estacionamientoId, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad, cantEspecialesDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0 FOR JSON PATH
 			END ELSE BEGIN					-- solo en los particulares
-				SELECT estacionamientoId, 'Particular' AS tipo, cantEspacios AS cantidad FROM dbo.Estacionamientos WHERE cantEspacios>0
+				SELECT estacionamientoId, 'Particular' AS tipo, cantEspacios AS cantidad, cantDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspacios>0 FOR JSON PATH
 			END
 		END
 		IF @objetivo = 2 BEGIN		-- administrador reserva para una visita
-			SELECT estacionamientoId, 'Visitantes' AS tipo, cantEspaciosVisitantes AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosVisitantes>0 AND tipoEstacionamiento = 2
+			SELECT estacionamientoId, 'Visitantes' AS tipo, cantEspaciosVisitantes AS cantidad, cantVisitantesDisponibles AS disponibles FROM dbo.Estacionamientos WHERE cantEspaciosVisitantes>0 AND tipoEstacionamiento = 2 FOR JSON PATH
 		END
 	END
 
 	-- Usuario que esta reservando es un operador
 	IF @esOperador = 1 BEGIN
 		IF @objetivo = 2 BEGIN		-- operador va a registrar la entrada de un carro oficial
-			SELECT estacionamientoId, 'Oficial' AS tipo, cantEspaciosOficiales AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosOficiales>0
+			SELECT estacionamientoId, 'Oficial' AS tipo, cantEspaciosOficiales AS cantidad, cantOficialesDisponibles AS disponibles FROM dbo.Estacionamientos WHERE cantEspaciosOficiales>0 FOR JSON PATH
 		END
 	END
 
@@ -743,12 +752,9 @@ AS
 	IF @esFuncionario = 1 BEGIN
 		IF @objetivo = 1 BEGIN		-- funcionario va a reservar para si mismo
 			IF @esDiscapacitado = 1 BEGIN		-- funcionario + discapacidad
-				SELECT estacionamientoId, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0
+				SELECT estacionamientoId, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad, cantEspecialesDisponibles AS disponibles FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0 FOR JSON PATH
 			END ELSE BEGIN					-- solo en los particulares
-				WITH CTE AS(
-					SELECT estacionamientoId, 'Particular' AS tipo, cantEspacios AS cantidad FROM dbo.Estacionamientos WHERE cantEspacios>0
-				)
-				SELECT 
+				SELECT estacionamientoId, 'Particular' AS tipo, cantEspacios AS cantidad, cantDisponibles AS disponibles FROM dbo.Estacionamientos WHERE cantEspacios>0 FOR JSON PATH
 			END
 		END
 	END
@@ -756,7 +762,7 @@ AS
 GO
 
 
-dbo.sp_estacionamientosUsuario 2, 1
+dbo.sp_estacionamientosUsuario 1, 1
 
 /*
 Objetivo (2nd parametro)
@@ -782,8 +788,21 @@ CREATE TABLE #tmpEstacionamientosUsuario
 
 */
 
+/*
+-- Al insertar un estacionamiento deberia hacer esto o bien mandar a actualizar
 
+UPDATE dbo.Estacionamientos SET cantDisponibles = cantEspacios
+UPDATE dbo.Estacionamientos SET cantEspecialesDisponibles = cantEspaciosEspeciales
+UPDATE dbo.Estacionamientos SET cantJefaturasDisponibles = cantEspaciosJefaturas
+UPDATE dbo.Estacionamientos SET cantVisitantesDisponibles = cantEspaciosVisitantes
+UPDATE dbo.Estacionamientos SET cantOficialesDisponibles = cantEspaciosOficiales
+*/
 
+/*
+	dbo.sp_calcularEspaciosDisponibles
+
+	Segun reservas aun habilitadas
+*/
 
 DROP PROCEDURE IF EXISTS dbo.sp_calcularEspaciosDisponibles
 GO
@@ -816,6 +835,39 @@ AS
 GO
 
 EXEC dbo.sp_calcularEspaciosDisponibles 2, 2
+
+
+/*
+	dbo.sp_actualizarEspaciosDisponibles
+	
+	Recibe:
+		- estacionamientoId
+
+	Actualiza los espacios de un parqueo, esto consultando las reservas asociadas a ester que aun se encuentren
+	habilitadas
+*/
+
+DROP PROCEDURE IF EXISTS dbo.sp_actualizarEspaciosDisponibles
+GO
+
+CREATE PROCEDURE dbo.sp_actualizarEspaciosDisponibles
+	@estacionamientoId INT
+AS
+	DECLARE @particular INT, @oficiales INT, @visitantes INT, @jefaturas INT, @especiales INT
+
+	EXEC @particular = dbo.sp_calcularEspaciosDisponibles @estacionamientoId, 1
+	EXEC @oficiales = dbo.sp_calcularEspaciosDisponibles @estacionamientoId, 2
+	EXEC @visitantes = dbo.sp_calcularEspaciosDisponibles @estacionamientoId, 3
+	EXEC @jefaturas = dbo.sp_calcularEspaciosDisponibles @estacionamientoId, 4
+	EXEC @especiales = dbo.sp_calcularEspaciosDisponibles @estacionamientoId, 5
+
+	UPDATE dbo.Estacionamientos SET cantDisponibles = @particular, cantOficialesDisponibles = @oficiales,
+	cantVisitantesDisponibles = @visitantes, cantJefaturasDisponibles = @jefaturas, cantEspecialesDisponibles = @especiales
+	WHERE estacionamientoId = @estacionamientoId
+
+GO
+
+EXEC dbo.sp_actualizarEspaciosDisponibles 4
 
 
 -- --------------
