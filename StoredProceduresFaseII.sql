@@ -97,12 +97,14 @@ AS
 	END
 GO
 
-DECLARE @entrada datetime = '2022-06-16 07:30:00'
-DECLARE @salida datetime = '2022-06-17 16:30:00'
+/*
+DECLARE @entrada datetime = '2022-06-23 07:30:00'
+DECLARE @salida datetime = '2022-06-23 08:30:00'
 
-EXEC sp_verificacionFranjas 3, @entrada, @salida
-
-
+DECLARE @PRINT INT
+EXEC @PRINT = sp_verificacionFranjas 1, @entrada, @salida
+SELECT @PRINT
+*/
 
 -- ----------------------------------------
 --  Verifica que el dia indicado sea laboral para la jefatura
@@ -717,13 +719,13 @@ AS
 	IF @esJefatura = 1 BEGIN
 		IF @objetivo = 1 BEGIN		-- jefatura reserva para si mismo
 			IF @esDiscapacitado = 1 BEGIN			-- jefe + discapacidad
-				SELECT estacionamientoId, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad, cantEspecialesDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0 FOR JSON PATH
+				SELECT estacionamientoId, nombre, telefono, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad, cantEspecialesDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0 AND deshabilitado = 0 FOR JSON PATH
 			END ELSE BEGIN						-- solo en los de jefatura
-				SELECT estacionamientoId, 'Jefatura' AS tipo, cantEspaciosJefaturas AS cantidad, cantJefaturasDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspaciosJefaturas>0 FOR JSON PATH
+				SELECT estacionamientoId, nombre, telefono, 'Jefatura' AS tipo, cantEspaciosJefaturas AS cantidad, cantJefaturasDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspaciosJefaturas>0 AND deshabilitado = 0 FOR JSON PATH
 			END
 		END
 		IF @objetivo = 2 BEGIN		-- jefatura reserva para un visitante
-			SELECT estacionamientoId, 'Visitantes' AS tipo, cantEspaciosVisitantes AS cantidad, cantVisitantesDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspaciosVisitantes>0 AND tipoEstacionamiento = 2 FOR JSON PATH
+			SELECT estacionamientoId, nombre, telefono, 'Visitantes' AS tipo, cantEspaciosVisitantes AS cantidad, cantVisitantesDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspaciosVisitantes>0 AND tipoEstacionamiento = 2 AND deshabilitado = 0 FOR JSON PATH
 		END
 	END
 
@@ -731,20 +733,20 @@ AS
 	IF @esAdministrador = 1 BEGIN
 		IF @objetivo = 1 BEGIN		-- administrador va a reservar para si mismo
 			IF @esDiscapacitado = 1 BEGIN		-- admin + discapacidad
-				SELECT estacionamientoId, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad, cantEspecialesDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0 FOR JSON PATH
+				SELECT estacionamientoId, nombre, telefono, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad, cantEspecialesDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0 AND deshabilitado = 0 FOR JSON PATH
 			END ELSE BEGIN					-- solo en los particulares
-				SELECT estacionamientoId, 'Particular' AS tipo, cantEspacios AS cantidad, cantDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspacios>0 FOR JSON PATH
+				SELECT estacionamientoId, nombre, telefono, 'Particular' AS tipo, cantEspacios AS cantidad, cantDisponibles AS disponibles  FROM dbo.Estacionamientos WHERE cantEspacios>0 AND deshabilitado = 0 FOR JSON PATH
 			END
 		END
 		IF @objetivo = 2 BEGIN		-- administrador reserva para una visita
-			SELECT estacionamientoId, 'Visitantes' AS tipo, cantEspaciosVisitantes AS cantidad, cantVisitantesDisponibles AS disponibles FROM dbo.Estacionamientos WHERE cantEspaciosVisitantes>0 AND tipoEstacionamiento = 2 FOR JSON PATH
+			SELECT estacionamientoId, nombre, telefono, 'Visitantes' AS tipo, cantEspaciosVisitantes AS cantidad, cantVisitantesDisponibles AS disponibles FROM dbo.Estacionamientos WHERE cantEspaciosVisitantes>0 AND tipoEstacionamiento = 2 AND deshabilitado = 0 FOR JSON PATH
 		END
 	END
 
 	-- Usuario que esta reservando es un operador
 	IF @esOperador = 1 BEGIN
 		IF @objetivo = 2 BEGIN		-- operador va a registrar la entrada de un carro oficial
-			SELECT estacionamientoId, 'Oficial' AS tipo, cantEspaciosOficiales AS cantidad, cantOficialesDisponibles AS disponibles FROM dbo.Estacionamientos WHERE cantEspaciosOficiales>0 FOR JSON PATH
+			SELECT estacionamientoId, nombre, telefono, 'Oficial' AS tipo, cantEspaciosOficiales AS cantidad, cantOficialesDisponibles AS disponibles FROM dbo.Estacionamientos WHERE cantEspaciosOficiales>0 AND deshabilitado = 0 FOR JSON PATH
 		END
 	END
 
@@ -752,13 +754,12 @@ AS
 	IF @esFuncionario = 1 BEGIN
 		IF @objetivo = 1 BEGIN		-- funcionario va a reservar para si mismo
 			IF @esDiscapacitado = 1 BEGIN		-- funcionario + discapacidad
-				SELECT estacionamientoId, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad, cantEspecialesDisponibles AS disponibles FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0 FOR JSON PATH
+				SELECT estacionamientoId, nombre, telefono, 'Discapacitado' AS tipo, cantEspaciosEspeciales AS cantidad, cantEspecialesDisponibles AS disponibles FROM dbo.Estacionamientos WHERE cantEspaciosEspeciales>0 AND deshabilitado = 0 FOR JSON PATH
 			END ELSE BEGIN					-- solo en los particulares
-				SELECT estacionamientoId, 'Particular' AS tipo, cantEspacios AS cantidad, cantDisponibles AS disponibles FROM dbo.Estacionamientos WHERE cantEspacios>0 FOR JSON PATH
+				SELECT estacionamientoId, nombre, telefono, 'Particular' AS tipo, cantEspacios AS cantidad, cantDisponibles AS disponibles FROM dbo.Estacionamientos WHERE cantEspacios>0 AND deshabilitado = 0 FOR JSON PATH
 			END
 		END
 	END
-
 GO
 
 
@@ -870,7 +871,208 @@ GO
 EXEC dbo.sp_actualizarEspaciosDisponibles 4
 
 
+
+
+
+
+
+
+
+-- =================================================
+--			V Parte
+-- =================================================
+
+
+-- Recuerde que carros oficiales y visitantes salen de los estacionamientos por medio del operador de este,
+-- sea un estacionamiento propio o subcontratado.
+
+-- ---------------------------------------
+--		dbo.sp_RegistrarOficial
+--	Registra la entrada de un vehiculo Oficial
+-- ---------------------------------------
+
+-- Oficiales Entrada
+DROP PROCEDURE IF EXISTS dbo.sp_RegistrarOficial
+GO
+
+CREATE PROCEDURE dbo.sp_RegistrarOficial
+	@usuarioId INT,
+	@estacionamientoId INT,
+	@tipoEspacioId INT,
+	@entrada DATETIME,
+	@placa NVARCHAR(20),
+	@conductor NVARCHAR(120),
+	@sede NVARCHAR(60),
+	@modelo NVARCHAR(60)
+AS
+	
+	INSERT INTO dbo.Reservaciones(usuarioId, estacionamientoId, tipoEspacioId, horaInicio, horaFinal, [timestamp]) VALUES
+	(@usuarioId, @estacionamientoId, @tipoEspacioId, @entrada, DATEADD(MINUTE, -1, CAST(DATEFROMPARTS(DATEPART(YEAR, @entrada), DATEPART(MONTH, @entrada), DATEPART(DAY, @entrada)+1) AS DATETIME)),GETDATE())
+	
+	DECLARE @laReserva BIGINT
+	SELECT @laReserva = MAX(reservacionId) FROM dbo.Reservaciones
+
+	INSERT INTO dbo.VisitasOficiales(conductor, sede, placa, modelo, reservacion) VALUES (@conductor, @sede, @placa, @modelo, @laReserva)
+	RETURN 1
+GO
+
+/*
+Ejemplo de ejecucion
+EXEC dbo.sp_RegistrarOficial 3, 2, 2, '2022-06-19 07:30', '265-301', 'Rolando Figueroa', 'CAL', 'Buseta'
+*/
+
+-- ---------------------------------------
+--		dbo.sp_SalidaOficial
+--	Registra la salida de un vehiculo Oficial
+-- ---------------------------------------
+
+-- Oficiales Salida
+DROP PROCEDURE IF EXISTS dbo.sp_SalidaOficial
+GO
+
+CREATE PROCEDURE dbo.sp_SalidaOficial
+	@placa NVARCHAR(20),
+	@conductor NVARCHAR(120),
+	@salida DATETIME
+AS
+	
+	DECLARE @laReserva INT
+	SELECT @laReserva = reservacion FROM dbo.VisitasOficiales vo
+	INNER JOIN dbo.Reservaciones r ON  vo.reservacion = r.reservacionId
+	WHERE vo.conductor = @conductor AND vo.placa = @placa AND r.deshabilitado = 0
+	
+	UPDATE dbo.Reservaciones SET horaFinal = @salida, deshabilitado = 1 WHERE reservacionId = @laReserva
+
+	RETURN 1
+GO
+
+/*
+Ejemplo de ejecucion
+EXEC dbo.sp_SalidaOficial '265-301', 'Rolando Figueroa', '2022-06-19 16:00'
+*/
+
+
+
+
+-- ---------------------------------------
+--		dbo.sp_RegistrarVisita
+--	Hace la reserva de una visita
+-- ---------------------------------------
+
+-- Visitas Entrada
+DROP PROCEDURE IF EXISTS dbo.sp_RegistrarVisita
+GO
+
+CREATE PROCEDURE dbo.sp_RegistrarVisita
+	@usuarioId INT,
+	@estacionamientoId INT,
+	@tipoEspacioId INT,
+	@entrada DATETIME,
+	@visitante NVARCHAR(120),
+	@identificacion NVARCHAR(60),
+	@vehiculo NVARCHAR(60),
+	@motivo NVARCHAR(120),
+	@destino NVARCHAR(120)
+AS
+	
+	INSERT INTO dbo.Reservaciones(usuarioId, estacionamientoId, tipoEspacioId, horaInicio, horaFinal, [timestamp]) VALUES
+	(@usuarioId, @estacionamientoId, @tipoEspacioId, @entrada, DATEADD(MINUTE, -1, CAST(DATEFROMPARTS(DATEPART(YEAR, @entrada), DATEPART(MONTH, @entrada), DATEPART(DAY, @entrada)+1) AS DATETIME)),GETDATE())
+	
+	DECLARE @laReserva BIGINT
+	SELECT @laReserva = MAX(reservacionId) FROM dbo.Reservaciones
+
+	INSERT INTO dbo.Visitas(visitante, identificacion, vehiculo, motivo, destino, reservacion) VALUES
+	(@visitante, @identificacion, @vehiculo, @motivo, @destino, @laReserva)
+
+	RETURN 1
+GO
+
+/*
+Ejemplo de ejecucion
+EXEC dbo.sp_RegistrarVisita 1, 1, 3, '2022-06-20 13:00', 'Presidente de la Cooperativa TEC', '000000001', 'CAR-001','Reunion Direccion', 'Casa Verde'
+*/
+
+-- ---------------------------------------
+--		dbo.sp_SalidaVisita
+--	Registra la salida de un visitante
+-- ---------------------------------------
+
+-- Visitas Salida
+DROP PROCEDURE IF EXISTS dbo.sp_SalidaVisita
+GO
+
+CREATE PROCEDURE dbo.sp_SalidaVisita
+	@vehiculo NVARCHAR(60),
+	@identificacion NVARCHAR(60),
+	@salida DATETIME
+AS
+	
+	DECLARE @laReserva INT
+	SELECT @laReserva = reservacion FROM dbo.Visitas v
+	INNER JOIN dbo.Reservaciones r ON  v.reservacion = r.reservacionId
+	WHERE v.identificacion = @identificacion AND v.vehiculo = @vehiculo AND r.deshabilitado = 0
+	
+	UPDATE dbo.Reservaciones SET horaFinal = @salida, deshabilitado = 1 WHERE reservacionId = @laReserva
+
+	RETURN 1
+GO
+
+/*
+Ejemplo de ejecucion
+EXEC dbo.sp_SalidaVisita 'CAR-001', '000000001', '2022-06-20 15:00'
+*/
+
+
+
+
+-- ---------------------------------------
+--		dbo.sp_ReservarFuncionario
+--	Hace la reserva de un funcionario
+-- ---------------------------------------
+
+-- Visitas Entrada
+DROP PROCEDURE IF EXISTS dbo.sp_ReservarFuncionario
+GO
+
+CREATE PROCEDURE dbo.sp_ReservarFuncionario
+	@usuarioId INT,
+	@estacionamientoId INT,
+	@tipoEspacioId INT,
+	@entrada DATETIME,
+	@salida DATETIME
+AS
+	DECLARE @horasValidas BIT
+
+	EXEC @horasValidas = sp_verificacionFranjas @usuarioId, @entrada, @salida
+	
+	IF @horasValidas = 1 BEGIN
+		INSERT INTO dbo.Reservaciones(usuarioId, estacionamientoId, tipoEspacioId, horaInicio, horaFinal, [timestamp]) VALUES
+		(@usuarioId, @estacionamientoId, @tipoEspacioId, @entrada, @salida, GETDATE())
+	
+		DECLARE @laReserva BIGINT
+		SELECT @laReserva = MAX(reservacionId) FROM dbo.Reservaciones
+
+		RETURN @laReserva
+	END ELSE BEGIN
+		RETURN 0
+	END
+	
+GO
+
+
+
+/*
+Ejemplo de ejecucion
+DECLARE @print INT
+EXEC @print = dbo.sp_ReservarFuncionario 1, 1, 1, '2022-06-23 13:00', '2022-06-23 16:00'
+SELECT @print
+*/
+
+
+
+
 -- --------------
+
 
 /*
 -- Obtiene el porcentaje por departamento, respecto a todos los espacios
@@ -904,7 +1106,7 @@ INSERT INTO dbo.Reservaciones(usuarioId, estacionamientoId, tipoEspacioId, horaI
 SELECT * FROM dbo.Reservaciones
 
 */
-SELECT * FROM dbo.Tipos_Espacios
+
 /*
 
 	-- Realiza los calculos
