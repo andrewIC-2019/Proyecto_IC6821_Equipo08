@@ -110,6 +110,7 @@ SELECT @PRINT
 --  Verifica que el dia indicado sea laboral para la jefatura
 --  - jefe
 --  - dia reserva
+--	CORRER LA VERSION DE MAS ABAJO EN ESTE DOCUMENTO
 -- ----------------------------------------
 
 
@@ -153,11 +154,11 @@ AS
 	END
 GO
 
-
+/*
 DECLARE @impreso int
 EXEC @impreso = dbo.sp_verificacionDiaLaboral 3, 'Lunes'
 SELECT @impreso
-
+*/
 
 
 -- ----------------------------------------
@@ -762,8 +763,10 @@ AS
 	END
 GO
 
-
+/*
+-- Ejemplo de Ejecucion
 dbo.sp_estacionamientosUsuario 1, 1
+*/
 
 /*
 Objetivo (2nd parametro)
@@ -835,8 +838,10 @@ AS
 	RETURN @totales - @ocupados
 GO
 
+/*
+-- Ejemplo de Ejecucion
 EXEC dbo.sp_calcularEspaciosDisponibles 2, 2
-
+*/
 
 /*
 	dbo.sp_actualizarEspaciosDisponibles
@@ -868,15 +873,17 @@ AS
 
 GO
 
-EXEC dbo.sp_actualizarEspaciosDisponibles 4
+/*
+-- Ejemplo de Ejecucion
+EXEC dbo.sp_actualizarEspaciosDisponibles 1
+*/
 
-
-
-
-
-
-
-
+/*
+	PARA VERIFICAR!
+	SELECT * FROM dbo.Reservaciones WHERE deshabilitado = 0
+	SELECT cantEspacios, cantDisponibles, cantEspaciosOficiales, cantOficialesDisponibles, cantEspaciosVisitantes, cantVisitantesDisponibles, cantEspaciosJefaturas, cantJefaturasDisponibles,
+	cantEspaciosEspeciales, cantEspecialesDisponibles FROM dbo.Estacionamientos
+*/
 
 -- =================================================
 --			V Parte
@@ -1030,7 +1037,7 @@ EXEC dbo.sp_SalidaVisita 'CAR-001', '000000001', '2022-06-20 15:00'
 --	Hace la reserva de un funcionario
 -- ---------------------------------------
 
--- Visitas Entrada
+-- Reserva Funcionario
 DROP PROCEDURE IF EXISTS dbo.sp_ReservarFuncionario
 GO
 
@@ -1061,17 +1068,119 @@ GO
 
 
 
+-- =================================================
+--			VI Parte
+-- =================================================
+
+-- ---------------------------------------
+--		dbo.sp_ReservarJefatura
+--	Hace la reserva de una jefatura, para si mismo
+--	SE NECESITA ACTUALIZAR EL SP_VEFICACIONDIALABORAL
+-- ---------------------------------------
+
+
+-- ACTUALIZACION (EL API QUEDA IGUAL)
+
+DROP PROCEDURE IF EXISTS dbo.sp_verificacionDiaLaboral
+GO
+
+CREATE PROCEDURE dbo.sp_verificacionDiaLaboral
+	@jefe bigint,
+	@dia nvarchar(40)
+AS
+
+	-- Obtiene el dia de la semana de la reservacion
+	DECLARE @diaSemanaAnalizando tinyint
+	SELECT @diaSemanaAnalizando = @dia - 1
+	IF (@diaSemanaAnalizando = 0) 
+	BEGIN 
+		SET @diaSemanaAnalizando = 7
+	END
+
+	DECLARE @horariosCompatibles INT;
+
+	-- Obtiene los horarios actuales del usuario, en el dia especifico
+
+	WITH Horarios_CTE(diaSemana, horaInicio, horaFinal)
+	AS
+	(
+		SELECT diaSemana, horaInicio, horaFinal FROM dbo.Horarios_Por_Usuario hu 
+		INNER JOIN dbo.Horarios h ON hu.horarioId = h.horarioId
+		WHERE usuarioId = @jefe AND hu.deshabilitado = 0 AND diaSemana = @diaSemanaAnalizando
+	)
+
+	
+	SELECT @horariosCompatibles = COUNT(*) FROM Horarios_CTE
+
+	IF (@horariosCompatibles < 1) BEGIN
+		RETURN 0
+	END ELSE BEGIN
+		RETURN 1
+	END
+GO
+
+
+DECLARE @impreso int
+EXEC @impreso = dbo.sp_verificacionDiaLaboral 1, '3'
+SELECT @impreso
+
+
+-- Reserva Jefatura
+
+DROP PROCEDURE IF EXISTS dbo.sp_ReservarJefatura
+GO
+
+CREATE PROCEDURE dbo.sp_ReservarJefatura
+	@usuarioId INT,
+	@estacionamientoId INT,
+	@tipoEspacioId INT,
+	@dia DATETIME
+AS
+	DECLARE @diaValido BIT
+	DECLARE @diaSemana INT
+	SELECT @diaSemana = DATEPART(WEEKDAY, @dia)
+
+	EXEC @diaValido = sp_verificacionDiaLaboral @usuarioId, @diaSemana
+	
+	IF @diaValido = 1 BEGIN
+		INSERT INTO dbo.Reservaciones(usuarioId, estacionamientoId, tipoEspacioId, horaInicio, horaFinal, [timestamp]) VALUES
+		(@usuarioId, @estacionamientoId, @tipoEspacioId, @dia, DATEADD(SECOND, -1, DATEADD(DAY,1,@dia)), GETDATE())
+	
+		DECLARE @laReserva BIGINT
+		SELECT @laReserva = MAX(reservacionId) FROM dbo.Reservaciones
+
+		RETURN @laReserva
+	END ELSE BEGIN
+		RETURN 0
+	END
+	
+GO
+
 /*
 Ejemplo de ejecucion
 DECLARE @print INT
-EXEC @print = dbo.sp_ReservarFuncionario 1, 1, 1, '2022-06-23 13:00', '2022-06-23 16:00'
+EXEC @print = dbo.sp_ReservarJefatura 2, 1, 1, '2022-06-19'
 SELECT @print
 */
 
 
 
-
 -- --------------
+
+/*
+DECLARE @una DATETIME
+SET @una = '2022-06-18'
+SELECT @una
+
+DECLARE @otra DATETIME
+SET @otra = DATEADD(SECOND, -1, DATEADD(DAY,1,@una))
+
+DECLARE @prue nvarchar(20)
+SELECT @prue = DATEPART(WEEKDAY, @otra)
+SELECT @prue
+
+SELECT * FROM dbo.Dias
+*/
 
 
 /*
