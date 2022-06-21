@@ -124,3 +124,57 @@ BEGIN TRANSACTION
 COMMIT
 
 -- SELECT * FROM dbo.Ubicaciones
+
+
+
+
+-- *************************************************************
+--							TRUNCATES FASE II
+-- *************************************************************
+
+
+-- Visitas
+-----------------------------
+
+-- SELECT * FROM dbo.Visitas
+
+TRUNCATE TABLE dbo.Visitas
+GO
+
+-- SELECT * FROM dbo.Visitas
+
+
+
+-- *************************************************************
+
+
+
+-- Visitas Oficiales
+-----------------------------
+
+-- SELECT * FROM dbo.VisitasOficiales
+
+TRUNCATE TABLE dbo.VisitasOficiales
+GO
+
+-- SELECT * FROM dbo.VisitasOficiales
+
+
+
+-- *************************************************************
+
+-- Reservaciones
+-----------------------------
+
+-- SELECT * FROM dbo.Reservaciones
+
+BEGIN TRANSACTION
+	DELETE FROM dbo.Reservaciones
+	DBCC CHECKIDENT ('dbo.Reservaciones', RESEED, 0)
+COMMIT
+
+-- SELECT * FROM dbo.Reservaciones
+
+-- ------------------------------------
+
+-- *************************************************************
