@@ -19,6 +19,7 @@ async function reservarJefatura(
   res: express.Response,
   next: express.NextFunction
 ) {
+  console.log("llega")
   let usuarioId: string = req.body.usuarioId;
   let estacionamientoId: string = req.body.estacionamientoId;
   let tipoEspacioId: string = req.body.tipoEspacioId;

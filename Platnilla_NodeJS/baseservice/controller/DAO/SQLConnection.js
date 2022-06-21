@@ -187,7 +187,7 @@ function reservarJefatura(usuarioId, estacionamientoId, tipoEspacioId, dia) {
                             .request()
                             .input("usuarioId", sql.NVarChar, usuarioId)
                             .input("estacionamientoId", sql.NVarChar, estacionamientoId)
-                            .input("vehtipoEspacioIdiculo", sql.NVarChar, tipoEspacioId)
+                            .input("tipoEspacioId", sql.NVarChar, tipoEspacioId)
                             .input("dia", sql.NVarChar, dia)
                             .execute("sp_ReservarJefatura")];
                 case 2:
@@ -215,6 +215,7 @@ function reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrad
                             .execute("sp_ReservarFuncionario")];
                 case 2:
                     result = _a.sent();
+                    console.log();
                     return [2 /*return*/, result.returnValue];
             }
         });

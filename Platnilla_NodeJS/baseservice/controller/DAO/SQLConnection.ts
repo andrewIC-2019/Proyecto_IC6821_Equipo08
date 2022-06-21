@@ -537,7 +537,7 @@ async function reservarJefatura(usuarioId: string, estacionamientoId: string, ti
     .request()
     .input("usuarioId", sql.NVarChar, usuarioId)
     .input("estacionamientoId", sql.NVarChar, estacionamientoId)
-    .input("vehtipoEspacioIdiculo", sql.NVarChar, tipoEspacioId)
+    .input("tipoEspacioId", sql.NVarChar, tipoEspacioId)
     .input("dia", sql.NVarChar, dia)
     .execute("sp_ReservarJefatura");
 
@@ -557,6 +557,7 @@ async function reservarFuncionario(usuarioId: string, estacionamientoId: string,
     .input("identradantificacion", sql.NVarChar, entrada)
     .input("salida", sql.NVarChar, salida)
     .execute("sp_ReservarFuncionario");
+    console.log()
 
   return result.returnValue;
 }
