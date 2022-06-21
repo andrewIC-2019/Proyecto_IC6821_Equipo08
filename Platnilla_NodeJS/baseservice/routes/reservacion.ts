@@ -12,6 +12,31 @@ app.get("/verificacionDiaLaboral", verificacionDiaLaboral)
 app.get("/getDisponiblesTipo", getDisponiblesTipo)
 app.post("/actualizarSalidaReservaciones", actualizarSalidaReservaciones)
 app.post("/reservarFuncionario", reservarFuncionario)
+app.post("/reservarJefatura", reservarJefatura)
+
+async function reservarJefatura(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  let usuarioId: string = req.body.usuarioId;
+  let estacionamientoId: string = req.body.estacionamientoId;
+  let tipoEspacioId: string = req.body.tipoEspacioId;
+  let dia: string = req.body.dia;
+
+  await Control.getInstance()
+    .$gestorReservacion.reservarJefatura(usuarioId, estacionamientoId, tipoEspacioId, dia)
+    .then((data) => {
+      if (!data) {
+        data = '-1';
+      }
+      res.json({ response: data });
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function reservarFuncionario(
   req: express.Request,

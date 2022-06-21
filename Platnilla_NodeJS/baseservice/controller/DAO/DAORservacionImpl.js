@@ -32,6 +32,9 @@ var DAOReservacionImpl = /** @class */ (function () {
     DAOReservacionImpl.prototype.reservarFuncionario = function (usuarioId, estacionamientoId, tipoEspacioId, entrada, salida) {
         return SQLConnection_1.SQLConnection.getInstance().reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrada, salida);
     };
+    DAOReservacionImpl.prototype.reservarJefatura = function (usuarioId, estacionamientoId, tipoEspacioId, dia) {
+        return SQLConnection_1.SQLConnection.getInstance().reservarJefatura(usuarioId, estacionamientoId, tipoEspacioId, dia);
+    };
     return DAOReservacionImpl;
 }());
 exports.DAOReservacionImpl = DAOReservacionImpl;

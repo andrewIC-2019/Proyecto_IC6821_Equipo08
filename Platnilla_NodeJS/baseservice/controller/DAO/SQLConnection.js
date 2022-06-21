@@ -169,9 +169,34 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.reservarFuncionario = function (usuarioId, estacionamientoId, tipoEspacioId, entrada, salida) {
         return reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrada, salida);
     };
+    SQLConnection.prototype.reservarJefatura = function (usuarioId, estacionamientoId, tipoEspacioId, dia) {
+        return reservarJefatura(usuarioId, estacionamientoId, tipoEspacioId, dia);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+function reservarJefatura(usuarioId, estacionamientoId, tipoEspacioId, dia) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("usuarioId", sql.NVarChar, usuarioId)
+                            .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+                            .input("vehtipoEspacioIdiculo", sql.NVarChar, tipoEspacioId)
+                            .input("dia", sql.NVarChar, dia)
+                            .execute("sp_ReservarJefatura")];
+                case 2:
+                    result = _a.sent();
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
 function reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrada, salida) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result;

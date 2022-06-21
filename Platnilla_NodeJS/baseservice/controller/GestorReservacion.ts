@@ -60,4 +60,8 @@ export class GestorReservacion {
   public reservarFuncionario(usuarioId: string, estacionamientoId: string, tipoEspacioId: string, entrada: string, salida: string): Promise<string> {
     return this.daoReservacion.reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrada, salida);
   }
+
+  public reservarJefatura(usuarioId: string, estacionamientoId: string, tipoEspacioId: string, dia: string): Promise<string> {
+    return this.daoReservacion.reservarJefatura(usuarioId, estacionamientoId, tipoEspacioId, dia);
+  }
 }

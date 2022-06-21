@@ -518,8 +518,30 @@ export class SQLConnection implements DataSource {
     return reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrada, salida);
   }
 
+  public reservarJefatura(usuarioId: string, estacionamientoId: string, tipoEspacioId: string, dia: string): Promise<string> {
+    return reservarJefatura(usuarioId, estacionamientoId, tipoEspacioId, dia);
+}
 
 
+
+
+}
+
+
+
+async function reservarJefatura(usuarioId: string, estacionamientoId: string, tipoEspacioId: string, dia: string): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("usuarioId", sql.NVarChar, usuarioId)
+    .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+    .input("vehtipoEspacioIdiculo", sql.NVarChar, tipoEspacioId)
+    .input("dia", sql.NVarChar, dia)
+    .execute("sp_ReservarJefatura");
+
+  return result.returnValue;
 }
 
 
