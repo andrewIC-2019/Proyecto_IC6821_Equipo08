@@ -45,16 +45,18 @@ async function crearEspacios(
   res: express.Response,
   next: express.NextFunction
 ) {
+
   let estacionamiento: string = req.body.estacionamiento;
   let tipo: string = req.body.tipo;
   let cantidad: string = req.body.cantidad;
+
   await Control.getInstance()
     .$gestorEstacionamiento.crearEspacios(estacionamiento, tipo, cantidad)
     .then((data) => {
       if (!data) {
-        data = '{"response": false}';
+        data = '-1';
       }
-      res.json(JSON.parse(data));
+      res.json({done: data == '1'});
     })
     .catch((err) => {
       log.error(err);

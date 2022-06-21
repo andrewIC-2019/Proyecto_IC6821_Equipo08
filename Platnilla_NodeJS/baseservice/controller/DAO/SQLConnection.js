@@ -749,7 +749,7 @@ function crearEspacios(estacionamiento, tipo, cantidad) {
                             .execute("sp_crearEspacios")];
                 case 2:
                     result = _a.sent();
-                    return [2 /*return*/, "{ok: true}"];
+                    return [2 /*return*/, "1"];
             }
         });
     });

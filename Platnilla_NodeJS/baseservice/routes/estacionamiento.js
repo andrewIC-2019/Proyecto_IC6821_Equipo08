@@ -86,16 +86,19 @@ function crearEspacios(req, res, next) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    console.log("asssssssssssss");
                     estacionamiento = req.body.estacionamiento;
                     tipo = req.body.tipo;
                     cantidad = req.body.cantidad;
+                    console.log("llega");
                     return [4 /*yield*/, controller_1.Control.getInstance()
                             .$gestorEstacionamiento.crearEspacios(estacionamiento, tipo, cantidad)
                             .then(function (data) {
                             if (!data) {
-                                data = '{"response": false}';
+                                data = '-1';
                             }
-                            res.json(JSON.parse(data));
+                            console.log(data);
+                            res.json({ done: data == '1' });
                         })
                             .catch(function (err) {
                             log.error(err);

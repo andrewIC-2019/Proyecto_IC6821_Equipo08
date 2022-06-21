@@ -1055,7 +1055,7 @@ async function crearEspacios(
     .input("cantidad", sql.Int, cantidad)
     .execute("sp_crearEspacios");
 
-  return "{ok: true}";
+  return "1";
 }
 
 async function estacionamientosTipoSubcontratados(
