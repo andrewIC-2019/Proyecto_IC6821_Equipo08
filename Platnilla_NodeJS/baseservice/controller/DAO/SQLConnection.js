@@ -148,12 +148,72 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.registrarUsuarioTotalF2 = function (correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios) {
         return registrarUsuarioTotalF2(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios);
     };
+    SQLConnection.prototype.guardarEditarUsuarioF2 = function (usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios) {
+        return guardarEditarUsuarioF2(usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
-function registrarUsuarioTotalF2(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios) {
+function guardarEditarUsuarioF2(usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result, idUSer, _i, horarios_1, horario, ds, hi, hf;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("usuarioId", sql.NVarChar, usuarioId)
+                            .input("correo", sql.NVarChar, correo)
+                            .input("password", sql.NVarChar, password)
+                            .input("telefono", sql.NVarChar, telefono)
+                            .input("departamento", sql.NVarChar, departamento)
+                            .input("placa1", sql.NVarChar, placa1)
+                            .input("placa2", sql.NVarChar, placa2)
+                            .input("placa3", sql.NVarChar, placa3)
+                            .input("placa4", sql.NVarChar, placa4)
+                            .input("notificarCorreoAlterno", sql.NVarChar, notificarCorreoAlterno)
+                            .input("esAdministrador", sql.Bit, esAdministrador)
+                            .input("esJefatura", sql.Bit, esJefatura)
+                            .input("esDiscapacitado", sql.Bit, esDiscapacitado)
+                            .input("esOperador", sql.Bit, esOperador)
+                            .execute("sp_guardarEditarUsuarioF2")];
+                case 2:
+                    result = _a.sent();
+                    if (!result.returnValue || result.returnValue < 0) {
+                        return [2 /*return*/, "-1"];
+                    }
+                    idUSer = result.returnValue;
+                    _i = 0, horarios_1 = horarios;
+                    _a.label = 3;
+                case 3:
+                    if (!(_i < horarios_1.length)) return [3 /*break*/, 6];
+                    horario = horarios_1[_i];
+                    ds = horario['diaSemana'].toString();
+                    hi = horario['horaInicio'].toString();
+                    hf = horario['horaFinal'].toString();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("usuarioId", sql.Int, idUSer)
+                            .input("diaSemana", sql.NVarChar, ds)
+                            .input("horaInicio", sql.NVarChar, hi)
+                            .input("horaFinal", sql.NVarChar, hf)
+                            .execute("sp_registrarHorario")];
+                case 4:
+                    result = _a.sent();
+                    _a.label = 5;
+                case 5:
+                    _i++;
+                    return [3 /*break*/, 3];
+                case 6: return [2 /*return*/, idUSer];
+            }
+        });
+    });
+}
+function registrarUsuarioTotalF2(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result, idUSer, _i, horarios_2, horario, ds, hi, hf;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
@@ -185,18 +245,24 @@ function registrarUsuarioTotalF2(correoInstitucional, identificacion, correo, pa
                     if (!result.returnValue || result.returnValue < 0) {
                         return [2 /*return*/, "-1"];
                     }
+                    console.log("paso");
                     idUSer = result.returnValue;
-                    _i = 0, horarios_1 = horarios;
+                    console.log(idUSer);
+                    console.log("paso**************");
+                    //llamar al segundo
+                    console.log(horarios);
+                    _i = 0, horarios_2 = horarios;
                     _a.label = 3;
                 case 3:
-                    if (!(_i < horarios_1.length)) return [3 /*break*/, 6];
-                    horario = horarios_1[_i];
+                    if (!(_i < horarios_2.length)) return [3 /*break*/, 6];
+                    horario = horarios_2[_i];
                     ds = horario['diaSemana'].toString();
                     hi = horario['horaInicio'].toString();
                     hf = horario['horaFinal'].toString();
+                    console.log(ds);
                     return [4 /*yield*/, pool
                             .request()
-                            .input("usuarioId", sql.NVarChar, idUSer)
+                            .input("usuarioId", sql.Int, idUSer)
                             .input("diaSemana", sql.NVarChar, ds)
                             .input("horaInicio", sql.NVarChar, hi)
                             .input("horaFinal", sql.NVarChar, hf)

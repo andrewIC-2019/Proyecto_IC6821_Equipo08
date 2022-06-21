@@ -98,7 +98,8 @@ export class GestorUsuario {
     domingoB: string,
     notificarCorreoAlterno: string
   ): Promise<string> {
-    return this.daoUsuario.guardarEditarUsuario(usuarioId,
+    return this.daoUsuario.guardarEditarUsuario(
+      usuarioId,
       correo,
       password,
       telefono,
@@ -257,6 +258,43 @@ export class GestorUsuario {
       nombre,
       apellido1,
       apellido2,
+      departamento,
+      placa1,
+      placa2,
+      placa3,
+      placa4,
+      notificarCorreoAlterno,
+      esAdministrador,
+      esJefatura,
+      esDiscapacitado,
+      esOperador,
+      horarios
+    );
+  }
+
+
+  public guardarEditarUsuarioF2(
+    usuarioId: string,
+    correo: string,
+    password: string,
+    telefono: string,
+    departamento: string,
+    placa1: string,
+    placa2: string,
+    placa3: string,
+    placa4: string,
+    notificarCorreoAlterno: string,
+    esAdministrador: boolean,
+    esJefatura: boolean,
+    esDiscapacitado: boolean,
+    esOperador: boolean,
+    horarios: JSON[],
+  ): Promise<string> {
+    return this.daoUsuario.guardarEditarUsuarioF2(
+      usuarioId,
+      correo,
+      password,
+      telefono,
       departamento,
       placa1,
       placa2,

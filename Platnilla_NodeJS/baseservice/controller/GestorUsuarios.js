@@ -102,6 +102,9 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.registrarUsuarioTotalF2 = function (correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios) {
         return this.daoUsuario.registrarUsuarioTotalF2(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios);
     };
+    GestorUsuario.prototype.guardarEditarUsuarioF2 = function (usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios) {
+        return this.daoUsuario.guardarEditarUsuarioF2(usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios);
+    };
     return GestorUsuario;
 }());
 exports.GestorUsuario = GestorUsuario;

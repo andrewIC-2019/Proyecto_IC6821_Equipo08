@@ -241,5 +241,42 @@ export class DAOUsuariosImpl implements DAOTransaccional {
   }
 
 
+  public guardarEditarUsuarioF2(
+    usuarioId: string,
+    correo: string,
+    password: string,
+    telefono: string,
+    departamento: string,
+    placa1: string,
+    placa2: string,
+    placa3: string,
+    placa4: string,
+    notificarCorreoAlterno: string,
+    esAdministrador: boolean,
+    esJefatura: boolean,
+    esDiscapacitado: boolean,
+    esOperador: boolean,
+    horarios: JSON[],
+  ): Promise<string> {
+    return SQLConnection.getInstance().guardarEditarUsuarioF2(
+      usuarioId,
+      correo,
+      password,
+      telefono,
+      departamento,
+      placa1,
+      placa2,
+      placa3,
+      placa4,
+      notificarCorreoAlterno,
+      esAdministrador,
+      esJefatura,
+      esDiscapacitado,
+      esOperador,
+      horarios
+    );
+  }
+
+
 
 }

@@ -25,12 +25,65 @@ app.get("/verReservasEstacionamiento", verReservasEstacionamiento);
 app.post("/registrarOficial", registrarOficial);
 app.post("/salidaOficial", salidaOficial);
 app.get("/estacionamientosUsuario", estacionamientosUsuario);
-//app.post("/guardarEditarUsuarioF2", guardarEditarUsuarioF2);
+app.post("/guardarEditarUsuarioF2", guardarEditarUsuarioF2);
 app.post("/registrarUsuarioTotalF2", registrarUsuarioTotalF2);
 
 
 
 
+
+
+
+async function guardarEditarUsuarioF2(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  let usuarioId: string = req.body.usuarioId;
+  let correo: string = req.body.correo;
+  let password: string = req.body.password;
+  let telefono: string = req.body.telefono;
+  let departamento: string = req.body.departamento;
+  let placa1: string = req.body.placa1;
+  let placa2: string = req.body.placa2;
+  let placa3: string = req.body.placa3;
+  let placa4: string = req.body.placa4;
+  let notificarCorreoAlterno: string = req.body.notificarCorreoAlterno;
+  let esAdministrador: boolean = req.body.esAdministrador;
+  let esJefatura: boolean = req.body.esJefatura;
+  let esDiscapacitado: boolean = req.body.esDiscapacitado;
+  let esOperador: boolean = req.body.esOperador;
+  let horarios: JSON[] = req.body.horarios;
+
+  await Control.getInstance()
+    .$gestorUsuario.guardarEditarUsuarioF2(
+      usuarioId,
+      correo,
+      password,
+      telefono,
+      departamento,
+      placa1,
+      placa2,
+      placa3,
+      placa4,
+      notificarCorreoAlterno,
+      esAdministrador,
+      esJefatura,
+      esDiscapacitado,
+      esOperador,
+      horarios
+    )
+    .then((data) => {
+      if (!data) {
+        data = '{"response": false}';
+      }
+      res.json(JSON.parse(data));
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function registrarUsuarioTotalF2(
   req: express.Request,
@@ -391,6 +444,7 @@ async function registrarUsuarioTotal(
       return "";
     });
 }
+
 async function guardarEditarUsuario(
   req: express.Request,
   res: express.Response,

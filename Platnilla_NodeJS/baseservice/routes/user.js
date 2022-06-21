@@ -62,8 +62,48 @@ app.get("/verReservasEstacionamiento", verReservasEstacionamiento);
 app.post("/registrarOficial", registrarOficial);
 app.post("/salidaOficial", salidaOficial);
 app.get("/estacionamientosUsuario", estacionamientosUsuario);
-//app.post("/guardarEditarUsuarioF2", guardarEditarUsuarioF2);
+app.post("/guardarEditarUsuarioF2", guardarEditarUsuarioF2);
 app.post("/registrarUsuarioTotalF2", registrarUsuarioTotalF2);
+function guardarEditarUsuarioF2(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    usuarioId = req.body.usuarioId;
+                    correo = req.body.correo;
+                    password = req.body.password;
+                    telefono = req.body.telefono;
+                    departamento = req.body.departamento;
+                    placa1 = req.body.placa1;
+                    placa2 = req.body.placa2;
+                    placa3 = req.body.placa3;
+                    placa4 = req.body.placa4;
+                    notificarCorreoAlterno = req.body.notificarCorreoAlterno;
+                    esAdministrador = req.body.esAdministrador;
+                    esJefatura = req.body.esJefatura;
+                    esDiscapacitado = req.body.esDiscapacitado;
+                    esOperador = req.body.esOperador;
+                    horarios = req.body.horarios;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.guardarEditarUsuarioF2(usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function registrarUsuarioTotalF2(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios;
