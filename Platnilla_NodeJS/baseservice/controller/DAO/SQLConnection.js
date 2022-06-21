@@ -209,13 +209,13 @@ function reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrad
                             .request()
                             .input("usuarioId", sql.NVarChar, usuarioId)
                             .input("estacionamientoId", sql.NVarChar, estacionamientoId)
-                            .input("vehtipoEspacioIdiculo", sql.NVarChar, tipoEspacioId)
-                            .input("identradantificacion", sql.NVarChar, entrada)
+                            .input("tipoEspacioId", sql.NVarChar, tipoEspacioId)
+                            .input("entrada", sql.NVarChar, entrada)
                             .input("salida", sql.NVarChar, salida)
                             .execute("sp_ReservarFuncionario")];
                 case 2:
                     result = _a.sent();
-                    console.log();
+                    console.log(result.returnValue);
                     return [2 /*return*/, result.returnValue];
             }
         });
