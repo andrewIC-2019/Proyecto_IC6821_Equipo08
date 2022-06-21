@@ -98,12 +98,14 @@ AS
 GO
 
 /*
-DECLARE @entrada datetime = '2022-06-23 07:30:00'
-DECLARE @salida datetime = '2022-06-23 08:30:00'
+DECLARE @entrada datetime = '2022-06-19 14:00:00'
+DECLARE @salida datetime = '2022-06-19 19:00:00'
 
 DECLARE @PRINT INT
 EXEC @PRINT = sp_verificacionFranjas 1, @entrada, @salida
 SELECT @PRINT
+
+EXEC dbo.sp_consultaFuncionario 998001173
 */
 
 -- ----------------------------------------
@@ -232,23 +234,8 @@ EXEC dbo.sp_getDisponiblesTipo 'Discapacitado'
 --	fuese la hora actual; toda reservacion
 --  cuya hora y franja horaria sea menor a la
 --  pivot, se pasara al estado deshabilitado
+--    dbo.sp_actualizarSalidaReservaciones
 -- ----------------------------------------
-
-
-DROP PROCEDURE IF EXISTS dbo.sp_actualizarSalidaReservaciones
-GO
-
-CREATE PROCEDURE dbo.sp_actualizarSalidaReservaciones
-	@horaPivot datetime
-AS
-	UPDATE dbo.Reservaciones SET deshabilitado = 1 WHERE horaFinal < @horaPivot
-	RETURN 1
-GO
-
-/*
--- Ejemplo de Ejecucion
-EXEC dbo.sp_actualizarSalidaReservaciones '2016-06-13 16:35:00'
-*/
 
 
 -- ----------------------------------------
@@ -921,6 +908,10 @@ AS
 
 	INSERT INTO dbo.VisitasOficiales(conductor, sede, placa, modelo, reservacion) VALUES (@conductor, @sede, @placa, @modelo, @laReserva)
 	RETURN 1
+
+	-- Actualiza los espacios disponibles de ese parqueo
+	EXEC dbo.sp_actualizarEspaciosDisponibles @estacionamientoId
+
 GO
 
 /*
@@ -949,6 +940,11 @@ AS
 	WHERE vo.conductor = @conductor AND vo.placa = @placa AND r.deshabilitado = 0
 	
 	UPDATE dbo.Reservaciones SET horaFinal = @salida, deshabilitado = 1 WHERE reservacionId = @laReserva
+
+	-- Actualiza los espacios disponibles de ese parqueo
+	DECLARE @estacionamientoId INT						-- obtener el id del parqueo
+	SELECT @estacionamientoId = estacionamientoId FROM dbo.Reservaciones WHERE reservacionId = @laReserva
+	EXEC dbo.sp_actualizarEspaciosDisponibles @estacionamientoId
 
 	RETURN 1
 GO
@@ -991,6 +987,9 @@ AS
 	INSERT INTO dbo.Visitas(visitante, identificacion, vehiculo, motivo, destino, reservacion) VALUES
 	(@visitante, @identificacion, @vehiculo, @motivo, @destino, @laReserva)
 
+	-- Actualiza los espacios disponibles de ese parqueo
+	EXEC dbo.sp_actualizarEspaciosDisponibles @estacionamientoId
+
 	RETURN 1
 GO
 
@@ -1020,6 +1019,11 @@ AS
 	WHERE v.identificacion = @identificacion AND v.vehiculo = @vehiculo AND r.deshabilitado = 0
 	
 	UPDATE dbo.Reservaciones SET horaFinal = @salida, deshabilitado = 1 WHERE reservacionId = @laReserva
+
+	-- Actualiza los espacios disponibles de ese parqueo
+	DECLARE @estacionamientoId INT						-- obtener el id del parqueo
+	SELECT @estacionamientoId = estacionamientoId FROM dbo.Reservaciones WHERE reservacionId = @laReserva
+	EXEC dbo.sp_actualizarEspaciosDisponibles @estacionamientoId
 
 	RETURN 1
 GO
@@ -1056,6 +1060,9 @@ AS
 		INSERT INTO dbo.Reservaciones(usuarioId, estacionamientoId, tipoEspacioId, horaInicio, horaFinal, [timestamp]) VALUES
 		(@usuarioId, @estacionamientoId, @tipoEspacioId, @entrada, @salida, GETDATE())
 	
+		-- Actualiza los espacios disponibles de ese parqueo
+		EXEC dbo.sp_actualizarEspaciosDisponibles @estacionamientoId
+
 		DECLARE @laReserva BIGINT
 		SELECT @laReserva = MAX(reservacionId) FROM dbo.Reservaciones
 
@@ -1145,6 +1152,9 @@ AS
 	IF @diaValido = 1 BEGIN
 		INSERT INTO dbo.Reservaciones(usuarioId, estacionamientoId, tipoEspacioId, horaInicio, horaFinal, [timestamp]) VALUES
 		(@usuarioId, @estacionamientoId, @tipoEspacioId, @dia, DATEADD(SECOND, -1, DATEADD(DAY,1,@dia)), GETDATE())
+
+		-- Actualiza los espacios disponibles de ese parqueo
+		EXEC dbo.sp_actualizarEspaciosDisponibles @estacionamientoId
 	
 		DECLARE @laReserva BIGINT
 		SELECT @laReserva = MAX(reservacionId) FROM dbo.Reservaciones
@@ -1162,6 +1172,94 @@ DECLARE @print INT
 EXEC @print = dbo.sp_ReservarJefatura 2, 1, 1, '2022-06-19'
 SELECT @print
 */
+
+
+-- =================================================
+--			VII Parte
+-- =================================================
+
+-- Actualiza los espacios de todos los estacionamientos
+-- USO INTERNO NO ES NECESARIO EN EL API
+
+DROP PROCEDURE IF EXISTS dbo.sp_actualizarEstacionamientos
+GO
+
+CREATE PROCEDURE dbo.sp_actualizarEstacionamientos
+AS
+	DECLARE @elCursor CURSOR;
+	DECLARE @unEstacionamiento INT;
+
+	BEGIN
+		SET @elCursor = CURSOR FOR
+		SELECT estacionamientoId FROM dbo.Estacionamientos
+			
+		OPEN @elCursor
+		FETCH NEXT FROM @elCursor
+		INTO @unEstacionamiento
+
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+			
+			-- Actualiza los espacios disponibles de ese parqueo
+			EXEC dbo.sp_actualizarEspaciosDisponibles @unEstacionamiento
+	
+
+			FETCH NEXT FROM @elCursor
+			INTO @unEstacionamiento
+		END;
+
+		CLOSE @elCursor;
+		DEALLOCATE @elCursor;
+	END;
+GO
+
+/*
+-- Para probar
+
+UPDATE dbo.Estacionamientos SET cantDisponibles = 10, cantOficialesDisponibles = 10,
+cantVisitantesDisponibles = 10, cantJefaturasDisponibles = 10, cantEspecialesDisponibles = 10
+
+SELECT * FROM dbo.Estacionamientos
+
+EXEC dbo.sp_actualizarEstacionamientos
+
+SELECT * FROM dbo.Reservaciones WHERE deshabilitado = 0
+SELECT cantEspacios, cantDisponibles, cantEspaciosOficiales, cantOficialesDisponibles, cantEspaciosVisitantes, cantVisitantesDisponibles, cantEspaciosJefaturas, cantJefaturasDisponibles,
+cantEspaciosEspeciales, cantEspecialesDisponibles FROM dbo.Estacionamientos
+
+*/
+
+
+-- ----------------------------------------
+--  Simula el paso del tiempo
+--  Recibe una fecha que se utilizara como si
+--	fuese la hora actual; toda reservacion
+--  cuya hora y franja horaria sea menor a la
+--  pivot, se pasara al estado deshabilitado
+--  NO CAMBIA EN EL API, ESTE YA ESTABA
+-- ----------------------------------------
+
+
+DROP PROCEDURE IF EXISTS dbo.sp_actualizarSalidaReservaciones
+GO
+
+CREATE PROCEDURE dbo.sp_actualizarSalidaReservaciones
+	@horaPivot datetime
+AS
+	UPDATE dbo.Reservaciones SET deshabilitado = 1 WHERE horaFinal < @horaPivot
+
+	-- Actualiza los espacios
+	EXEC dbo.sp_actualizarEstacionamientos
+
+	RETURN 1
+GO
+
+/*
+-- Ejemplo de Ejecucion
+EXEC dbo.sp_actualizarSalidaReservaciones '2016-06-13 16:35:00'
+*/
+
+
 
 
 

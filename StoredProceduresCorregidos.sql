@@ -266,5 +266,265 @@ EXEC dbo.sp_guardarEditarUsuarioF2 1, 'correito@email.cr', 'actualizada', '15531
 -- ==========================================================================================
 
 
+-- ==========================================
+--		II PARTE: CORRECCIONES LOGIN
+-- ==========================================
 
+/*
+	dbo.sp_login
+		Devuelve nuevas banderas
+*/
+
+
+DROP PROCEDURE IF EXISTS dbo.sp_login
+GO
+
+CREATE PROCEDURE dbo.sp_login
+	@user nvarchar(200),
+	@pass nvarchar(200)
+AS
+	DECLARE @elUsuario INT = -1
+	DECLARE @continue INT = 0
+	
+	SELECT @elUsuario=usuarioId FROM dbo.Usuarios WHERE correoInstitucional = @user AND deshabilitado = 0
+
+	IF @elUsuario = -1 BEGIN
+		RETURN 0
+	END ELSE BEGIN
+		DECLARE @temporal VARBINARY(256)
+		SELECT @temporal=[password] FROM dbo.Usuarios WHERE usuarioId = @elUsuario
+		IF @temporal = HASHBYTES('SHA2_256', @pass) BEGIN
+			SELECT usuarioId, apellido1, apellido2, nombre, esAdministrador, esJefatura, esDiscapacitado, esOperador, correo FROM dbo.Usuarios WHERE usuarioId = @elUsuario FOR JSON AUTO
+			RETURN 1
+		END ELSE BEGIN
+			RETURN 0
+		END
+	END
+GO
+
+/*
+-- Ejemplo de ejecucion: correoInstitucional, password
+EXEC dbo.sp_login 'aarias.19@itcr.ac.cr', '12345'
+
+-- Por si es necesario, cuando las banderas estan nulas:
+-- UPDATE dbo.Usuarios SET esAdministrador = 0, esJefatura = 0, esDiscapacitado = 0, esOperador = 0 WHERE usuarioId = 2
+*/
+
+
+
+-- ==========================================================================================
+
+
+-- =========================================================
+--		III PARTE: CORRECCIONES INSERTAR Y EDITAR PARQUEOS
+-- =========================================================
+
+--	Actualiza los espacios dispnibles
+
+-- ==========================================
+--		FORMULARIO REGISTRAR ESTACIONAMIENTO
+-- ==========================================
+
+DROP PROCEDURE IF EXISTS dbo.sp_registrarEstacionamientoTotal
+GO
+
+CREATE PROCEDURE dbo.sp_registrarEstacionamientoTotal
+	@nombre nvarchar(200),
+	@correo nvarchar(200),
+	@telefono nvarchar(40),
+	@identificacion nvarchar(60),
+	@direccionExacta nvarchar(500),
+	@formaAcceso nvarchar(500),
+	@descripcion nvarchar(250),
+	@cantEspaciosEspeciales int,
+	@cantEspaciosJefaturas int,
+	@cantEspaciosVisitantes int,
+	@cantEspaciosOficiales int,
+	@cantEspacios int,
+	@imageUrl nvarchar(800),
+	@lunesA time(7),
+	@lunesB time(7),
+	@martesA time(7),
+	@martesB time(7),
+	@miercolesA time(7),
+	@miercolesB time(7),
+	@juevesA time(7),
+	@juevesB time(7),
+	@viernesA time(7),
+	@viernesB time(7),
+	@sabadoA time(7),
+	@sabadoB time(7),
+	@domingoA time(7),
+	@domingoB time(7),
+	@esInstitucional bit
+AS
+	-- institucional 1:
+	-- subcontratado 2:
+
+	DECLARE @tipoEstacionamiento INT
+
+	IF @esInstitucional=1 BEGIN
+		SELECT @tipoEstacionamiento = tipoEstacionamientoId FROM dbo.TiposEstacionamientos WHERE tipo = 'institucional' 
+	END ELSE BEGIN
+		SELECT @tipoEstacionamiento = tipoEstacionamientoId FROM dbo.TiposEstacionamientos WHERE tipo = 'subcontratado' 
+	END
+
+	DECLARE @nuevoEstacionamientoId BIGINT
+	EXEC @nuevoEstacionamientoId = dbo.sp_registrarEstacionamiento @tipoEstacionamiento, 1, 1, 1, @direccionExacta,
+	@nombre, @formaAcceso, @cantEspacios, @cantEspaciosEspeciales, @cantEspaciosJefaturas, @cantEspaciosVisitantes, @cantEspaciosOficiales,
+	@correo, @telefono, @identificacion, @imageUrl, @descripcion
+
+	-- insercion de los horarios
+
+	IF @lunesA IS NOT NULL AND @lunesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 1, @lunesA, @lunesB
+	END
+
+	IF @martesA IS NOT NULL AND @martesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 2, @lunesA, @lunesB
+	END
+
+	IF @miercolesA IS NOT NULL AND @miercolesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 3, @lunesA, @lunesB
+	END
+
+	IF @juevesA IS NOT NULL AND @juevesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 4, @lunesA, @lunesB
+	END
+
+	IF @viernesA IS NOT NULL AND @juevesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 5, @lunesA, @lunesB
+	END
+
+	IF @sabadoA IS NOT NULL AND @sabadoB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 6, @sabadoA, @sabadoB
+	END
+
+	IF @domingoA IS NOT NULL AND @domingoB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @nuevoEstacionamientoId, 7, @domingoA, @domingoB
+	END
+
+	-- *Actualiza los espacios disponibles de ese parqueo
+	EXEC dbo.sp_actualizarEspaciosDisponibles @nuevoEstacionamientoId
+
+	RETURN @nuevoEstacionamientoId -- Se completo exitosamente
+
+GO
+
+/*
+-- Ejemplo de ejecucion
+EXEC dbo.sp_registrarEstacionamientoTotal 'Parqueo Amón2', 'parqueo.amon@email.cr', '75643462', NULL, 'Diagonal a casa verd2e', 'Dar la vuelta por el edificio principal, sentido S-N2', 'Parqueo cercano al campus2',
+1, 1, 1, 0, 7, 'https://uc905e507265cf72e311859374ed.previews.dropboxusercontent.com/p/thumb/ABhIgcjAJXv8k4siO1HiGTPNXePMIt8QbCiYXVl17E9zpJSLT9osxPUDlcr6gGHTJfx0rvGXQ4P0vfIHIrpoPQ5Y7yCmaBcLDPilYGYBZPgcrxzoUs2CGSStm1kdLwxekiQ7nYOR6fwGW-c0T5wtwRGb8ehEIK7pMohYhJl2qmaX1gPGlefKgnQ_usdMuY4tnAKyNXyE-N12y8y1786sRO1JpxiabYn72hNdqiGK8Jp13JcIEAeePQSliayjYjbj05EtTO88nFVCxaAUelH1xF8fRTGojcVLwoOSl1FBk-KJ0wb3wrwW3ZWfzZjnz7vvgwnEW4DbuLzK9r2LcH1iFV0JrOlSWjIOP57Iw0r67e5k9gXksr1cZS8H6sF4wlg-V2s/p.jpeg',
+'06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '06:30', '21:00', '08:00', '16:00', NULL, NULL, 0
+SELECT * FROM dbo.Estacionamientos
+*/
+
+
+-- ==================================================
+--		FORMULARIO MODIFICAR ESTACIONAMIENTO
+-- ==================================================
+
+--		guardar: para salvar los cambios, en caso de que el boton se oprima
+
+DROP PROCEDURE IF EXISTS dbo.sp_guardarEditarEstacionamiento
+GO
+
+CREATE PROCEDURE dbo.sp_guardarEditarEstacionamiento
+	@estacionamientoId int,
+	@identificacion nvarchar(60),
+	@nombre nvarchar(200),
+	@correo nvarchar(200),
+	@telefono nvarchar(40),
+	@direccionExacta nvarchar(500),
+	@formaAcceso nvarchar(500),
+	@descripcion nvarchar(250),
+	@cantEspaciosEspeciales int,
+	@cantEspaciosJefaturas int,
+	@cantEspaciosVisitantes int,
+	@cantEspaciosOficiales int,
+	@cantEspacios int,
+	@imageUrl nvarchar(800),
+	@tipoEstacionamiento int,
+	@lunesA time(7),
+	@lunesB time(7),
+	@martesA time(7),
+	@martesB time(7),
+	@miercolesA time(7),
+	@miercolesB time(7),
+	@juevesA time(7),
+	@juevesB time(7),
+	@viernesA time(7),
+	@viernesB time(7),
+	@sabadoA time(7),
+	@sabadoB time(7),
+	@domingoA time(7),
+	@domingoB time(7)
+AS
+	-- busqueda del Id del estacionamiento
+	-- DECLARE @estacionamientoId INT
+	-- SELECT @estacionamientoId = estacionamientoId FROM dbo.Estacionamientos WHERE identificacion = @identificacion
+
+	-- busca y actualiza la direccionExacta
+	DECLARE @laUbicacion BIGINT
+	SELECT @laUbicacion = ubicacion FROM dbo.Estacionamientos WHERE identificacion = @identificacion OR estacionamientoId = @estacionamientoId
+
+	UPDATE dbo.Ubicaciones SET direccionExacta = @direccionExacta WHERE ubicacionId = @laUbicacion
+
+	-- actualiza informacion de la tabla de estacionamiento
+	IF @formaAcceso IS NOT NULL
+	UPDATE dbo.Estacionamientos SET nombre = @nombre, correo= @correo, telefono = @telefono, formaAcceso = @formaAcceso, 
+	descripcion = @descripcion, cantEspaciosEspeciales = @cantEspaciosEspeciales, cantEspaciosJefaturas = @cantEspaciosJefaturas, cantEspaciosVisitantes = @cantEspaciosVisitantes,
+	cantEspaciosOficiales = @cantEspaciosOficiales, cantEspacios = @cantEspacios, imageUrl = @imageUrl, tipoEstacionamiento=@tipoEstacionamiento
+	WHERE identificacion = @identificacion OR estacionamientoId = @estacionamientoId
+
+	ELSE
+	UPDATE dbo.Estacionamientos SET nombre = @nombre, correo= @correo, telefono = @telefono, 
+	descripcion = @descripcion, cantEspaciosEspeciales = @cantEspaciosEspeciales, cantEspaciosJefaturas = @cantEspaciosJefaturas, cantEspaciosVisitantes = @cantEspaciosVisitantes,
+	cantEspaciosOficiales = @cantEspaciosOficiales, cantEspacios = @cantEspacios, imageUrl = @imageUrl, tipoEstacionamiento=@tipoEstacionamiento
+	WHERE identificacion = @identificacion OR estacionamientoId = @estacionamientoId
+
+
+	-- actualizacion de los horarios
+
+	IF @lunesA IS NOT NULL AND @lunesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 1, @lunesA, @lunesB
+	END
+
+	IF @martesA IS NOT NULL AND @martesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 2, @martesA, @martesB
+	END
+
+	IF @miercolesA IS NOT NULL AND @miercolesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 3, @miercolesA, @miercolesB
+	END
+
+	IF @juevesA IS NOT NULL AND @juevesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 4, @juevesA, @juevesB
+	END
+
+	IF @viernesA IS NOT NULL AND @juevesB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 5, @viernesA, @viernesB
+	END
+
+	IF @sabadoA IS NOT NULL AND @sabadoB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 6, @sabadoA, @sabadoB
+	END
+
+	IF @domingoA IS NOT NULL AND @domingoB IS NOT NULL BEGIN
+		EXEC dbo.sp_registrarHorarioEstacionamiento @estacionamientoId, 7, @domingoA, @domingoB
+	END
+
+	-- *Actualiza los espacios disponibles de ese parqueo
+	EXEC dbo.sp_actualizarEspaciosDisponibles @estacionamientoId
+
+	RETURN 1
+
+GO
+
+/*
+-- ejemplo de ejecucion
+EXEC dbo.sp_guardarEditarEstacionamiento 6, '75643457', 'Parqueo Nuevo Amón', 'nuevoamon@email.cr','96213505', '200m norte del morazán', 'Sobre la calle del casino, sentido O - E, mano derecha', 'Parqueo bajo techo',
+1, 1, 1, 1, 6, NULL,
+NULL, NULL, '07:30', '16:30', '07:30', '16:30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+*/
 
