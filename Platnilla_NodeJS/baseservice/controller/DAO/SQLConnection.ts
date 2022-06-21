@@ -557,7 +557,7 @@ async function reservarFuncionario(usuarioId: string, estacionamientoId: string,
     .input("entrada", sql.NVarChar, entrada)
     .input("salida", sql.NVarChar, salida)
     .execute("sp_ReservarFuncionario");
-    console.log(result.returnValue)
+ 
 
   return result.returnValue;
 }
@@ -1025,7 +1025,6 @@ async function actualizarSalidaReservaciones(
     .input("horaPivot", sql.NVarChar, horaPivot)
     .execute("sp_actualizarSalidaReservaciones");
 
-  console.log(result)
   return result.returnValue;
 }
 
@@ -1094,7 +1093,7 @@ async function verificacionDiaLaboral(
     .input("dia", sql.NVarChar, dia)
     .execute("sp_verificacionDiaLaboral");
 
-  console.log(result)
+
   return result.returnValue;
 }
 
@@ -1137,7 +1136,7 @@ async function estacionamientosTipoSubcontratados(
   subcontratados: string
 ): Promise<string> {
   //do connection
-  console.log("previo")
+
   let pool = await new sql.connect(config);
   //do reques from pool, with parameters and execute sp
 
@@ -1608,7 +1607,7 @@ async function login(username: string, password: string): Promise<string> {
     .input("pass", sql.NVarChar(200), password)
     .execute("sp_login");
 
-  console.log(result)
+
   let str: string;
   if (result.recordsets && result.returnValue) {
     let obj: any = result.recordsets[0][0];

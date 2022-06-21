@@ -215,7 +215,6 @@ function reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrad
                             .execute("sp_ReservarFuncionario")];
                 case 2:
                     result = _a.sent();
-                    console.log(result.returnValue);
                     return [2 /*return*/, result.returnValue];
             }
         });
@@ -721,7 +720,6 @@ function actualizarSalidaReservaciones(horaPivot) {
                             .execute("sp_actualizarSalidaReservaciones")];
                 case 2:
                     result = _a.sent();
-                    console.log(result);
                     return [2 /*return*/, result.returnValue];
             }
         });
@@ -803,7 +801,6 @@ function verificacionDiaLaboral(jefe, dia) {
                             .execute("sp_verificacionDiaLaboral")];
                 case 2:
                     result = _a.sent();
-                    console.log(result);
                     return [2 /*return*/, result.returnValue];
             }
         });
@@ -856,10 +853,7 @@ function estacionamientosTipoSubcontratados(subcontratados) {
         var pool, result, str, key;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    //do connection
-                    console.log("previo");
-                    return [4 /*yield*/, new sql.connect(config)];
+                case 0: return [4 /*yield*/, new sql.connect(config)];
                 case 1:
                     pool = _a.sent();
                     return [4 /*yield*/, pool
@@ -1300,7 +1294,6 @@ function login(username, password) {
                             .execute("sp_login")];
                 case 2:
                     result = _a.sent();
-                    console.log(result);
                     if (result.recordsets && result.returnValue) {
                         obj = result.recordsets[0][0];
                         for (key in obj) {

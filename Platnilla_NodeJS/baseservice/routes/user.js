@@ -678,7 +678,6 @@ function consultaFuncionario(req, res, next) {
                             if (!data) {
                                 data = '{"response": false}';
                             }
-                            console.log(data);
                             res.json(data);
                         })
                             .catch(function (err) {

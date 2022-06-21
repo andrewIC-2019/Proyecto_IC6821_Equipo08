@@ -657,7 +657,7 @@ async function consultaFuncionario(
       if (!data) {
         data = '{"response": false}';
       }
-      console.log(data)
+ 
       res.json(data);
     })
     .catch((err) => {
