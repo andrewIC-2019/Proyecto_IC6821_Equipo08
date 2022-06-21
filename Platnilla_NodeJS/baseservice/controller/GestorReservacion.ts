@@ -56,4 +56,8 @@ export class GestorReservacion {
   public actualizarSalidaReservaciones(horaPivot: string): Promise<string> {
     return this.daoReservacion.actualizarSalidaReservaciones(horaPivot);
   }
+
+  public reservarFuncionario(usuarioId: string, estacionamientoId: string, tipoEspacioId: string, entrada: string, salida: string): Promise<string> {
+    return this.daoReservacion.reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrada, salida);
+  }
 }

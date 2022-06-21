@@ -29,9 +29,66 @@ app.post("/guardarEditarUsuarioF2", guardarEditarUsuarioF2);
 app.post("/registrarUsuarioTotalF2", registrarUsuarioTotalF2);
 app.get("/ocupacionXTipoJefe", ocupacionXTipoJefe);
 app.get("/ocupacionXDepartamentoJefe", ocupacionXDepartamentoJefe);
+app.post("/registrarVisita", registrarVisita);
+app.post("/salidaVisita", salidaVisita);
 
 
 
+async function salidaVisita(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+
+  let vehiculo: string = req.body.vehiculo;
+  let identificacion: string = req.body.identificacion;
+  let salida: string = req.body.salida;
+
+  await Control.getInstance()
+    .$gestorUsuario.salidaVisita( vehiculo, identificacion, salida)
+    .then((data) => {
+      if (!data) {
+        data = '0';
+      }
+      res.json({ done: data == '1' });
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
+
+async function registrarVisita(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  let usuarioId: string = req.body.usuarioId;
+  let estacionamientoId: string = req.body.estacionamientoId;
+  let tipoEspacioId: string = req.body.tipoEspacioId;
+
+  let entrada: string = req.body.entrada;
+  let visitante: string = req.body.visitante;
+  let identificacion: string = req.body.identificacion;
+
+  let vehiculo: string = req.body.vehiculo;
+  let motivo: string = req.body.motivo;
+  let destino: string = req.body.destino;
+
+  await Control.getInstance()
+    .$gestorUsuario.registrarVisita(usuarioId, estacionamientoId, tipoEspacioId,
+      entrada, visitante, identificacion, vehiculo, motivo, destino)
+    .then((data) => {
+      if (!data) {
+        data = '0';
+      }
+      res.json({ done: data == '1' });
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function ocupacionXDepartamentoJefe(
   req: express.Request,
@@ -217,13 +274,13 @@ async function salidaOficial(
   res: express.Response,
   next: express.NextFunction
 ) {
-  let estacionamientoId: string = req.body.estacionamientoId;
+
   let placa: string = req.body.placa;
   let conductor: string = req.body.conductor;
   let salida: string = req.body.salida;
 
   await Control.getInstance()
-    .$gestorUsuario.salidaOficial(estacionamientoId, placa, conductor, salida)
+    .$gestorUsuario.salidaOficial( placa, conductor, salida)
     .then((data) => {
       if (!data) {
         data = '0';
@@ -241,18 +298,25 @@ async function registrarOficial(
   res: express.Response,
   next: express.NextFunction
 ) {
+  let usuarioId: string = req.body.usuarioId;
   let estacionamientoId: string = req.body.estacionamientoId;
+  let tipoEspacioId: string = req.body.tipoEspacioId;
+
+  let entrada: string = req.body.entrada;
   let placa: string = req.body.placa;
   let conductor: string = req.body.conductor;
-  let entrada: string = req.body.entrada;
+
+  let sede: string = req.body.sede;
+  let modelo: string = req.body.modelo;
 
   await Control.getInstance()
-    .$gestorUsuario.registrarOficial(estacionamientoId, placa, conductor, entrada)
+    .$gestorUsuario.registrarOficial(usuarioId, estacionamientoId, tipoEspacioId,
+      entrada, placa, conductor, sede, modelo)
     .then((data) => {
       if (!data) {
-        data = '{"response": false}';
+        data = '0';
       }
-      res.json(JSON.parse(data));
+      res.json({ done: data == '1' });
     })
     .catch((err) => {
       log.error(err);

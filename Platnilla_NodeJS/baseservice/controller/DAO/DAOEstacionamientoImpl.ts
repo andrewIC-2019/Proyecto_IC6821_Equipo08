@@ -166,4 +166,5 @@ export class DAOEStacionamientoImpl implements DAOTransaccional {
   public calcularEspaciosDisponibles(estacionamiento: string, tipoEspacioId: string): Promise<string> {
     return SQLConnection.getInstance().calcularEspaciosDisponibles(estacionamiento, tipoEspacioId);
   }
+
 }

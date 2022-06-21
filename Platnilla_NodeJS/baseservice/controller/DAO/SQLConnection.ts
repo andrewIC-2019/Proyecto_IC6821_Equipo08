@@ -385,16 +385,17 @@ export class SQLConnection implements DataSource {
     return verReservasEstacionamiento(estacionamiento);
   }
 
-  public registrarOficial(
-    estacionamientoId: string, placa: string, conductor: string,  entrada: string
-  ): Promise<string> {
-    return registrarOficial(estacionamientoId, placa, conductor, entrada);
+  public registrarOficial(usuarioId: string, estacionamientoId: string, tipoEspacioId: string,
+    entrada: string, placa: string, conductor: string, sede: string, modelo: string): Promise<string> {
+    return registrarOficial(usuarioId, estacionamientoId, tipoEspacioId,
+      entrada, placa, conductor, sede, modelo);
   }
 
+
   public salidaOficial(
-    estacionamientoId: string, placa: string, conductor: string,  salida: string
+    placa: string, conductor: string,  salida: string
   ): Promise<string> {
-    return salidaOficial(estacionamientoId, placa, conductor, salida);
+    return salidaOficial(placa, conductor, salida);
   }
 
   public estacionamientosUsuario(
@@ -503,18 +504,79 @@ export class SQLConnection implements DataSource {
     return calcularEspaciosDisponibles(estacionamiento, tipoEspacioId);
   }
 
+  public registrarVisita(usuarioId: string, estacionamientoId: string, tipoEspacioId: string,
+    entrada: string, visitante: string, identificacion: string, vehiculo: string, motivo: string, destino: string): Promise<string> {
+    return registrarVisita(usuarioId, estacionamientoId, tipoEspacioId,
+      entrada, visitante, identificacion, vehiculo, motivo, destino);
+  }
 
+  public salidaVisita(vehiculo: string, identificacion: string,  salida: string): Promise<string> {
+    return salidaVisita(vehiculo, identificacion, salida);
+  }
 
+  public reservarFuncionario(usuarioId: string, estacionamientoId: string, tipoEspacioId: string, entrada: string, salida: string): Promise<string> {
+    return reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrada, salida);
+  }
 
 
 
 }
 
 
+async function reservarFuncionario(usuarioId: string, estacionamientoId: string, tipoEspacioId: string, entrada: string, salida: string): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("usuarioId", sql.NVarChar, usuarioId)
+    .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+    .input("vehtipoEspacioIdiculo", sql.NVarChar, tipoEspacioId)
+    .input("identradantificacion", sql.NVarChar, entrada)
+    .input("salida", sql.NVarChar, salida)
+    .execute("sp_ReservarFuncionario");
 
+  return result.returnValue;
+}
 
+async function salidaVisita(
+  vehiculo: string, identificacion: string,  salida: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("vehiculo", sql.NVarChar, vehiculo)
+    .input("identificacion", sql.NVarChar, identificacion)
+    .input("salida", sql.NVarChar, salida)
+    .execute("sp_SalidaVisita");
 
+  return result.returnValue;
+}
 
+async function registrarVisita(
+  usuarioId: string, estacionamientoId: string, tipoEspacioId: string,
+  entrada: string, visitante: string, identificacion: string, vehiculo: string, motivo: string, destino: string
+  ): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("usuarioId", sql.NVarChar, usuarioId)
+    .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+    .input("tipoEspacioId", sql.NVarChar, tipoEspacioId)
+    .input("entrada", sql.NVarChar, entrada)
+    .input("visitante", sql.NVarChar, visitante)
+    .input("identificacion", sql.NVarChar, identificacion)
+    .input("vehiculo", sql.NVarChar, vehiculo)
+    .input("motivo", sql.NVarChar, motivo)
+    .input("destino", sql.NVarChar, destino)
+    .execute("sp_RegistrarVisita");
+
+  return result.returnValue;
+}
 
 
 async function calcularEspaciosDisponibles(
@@ -757,14 +819,13 @@ async function estacionamientosUsuario(
 
 
 async function salidaOficial(
-  estacionamientoId: string, placa: string, conductor: string,  salida: string
+  placa: string, conductor: string,  salida: string
 ): Promise<string> {
   //do connection
   let pool = await new sql.connect(config);
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
-    .input("estacionamientoId", sql.NVarChar, estacionamientoId)
     .input("placa", sql.NVarChar, placa)
     .input("conductor", sql.NVarChar, conductor)
     .input("salida", sql.NVarChar, salida)
@@ -774,32 +835,23 @@ async function salidaOficial(
 }
 
 async function registrarOficial(
-  estacionamientoId: string, placa: string, conductor: string,  entrada: string
-): Promise<string> {
+  usuarioId: string, estacionamientoId: string, tipoEspacioId: string,
+    entrada: string, placa: string, conductor: string, sede: string, modelo: string): Promise<string> {
   //do connection
   let pool = await new sql.connect(config);
   //do reques from pool, with parameters and execute sp
   let result = await pool
     .request()
+    .input("usuarioId", sql.NVarChar, usuarioId)
     .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+    .input("tipoEspacioId", sql.NVarChar, tipoEspacioId)
+    .input("entrada", sql.NVarChar, entrada)
     .input("placa", sql.NVarChar, placa)
     .input("conductor", sql.NVarChar, conductor)
-    .input("entrada", sql.NVarChar, entrada)
+    .input("sede", sql.NVarChar, sede)
+    .input("modelo", sql.NVarChar, modelo)
     .execute("sp_RegistrarOficial");
-  let str: string;
-  if (result.recordsets && result.returnValue) {
-    str = "{";
-    for (var i in result.recordsets) {
-      for (var key in result.recordsets[i][0]) {
-        let tmpStr: string = result.recordsets[i][0][key];
-        tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
-        str += '"' + i + '": "' + tmpStr + '",';
-      }
-    }
-    str = str.slice(0, -1);
-    str += "}";
-  }
-  return str;
+    return result.returnValue;
 }
 
 async function verReservasEstacionamiento(

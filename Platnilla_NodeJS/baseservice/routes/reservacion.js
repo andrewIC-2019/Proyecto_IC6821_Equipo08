@@ -48,6 +48,37 @@ app.get("/verificacionFranjas", verificacionFranjas);
 app.get("/verificacionDiaLaboral", verificacionDiaLaboral);
 app.get("/getDisponiblesTipo", getDisponiblesTipo);
 app.post("/actualizarSalidaReservaciones", actualizarSalidaReservaciones);
+app.post("/reservarFuncionario", reservarFuncionario);
+function reservarFuncionario(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var usuarioId, estacionamientoId, tipoEspacioId, entrada, salida;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    usuarioId = req.body.usuarioId;
+                    estacionamientoId = req.body.estacionamientoId;
+                    tipoEspacioId = req.body.tipoEspacioId;
+                    entrada = req.body.entrada;
+                    salida = req.body.salida;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorReservacion.reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrada, salida)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '-1';
+                            }
+                            res.json({ response: data });
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function actualizarSalidaReservaciones(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var horaPivot;

@@ -136,11 +136,11 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.verReservasEstacionamiento = function (estacionamiento) {
         return verReservasEstacionamiento(estacionamiento);
     };
-    SQLConnection.prototype.registrarOficial = function (estacionamientoId, placa, conductor, entrada) {
-        return registrarOficial(estacionamientoId, placa, conductor, entrada);
+    SQLConnection.prototype.registrarOficial = function (usuarioId, estacionamientoId, tipoEspacioId, entrada, placa, conductor, sede, modelo) {
+        return registrarOficial(usuarioId, estacionamientoId, tipoEspacioId, entrada, placa, conductor, sede, modelo);
     };
-    SQLConnection.prototype.salidaOficial = function (estacionamientoId, placa, conductor, salida) {
-        return salidaOficial(estacionamientoId, placa, conductor, salida);
+    SQLConnection.prototype.salidaOficial = function (placa, conductor, salida) {
+        return salidaOficial(placa, conductor, salida);
     };
     SQLConnection.prototype.estacionamientosUsuario = function (objetivo, usuario) {
         return estacionamientosUsuario(objetivo, usuario);
@@ -160,9 +160,89 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.calcularEspaciosDisponibles = function (estacionamiento, tipoEspacioId) {
         return calcularEspaciosDisponibles(estacionamiento, tipoEspacioId);
     };
+    SQLConnection.prototype.registrarVisita = function (usuarioId, estacionamientoId, tipoEspacioId, entrada, visitante, identificacion, vehiculo, motivo, destino) {
+        return registrarVisita(usuarioId, estacionamientoId, tipoEspacioId, entrada, visitante, identificacion, vehiculo, motivo, destino);
+    };
+    SQLConnection.prototype.salidaVisita = function (vehiculo, identificacion, salida) {
+        return salidaVisita(vehiculo, identificacion, salida);
+    };
+    SQLConnection.prototype.reservarFuncionario = function (usuarioId, estacionamientoId, tipoEspacioId, entrada, salida) {
+        return reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrada, salida);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+function reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrada, salida) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("usuarioId", sql.NVarChar, usuarioId)
+                            .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+                            .input("vehtipoEspacioIdiculo", sql.NVarChar, tipoEspacioId)
+                            .input("identradantificacion", sql.NVarChar, entrada)
+                            .input("salida", sql.NVarChar, salida)
+                            .execute("sp_ReservarFuncionario")];
+                case 2:
+                    result = _a.sent();
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
+function salidaVisita(vehiculo, identificacion, salida) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("vehiculo", sql.NVarChar, vehiculo)
+                            .input("identificacion", sql.NVarChar, identificacion)
+                            .input("salida", sql.NVarChar, salida)
+                            .execute("sp_SalidaVisita")];
+                case 2:
+                    result = _a.sent();
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
+function registrarVisita(usuarioId, estacionamientoId, tipoEspacioId, entrada, visitante, identificacion, vehiculo, motivo, destino) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("usuarioId", sql.NVarChar, usuarioId)
+                            .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+                            .input("tipoEspacioId", sql.NVarChar, tipoEspacioId)
+                            .input("entrada", sql.NVarChar, entrada)
+                            .input("visitante", sql.NVarChar, visitante)
+                            .input("identificacion", sql.NVarChar, identificacion)
+                            .input("vehiculo", sql.NVarChar, vehiculo)
+                            .input("motivo", sql.NVarChar, motivo)
+                            .input("destino", sql.NVarChar, destino)
+                            .execute("sp_RegistrarVisita")];
+                case 2:
+                    result = _a.sent();
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
 function calcularEspaciosDisponibles(estacionamientoId, tipoEspacioId) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result;
@@ -397,7 +477,7 @@ function estacionamientosUsuario(objetivo, usuario) {
         });
     });
 }
-function salidaOficial(estacionamientoId, placa, conductor, salida) {
+function salidaOficial(placa, conductor, salida) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result;
         return __generator(this, function (_a) {
@@ -407,7 +487,6 @@ function salidaOficial(estacionamientoId, placa, conductor, salida) {
                     pool = _a.sent();
                     return [4 /*yield*/, pool
                             .request()
-                            .input("estacionamientoId", sql.NVarChar, estacionamientoId)
                             .input("placa", sql.NVarChar, placa)
                             .input("conductor", sql.NVarChar, conductor)
                             .input("salida", sql.NVarChar, salida)
@@ -419,9 +498,9 @@ function salidaOficial(estacionamientoId, placa, conductor, salida) {
         });
     });
 }
-function registrarOficial(estacionamientoId, placa, conductor, entrada) {
+function registrarOficial(usuarioId, estacionamientoId, tipoEspacioId, entrada, placa, conductor, sede, modelo) {
     return __awaiter(this, void 0, void 0, function () {
-        var pool, result, str, i, key, tmpStr;
+        var pool, result;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new sql.connect(config)];
@@ -429,26 +508,18 @@ function registrarOficial(estacionamientoId, placa, conductor, entrada) {
                     pool = _a.sent();
                     return [4 /*yield*/, pool
                             .request()
+                            .input("usuarioId", sql.NVarChar, usuarioId)
                             .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+                            .input("tipoEspacioId", sql.NVarChar, tipoEspacioId)
+                            .input("entrada", sql.NVarChar, entrada)
                             .input("placa", sql.NVarChar, placa)
                             .input("conductor", sql.NVarChar, conductor)
-                            .input("entrada", sql.NVarChar, entrada)
+                            .input("sede", sql.NVarChar, sede)
+                            .input("modelo", sql.NVarChar, modelo)
                             .execute("sp_RegistrarOficial")];
                 case 2:
                     result = _a.sent();
-                    if (result.recordsets && result.returnValue) {
-                        str = "{";
-                        for (i in result.recordsets) {
-                            for (key in result.recordsets[i][0]) {
-                                tmpStr = result.recordsets[i][0][key];
-                                tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
-                                str += '"' + i + '": "' + tmpStr + '",';
-                            }
-                        }
-                        str = str.slice(0, -1);
-                        str += "}";
-                    }
-                    return [2 /*return*/, str];
+                    return [2 /*return*/, result.returnValue];
             }
         });
     });

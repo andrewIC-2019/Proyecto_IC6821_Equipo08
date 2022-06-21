@@ -29,6 +29,9 @@ var DAOReservacionImpl = /** @class */ (function () {
     DAOReservacionImpl.prototype.actualizarSalidaReservaciones = function (horaPivot) {
         return SQLConnection_1.SQLConnection.getInstance().actualizarSalidaReservaciones(horaPivot);
     };
+    DAOReservacionImpl.prototype.reservarFuncionario = function (usuarioId, estacionamientoId, tipoEspacioId, entrada, salida) {
+        return SQLConnection_1.SQLConnection.getInstance().reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrada, salida);
+    };
     return DAOReservacionImpl;
 }());
 exports.DAOReservacionImpl = DAOReservacionImpl;

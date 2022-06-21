@@ -215,12 +215,14 @@ export class GestorUsuario {
     return this.daoUsuario.verReservasEstacionamiento(estacionamiento);
   }
 
-  public registrarOficial(estacionamientoId: string, placa: string, conductor: string,  entrada: string): Promise<string> {
-    return this.daoUsuario.registrarOficial(estacionamientoId, placa, conductor, entrada);
+  public registrarOficial(usuarioId: string, estacionamientoId: string, tipoEspacioId: string,
+    entrada: string, placa: string, conductor: string, sede: string, modelo: string): Promise<string> {
+    return this.daoUsuario.registrarOficial(usuarioId, estacionamientoId, tipoEspacioId,
+      entrada, placa, conductor, sede, modelo);
   }
 
-  public salidaOficial(estacionamientoId: string, placa: string, conductor: string,  salida: string): Promise<string> {
-    return this.daoUsuario.salidaOficial(estacionamientoId, placa, conductor, salida);
+  public salidaOficial(placa: string, conductor: string,  salida: string): Promise<string> {
+    return this.daoUsuario.salidaOficial(placa, conductor, salida);
   }
 
   public estacionamientosUsuario(objetivo: string, usuario: string): Promise<string> {
@@ -318,6 +320,14 @@ export class GestorUsuario {
     return this.daoUsuario.ocupacionXDepartamentoJefe(estacionamiento, departamento);
   }
 
+  public registrarVisita(usuarioId: string, estacionamientoId: string, tipoEspacioId: string,
+    entrada: string, visitante: string, identificacion: string, vehiculo: string, motivo: string, destino: string): Promise<string> {
+    return this.daoUsuario.registrarVisita(usuarioId, estacionamientoId, tipoEspacioId,
+      entrada, visitante, identificacion, vehiculo, motivo, destino);
+  }
 
+  public salidaVisita(vehiculo: string, identificacion: string,  salida: string): Promise<string> {
+    return this.daoUsuario.salidaVisita(vehiculo, identificacion, salida);
+  }
 
 }

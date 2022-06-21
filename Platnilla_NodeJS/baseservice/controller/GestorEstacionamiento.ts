@@ -196,4 +196,7 @@ export class GestorEstacionamiento {
   public calcularEspaciosDisponibles(estacionamientoId: string, tipoEspacioId: string): Promise<string> {
     return this.daoEstacionamiento.calcularEspaciosDisponibles(estacionamientoId, tipoEspacioId);
   }
+
+
+
 }

@@ -19,6 +19,8 @@ app.get(
 app.post("/crearEspacios", crearEspacios)
 app.get("/calcularEspaciosDisponibles", calcularEspaciosDisponibles);
 
+
+
 async function calcularEspaciosDisponibles(
   req: express.Request,
   res: express.Response,

@@ -56,6 +56,9 @@ var GestorReservacion = /** @class */ (function () {
     GestorReservacion.prototype.actualizarSalidaReservaciones = function (horaPivot) {
         return this.daoReservacion.actualizarSalidaReservaciones(horaPivot);
     };
+    GestorReservacion.prototype.reservarFuncionario = function (usuarioId, estacionamientoId, tipoEspacioId, entrada, salida) {
+        return this.daoReservacion.reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrada, salida);
+    };
     return GestorReservacion;
 }());
 exports.GestorReservacion = GestorReservacion;

@@ -183,12 +183,14 @@ export class DAOUsuariosImpl implements DAOTransaccional {
     return SQLConnection.getInstance().verReservasEstacionamiento(estacionamiento);
   }
 
-  public registrarOficial(estacionamientoId: string, placa: string, conductor: string,  entrada: string): Promise<string> {
-    return SQLConnection.getInstance().registrarOficial(estacionamientoId, placa, conductor, entrada);
+  public registrarOficial(usuarioId: string, estacionamientoId: string, tipoEspacioId: string,
+    entrada: string, placa: string, conductor: string, sede: string, modelo: string): Promise<string> {
+    return  SQLConnection.getInstance().registrarOficial(usuarioId, estacionamientoId, tipoEspacioId,
+      entrada, placa, conductor, sede, modelo);
   }
 
-  public salidaOficial(estacionamientoId: string, placa: string, conductor: string,  salida: string): Promise<string> {
-    return SQLConnection.getInstance().salidaOficial(estacionamientoId, placa, conductor, salida);
+  public salidaOficial(placa: string, conductor: string,  salida: string): Promise<string> {
+    return SQLConnection.getInstance().salidaOficial(placa, conductor, salida);
   }
 
   public estacionamientosUsuario(objetivo: string, usuario: string): Promise<string> {
@@ -285,6 +287,15 @@ export class DAOUsuariosImpl implements DAOTransaccional {
     return SQLConnection.getInstance().ocupacionXDepartamentoJefe(estacionamiento, departamento);
   }
 
+  public registrarVisita(usuarioId: string, estacionamientoId: string, tipoEspacioId: string,
+    entrada: string, visitante: string, identificacion: string, vehiculo: string, motivo: string, destino: string): Promise<string> {
+    return SQLConnection.getInstance().registrarVisita(usuarioId, estacionamientoId, tipoEspacioId,
+      entrada, visitante, identificacion, vehiculo, motivo, destino);
+  }
+
+  public salidaVisita(vehiculo: string, identificacion: string,  salida: string): Promise<string> {
+    return SQLConnection.getInstance().salidaVisita(vehiculo, identificacion, salida);
+  }
 
 
 }

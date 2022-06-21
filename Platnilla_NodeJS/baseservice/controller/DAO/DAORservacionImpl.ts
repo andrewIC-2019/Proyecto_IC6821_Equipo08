@@ -33,4 +33,7 @@ export class DAOReservacionImpl implements DAOTransaccional{
         return SQLConnection.getInstance().actualizarSalidaReservaciones(horaPivot);
     }
     
+    public reservarFuncionario(usuarioId: string, estacionamientoId: string, tipoEspacioId: string, entrada: string, salida: string): Promise<string> {
+        return SQLConnection.getInstance().reservarFuncionario(usuarioId, estacionamientoId, tipoEspacioId, entrada, salida);
+      }
 }

@@ -90,11 +90,11 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.verReservasEstacionamiento = function (estacionamiento) {
         return this.daoUsuario.verReservasEstacionamiento(estacionamiento);
     };
-    GestorUsuario.prototype.registrarOficial = function (estacionamientoId, placa, conductor, entrada) {
-        return this.daoUsuario.registrarOficial(estacionamientoId, placa, conductor, entrada);
+    GestorUsuario.prototype.registrarOficial = function (usuarioId, estacionamientoId, tipoEspacioId, entrada, placa, conductor, sede, modelo) {
+        return this.daoUsuario.registrarOficial(usuarioId, estacionamientoId, tipoEspacioId, entrada, placa, conductor, sede, modelo);
     };
-    GestorUsuario.prototype.salidaOficial = function (estacionamientoId, placa, conductor, salida) {
-        return this.daoUsuario.salidaOficial(estacionamientoId, placa, conductor, salida);
+    GestorUsuario.prototype.salidaOficial = function (placa, conductor, salida) {
+        return this.daoUsuario.salidaOficial(placa, conductor, salida);
     };
     GestorUsuario.prototype.estacionamientosUsuario = function (objetivo, usuario) {
         return this.daoUsuario.estacionamientosUsuario(objetivo, usuario);
@@ -110,6 +110,12 @@ var GestorUsuario = /** @class */ (function () {
     };
     GestorUsuario.prototype.ocupacionXDepartamentoJefe = function (estacionamiento, departamento) {
         return this.daoUsuario.ocupacionXDepartamentoJefe(estacionamiento, departamento);
+    };
+    GestorUsuario.prototype.registrarVisita = function (usuarioId, estacionamientoId, tipoEspacioId, entrada, visitante, identificacion, vehiculo, motivo, destino) {
+        return this.daoUsuario.registrarVisita(usuarioId, estacionamientoId, tipoEspacioId, entrada, visitante, identificacion, vehiculo, motivo, destino);
+    };
+    GestorUsuario.prototype.salidaVisita = function (vehiculo, identificacion, salida) {
+        return this.daoUsuario.salidaVisita(vehiculo, identificacion, salida);
     };
     return GestorUsuario;
 }());

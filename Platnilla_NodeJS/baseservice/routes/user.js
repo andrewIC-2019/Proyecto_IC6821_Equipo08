@@ -66,6 +66,70 @@ app.post("/guardarEditarUsuarioF2", guardarEditarUsuarioF2);
 app.post("/registrarUsuarioTotalF2", registrarUsuarioTotalF2);
 app.get("/ocupacionXTipoJefe", ocupacionXTipoJefe);
 app.get("/ocupacionXDepartamentoJefe", ocupacionXDepartamentoJefe);
+app.post("/registrarVisita", registrarVisita);
+app.post("/salidaVisita", salidaVisita);
+function salidaVisita(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var vehiculo, identificacion, salida;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    vehiculo = req.body.vehiculo;
+                    identificacion = req.body.identificacion;
+                    salida = req.body.salida;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.salidaVisita(vehiculo, identificacion, salida)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '0';
+                            }
+                            res.json({ done: data == '1' });
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function registrarVisita(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var usuarioId, estacionamientoId, tipoEspacioId, entrada, visitante, identificacion, vehiculo, motivo, destino;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    usuarioId = req.body.usuarioId;
+                    estacionamientoId = req.body.estacionamientoId;
+                    tipoEspacioId = req.body.tipoEspacioId;
+                    entrada = req.body.entrada;
+                    visitante = req.body.visitante;
+                    identificacion = req.body.identificacion;
+                    vehiculo = req.body.vehiculo;
+                    motivo = req.body.motivo;
+                    destino = req.body.destino;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.registrarVisita(usuarioId, estacionamientoId, tipoEspacioId, entrada, visitante, identificacion, vehiculo, motivo, destino)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '0';
+                            }
+                            res.json({ done: data == '1' });
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function ocupacionXDepartamentoJefe(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var estacionamiento, departamento;
@@ -233,16 +297,15 @@ function estacionamientosUsuario(req, res, next) {
 }
 function salidaOficial(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var estacionamientoId, placa, conductor, salida;
+        var placa, conductor, salida;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    estacionamientoId = req.body.estacionamientoId;
                     placa = req.body.placa;
                     conductor = req.body.conductor;
                     salida = req.body.salida;
                     return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorUsuario.salidaOficial(estacionamientoId, placa, conductor, salida)
+                            .$gestorUsuario.salidaOficial(placa, conductor, salida)
                             .then(function (data) {
                             if (!data) {
                                 data = '0';
@@ -262,21 +325,25 @@ function salidaOficial(req, res, next) {
 }
 function registrarOficial(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var estacionamientoId, placa, conductor, entrada;
+        var usuarioId, estacionamientoId, tipoEspacioId, entrada, placa, conductor, sede, modelo;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    usuarioId = req.body.usuarioId;
                     estacionamientoId = req.body.estacionamientoId;
+                    tipoEspacioId = req.body.tipoEspacioId;
+                    entrada = req.body.entrada;
                     placa = req.body.placa;
                     conductor = req.body.conductor;
-                    entrada = req.body.entrada;
+                    sede = req.body.sede;
+                    modelo = req.body.modelo;
                     return [4 /*yield*/, controller_1.Control.getInstance()
-                            .$gestorUsuario.registrarOficial(estacionamientoId, placa, conductor, entrada)
+                            .$gestorUsuario.registrarOficial(usuarioId, estacionamientoId, tipoEspacioId, entrada, placa, conductor, sede, modelo)
                             .then(function (data) {
                             if (!data) {
-                                data = '{"response": false}';
+                                data = '0';
                             }
-                            res.json(JSON.parse(data));
+                            res.json({ done: data == '1' });
                         })
                             .catch(function (err) {
                             log.error(err);

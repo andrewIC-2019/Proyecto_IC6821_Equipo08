@@ -62,11 +62,11 @@ var DAOUsuariosImpl = /** @class */ (function () {
     DAOUsuariosImpl.prototype.verReservasEstacionamiento = function (estacionamiento) {
         return SQLConnection_1.SQLConnection.getInstance().verReservasEstacionamiento(estacionamiento);
     };
-    DAOUsuariosImpl.prototype.registrarOficial = function (estacionamientoId, placa, conductor, entrada) {
-        return SQLConnection_1.SQLConnection.getInstance().registrarOficial(estacionamientoId, placa, conductor, entrada);
+    DAOUsuariosImpl.prototype.registrarOficial = function (usuarioId, estacionamientoId, tipoEspacioId, entrada, placa, conductor, sede, modelo) {
+        return SQLConnection_1.SQLConnection.getInstance().registrarOficial(usuarioId, estacionamientoId, tipoEspacioId, entrada, placa, conductor, sede, modelo);
     };
-    DAOUsuariosImpl.prototype.salidaOficial = function (estacionamientoId, placa, conductor, salida) {
-        return SQLConnection_1.SQLConnection.getInstance().salidaOficial(estacionamientoId, placa, conductor, salida);
+    DAOUsuariosImpl.prototype.salidaOficial = function (placa, conductor, salida) {
+        return SQLConnection_1.SQLConnection.getInstance().salidaOficial(placa, conductor, salida);
     };
     DAOUsuariosImpl.prototype.estacionamientosUsuario = function (objetivo, usuario) {
         return SQLConnection_1.SQLConnection.getInstance().estacionamientosUsuario(objetivo, usuario);
@@ -82,6 +82,12 @@ var DAOUsuariosImpl = /** @class */ (function () {
     };
     DAOUsuariosImpl.prototype.ocupacionXDepartamentoJefe = function (estacionamiento, departamento) {
         return SQLConnection_1.SQLConnection.getInstance().ocupacionXDepartamentoJefe(estacionamiento, departamento);
+    };
+    DAOUsuariosImpl.prototype.registrarVisita = function (usuarioId, estacionamientoId, tipoEspacioId, entrada, visitante, identificacion, vehiculo, motivo, destino) {
+        return SQLConnection_1.SQLConnection.getInstance().registrarVisita(usuarioId, estacionamientoId, tipoEspacioId, entrada, visitante, identificacion, vehiculo, motivo, destino);
+    };
+    DAOUsuariosImpl.prototype.salidaVisita = function (vehiculo, identificacion, salida) {
+        return SQLConnection_1.SQLConnection.getInstance().salidaVisita(vehiculo, identificacion, salida);
     };
     return DAOUsuariosImpl;
 }());
