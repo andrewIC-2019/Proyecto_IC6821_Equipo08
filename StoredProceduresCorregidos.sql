@@ -161,7 +161,11 @@ CREATE PROCEDURE dbo.sp_guardarEditarUsuarioF2
 	@placa2 nvarchar(20),
 	@placa3 nvarchar(20),
 	@placa4 nvarchar(20),
-	@notificarCorreoAlterno bit
+	@notificarCorreoAlterno bit,
+	@esAdministrador bit,			-- nuevo
+	@esJefatura bit,
+	@esDiscapacitado bit,
+	@esOperador bit
 AS
 	-- busqueda del Id de la division
 	DECLARE @divisionId INT
@@ -223,6 +227,28 @@ AS
 	IF @departamentoFinal IS NULL BEGIN
 		UPDATE dbo.Usuarios SET division = 1 WHERE usuarioId= @usuarioId
 	END
+
+
+	UPDATE dbo.Usuarios SET esAdministrador = 0, esJefatura = 0, esDiscapacitado = 0, esOperador = 0 WHERE usuarioId= @usuarioId
+
+	-- Setea si es Administrador, Jefatura, Discapacitado, Operador								-- NUEVO
+	IF @esAdministrador = 1 BEGIN
+		UPDATE dbo.Usuarios SET esAdministrador = 1 WHERE usuarioId= @usuarioId
+	END
+
+	IF @esJefatura = 1 BEGIN
+		UPDATE dbo.Usuarios SET esJefatura = 1 WHERE usuarioId= @usuarioId
+	END
+
+	IF @esDiscapacitado = 1 BEGIN
+		UPDATE dbo.Usuarios SET esDiscapacitado = 1 WHERE usuarioId= @usuarioId
+	END
+
+	IF @esOperador = 1 BEGIN
+		UPDATE dbo.Usuarios SET esOperador = 1 WHERE usuarioId= @usuarioId
+	END																							-- NUEVO
+
+
 
 	RETURN 1
 
