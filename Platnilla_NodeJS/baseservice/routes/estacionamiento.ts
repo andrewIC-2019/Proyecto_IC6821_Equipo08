@@ -17,6 +17,28 @@ app.get(
   estacionamientosTipoSubcontratados
 );
 app.post("/crearEspacios", crearEspacios)
+app.get("/calcularEspaciosDisponibles", calcularEspaciosDisponibles);
+
+async function calcularEspaciosDisponibles(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  let estacionamientoId: string = req.query.estacionamientoId as string;
+  let tipoEspacioId: string = req.query.tipoEspacioId as string;
+  await Control.getInstance()
+    .$gestorEstacionamiento.calcularEspaciosDisponibles(estacionamientoId, tipoEspacioId)
+    .then((data) => {
+      if (!data) {
+        data = "-1";
+      }
+      res.json({ response: data });
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function crearEspacios(
   req: express.Request,

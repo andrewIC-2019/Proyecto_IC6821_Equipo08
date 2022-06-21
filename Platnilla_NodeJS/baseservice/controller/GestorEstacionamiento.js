@@ -68,6 +68,9 @@ var GestorEstacionamiento = /** @class */ (function () {
     GestorEstacionamiento.prototype.crearEspacios = function (estacionamiento, tipo, cantidad) {
         return this.daoEstacionamiento.crearEspacios(estacionamiento, tipo, cantidad);
     };
+    GestorEstacionamiento.prototype.calcularEspaciosDisponibles = function (estacionamientoId, tipoEspacioId) {
+        return this.daoEstacionamiento.calcularEspaciosDisponibles(estacionamientoId, tipoEspacioId);
+    };
     return GestorEstacionamiento;
 }());
 exports.GestorEstacionamiento = GestorEstacionamiento;

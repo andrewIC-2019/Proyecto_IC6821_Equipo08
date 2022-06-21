@@ -90,7 +90,7 @@ async function verificacionFranjas(
       .$gestorReservacion.verificacionFranjas(usuario, entrada, salida)
       .then((data) => {
         if (!data) {
-          data = '0';
+          data = '{"response": false}';
         }
         res.json({done : data == "1"});
       })

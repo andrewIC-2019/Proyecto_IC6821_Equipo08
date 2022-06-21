@@ -140,7 +140,7 @@ function verificacionFranjas(req, res, next) {
                             .$gestorReservacion.verificacionFranjas(usuario, entrada, salida)
                             .then(function (data) {
                             if (!data) {
-                                data = '0';
+                                data = '{"response": false}';
                             }
                             res.json({ done: data == "1" });
                         })

@@ -41,6 +41,9 @@ var DAOEStacionamientoImpl = /** @class */ (function () {
     DAOEStacionamientoImpl.prototype.crearEspacios = function (estacionamiento, tipo, cantidad) {
         return SQLConnection_1.SQLConnection.getInstance().crearEspacios(estacionamiento, tipo, cantidad);
     };
+    DAOEStacionamientoImpl.prototype.calcularEspaciosDisponibles = function (estacionamiento, tipoEspacioId) {
+        return SQLConnection_1.SQLConnection.getInstance().calcularEspaciosDisponibles(estacionamiento, tipoEspacioId);
+    };
     return DAOEStacionamientoImpl;
 }());
 exports.DAOEStacionamientoImpl = DAOEStacionamientoImpl;

@@ -497,6 +497,13 @@ export class SQLConnection implements DataSource {
     return ocupacionXDepartamentoJefe(estacionamiento, departamento);
   }
 
+  public calcularEspaciosDisponibles(
+    estacionamiento: string, tipoEspacioId: string
+  ): Promise<string> {
+    return calcularEspaciosDisponibles(estacionamiento, tipoEspacioId);
+  }
+
+
 
 
 
@@ -509,6 +516,21 @@ export class SQLConnection implements DataSource {
 
 
 
+
+async function calcularEspaciosDisponibles(
+  estacionamientoId: string, tipoEspacioId: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+    .input("tipoEspacioId", sql.NVarChar, tipoEspacioId)
+    .execute("sp_calcularEspaciosDisponibles");
+
+  return result.returnValue;
+}
 
 async function ocupacionXDepartamentoJefe(
   estacionamiento: string, departamento: string

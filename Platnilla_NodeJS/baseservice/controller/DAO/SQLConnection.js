@@ -157,9 +157,32 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.ocupacionXDepartamentoJefe = function (estacionamiento, departamento) {
         return ocupacionXDepartamentoJefe(estacionamiento, departamento);
     };
+    SQLConnection.prototype.calcularEspaciosDisponibles = function (estacionamiento, tipoEspacioId) {
+        return calcularEspaciosDisponibles(estacionamiento, tipoEspacioId);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+function calcularEspaciosDisponibles(estacionamientoId, tipoEspacioId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("estacionamientoId", sql.NVarChar, estacionamientoId)
+                            .input("tipoEspacioId", sql.NVarChar, tipoEspacioId)
+                            .execute("sp_calcularEspaciosDisponibles")];
+                case 2:
+                    result = _a.sent();
+                    return [2 /*return*/, result.returnValue];
+            }
+        });
+    });
+}
 function ocupacionXDepartamentoJefe(estacionamiento, departamento) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result, str, i, key, tmpStr;

@@ -52,6 +52,34 @@ app.get("/pintarEditarEstacionamiento", pintarEditarEstacionamiento);
 app.post("/guardarEditarEstacionamiento", guardarEditarEstacionamiento);
 app.get("/estacionamientosTipoSubcontratados", estacionamientosTipoSubcontratados);
 app.post("/crearEspacios", crearEspacios);
+app.get("/calcularEspaciosDisponibles", calcularEspaciosDisponibles);
+function calcularEspaciosDisponibles(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var estacionamientoId, tipoEspacioId;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    estacionamientoId = req.query.estacionamientoId;
+                    tipoEspacioId = req.query.tipoEspacioId;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorEstacionamiento.calcularEspaciosDisponibles(estacionamientoId, tipoEspacioId)
+                            .then(function (data) {
+                            if (!data) {
+                                data = "-1";
+                            }
+                            res.json({ response: data });
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function crearEspacios(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var estacionamiento, tipo, cantidad;
