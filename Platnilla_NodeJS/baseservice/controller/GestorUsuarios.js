@@ -105,6 +105,9 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.guardarEditarUsuarioF2 = function (usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios) {
         return this.daoUsuario.guardarEditarUsuarioF2(usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios);
     };
+    GestorUsuario.prototype.ocupacionXTipoJefe = function (estacionamiento, departamento) {
+        return this.daoUsuario.ocupacionXTipoJefe(estacionamiento, departamento);
+    };
     return GestorUsuario;
 }());
 exports.GestorUsuario = GestorUsuario;

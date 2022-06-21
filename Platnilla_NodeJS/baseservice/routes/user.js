@@ -64,6 +64,34 @@ app.post("/salidaOficial", salidaOficial);
 app.get("/estacionamientosUsuario", estacionamientosUsuario);
 app.post("/guardarEditarUsuarioF2", guardarEditarUsuarioF2);
 app.post("/registrarUsuarioTotalF2", registrarUsuarioTotalF2);
+app.get("/ocupacionXTipoJefe", ocupacionXTipoJefe);
+function ocupacionXTipoJefe(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var estacionamiento, departamento;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    estacionamiento = req.query.estacionamiento;
+                    departamento = req.query.departamento;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.ocupacionXTipoJefe(estacionamiento, departamento)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function guardarEditarUsuarioF2(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios;

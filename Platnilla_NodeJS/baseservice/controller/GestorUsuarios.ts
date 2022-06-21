@@ -309,5 +309,10 @@ export class GestorUsuario {
     );
   }
 
+  public ocupacionXTipoJefe(estacionamiento: string, departamento: string): Promise<string> {
+    return this.daoUsuario.ocupacionXTipoJefe(estacionamiento, departamento);
+  }
+
+
 
 }

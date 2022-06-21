@@ -277,6 +277,10 @@ export class DAOUsuariosImpl implements DAOTransaccional {
     );
   }
 
+  public ocupacionXTipoJefe(estacionamiento: string, departamento: string): Promise<string> {
+    return SQLConnection.getInstance().ocupacionXTipoJefe(estacionamiento, departamento);
+  }
+
 
 
 }

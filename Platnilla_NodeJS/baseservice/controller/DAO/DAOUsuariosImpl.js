@@ -77,6 +77,9 @@ var DAOUsuariosImpl = /** @class */ (function () {
     DAOUsuariosImpl.prototype.guardarEditarUsuarioF2 = function (usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios) {
         return SQLConnection_1.SQLConnection.getInstance().guardarEditarUsuarioF2(usuarioId, correo, password, telefono, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios);
     };
+    DAOUsuariosImpl.prototype.ocupacionXTipoJefe = function (estacionamiento, departamento) {
+        return SQLConnection_1.SQLConnection.getInstance().ocupacionXTipoJefe(estacionamiento, departamento);
+    };
     return DAOUsuariosImpl;
 }());
 exports.DAOUsuariosImpl = DAOUsuariosImpl;

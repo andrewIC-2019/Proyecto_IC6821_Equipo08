@@ -486,6 +486,11 @@ export class SQLConnection implements DataSource {
   }
   
 
+  public ocupacionXTipoJefe(
+    estacionamiento: string, departamento: string
+  ): Promise<string> {
+    return ocupacionXTipoJefe(estacionamiento, departamento);
+  }
 
 
 
@@ -499,6 +504,38 @@ export class SQLConnection implements DataSource {
 
 
 
+
+
+
+
+async function ocupacionXTipoJefe(
+  estacionamiento: string, departamento: string
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("estacionamiento", sql.NVarChar, estacionamiento)
+    .input("departamento", sql.NVarChar, departamento)
+    .execute("sp_ocupacionXTipoJefe");
+
+
+    let str: string;
+  if (result.recordsets) {
+    str = "{";
+    for (var i in result.recordsets) {
+      for (var key in result.recordsets[i][0]) {
+        let tmpStr: string = result.recordsets[i][0][key];
+        tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+        str += '"' + i + '": "' + tmpStr + '",';
+      }
+    }
+    str = str.slice(0, -1);
+    str += "}";
+  }
+  return str;
+}
 
 async function guardarEditarUsuarioF2(
   usuarioId: string,
@@ -615,10 +652,9 @@ async function registrarUsuarioTotalF2(
     return "-1"
   }
 
-  console.log("paso")
+
   let idUSer = result.returnValue
-  console.log(idUSer)
-  console.log("paso**************")
+
   //llamar al segundo
   for (const horario of horarios) {
     let ds: string = horario['diaSemana' as keyof JSON].toString();
@@ -650,7 +686,6 @@ async function estacionamientosUsuario(
     .input("usuario", sql.NVarChar, usuario)
     .execute("sp_estacionamientosUsuario");
 
-  console.log(result)
     let str: string;
   if (result.recordsets) {
     str = "{";
@@ -664,7 +699,6 @@ async function estacionamientosUsuario(
     str = str.slice(0, -1);
     str += "}";
   }
-  console.log(str)
   return str;
 }
 
