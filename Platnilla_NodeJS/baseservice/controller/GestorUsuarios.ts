@@ -226,6 +226,50 @@ export class GestorUsuario {
     return this.daoUsuario.estacionamientosUsuario(objetivo, usuario);
   }
 
+  
+  public registrarUsuarioTotalF2(
+    correoInstitucional: string,
+    identificacion: string,
+    correo: string,
+    password: string,
+    telefono: string,
+    nombre: string,
+    apellido1: string,
+    apellido2: string,
+    departamento: string,
+    placa1: string,
+    placa2: string,
+    placa3: string,
+    placa4: string,
+    notificarCorreoAlterno: string,
+    esAdministrador: boolean,
+    esJefatura: boolean,
+    esDiscapacitado: boolean,
+    esOperador: boolean,
+    horarios: JSON[],
+  ): Promise<string> {
+    return this.daoUsuario.registrarUsuarioTotalF2(
+      correoInstitucional,
+      identificacion,
+      correo,
+      password,
+      telefono,
+      nombre,
+      apellido1,
+      apellido2,
+      departamento,
+      placa1,
+      placa2,
+      placa3,
+      placa4,
+      notificarCorreoAlterno,
+      esAdministrador,
+      esJefatura,
+      esDiscapacitado,
+      esOperador,
+      horarios
+    );
+  }
 
 
 }

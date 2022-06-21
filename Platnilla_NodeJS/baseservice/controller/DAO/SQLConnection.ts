@@ -402,6 +402,51 @@ export class SQLConnection implements DataSource {
   ): Promise<string> {
     return estacionamientosUsuario(objetivo, usuario);
   }
+
+
+  registrarUsuarioTotalF2(
+    correoInstitucional: string,
+    identificacion: string,
+    correo: string,
+    password: string,
+    telefono: string,
+    nombre: string,
+    apellido1: string,
+    apellido2: string,
+    departamento: string,
+    placa1: string,
+    placa2: string,
+    placa3: string,
+    placa4: string,
+    notificarCorreoAlterno: string,
+    esAdministrador: boolean,
+    esJefatura: boolean,
+    esDiscapacitado: boolean,
+    esOperador: boolean,
+    horarios: JSON[],
+  ): Promise<string> {
+    return registrarUsuarioTotalF2(
+      correoInstitucional,
+      identificacion,
+      correo,
+      password,
+      telefono,
+      nombre,
+      apellido1,
+      apellido2,
+      departamento,
+      placa1,
+      placa2,
+      placa3,
+      placa4,
+      notificarCorreoAlterno,
+      esAdministrador,
+      esJefatura,
+      esDiscapacitado,
+      esOperador,
+      horarios
+    );
+  }
   
 
 
@@ -418,6 +463,79 @@ export class SQLConnection implements DataSource {
 
 
 
+
+
+async function registrarUsuarioTotalF2(
+  correoInstitucional: string,
+  identificacion: string,
+  correo: string,
+  password: string,
+  telefono: string,
+  nombre: string,
+  apellido1: string,
+  apellido2: string,
+  departamento: string,
+  placa1: string,
+  placa2: string,
+  placa3: string,
+  placa4: string,
+  notificarCorreoAlterno: string,
+  esAdministrador: boolean,
+  esJefatura: boolean,
+  esDiscapacitado: boolean,
+  esOperador: boolean,
+  horarios: JSON[]
+): Promise<string> {
+  //do connection
+  let pool = await new sql.connect(config);
+  //do reques from pool, with parameters and execute sp
+  let result = await pool
+    .request()
+    .input("correoInstitucional", sql.NVarChar(200), correoInstitucional)
+    .input("identificacion", sql.NVarChar(60), identificacion)
+    .input("correo", sql.NVarChar(200), correo)
+    .input("password", sql.NVarChar(200), password)
+    .input("telefono", sql.NVarChar(40), telefono)
+    .input("nombre", sql.NVarChar(200), nombre)
+    .input("apellido1", sql.NVarChar(200), apellido1)
+    .input("apellido2", sql.NVarChar(40), apellido2)
+    .input("departamento", sql.NVarChar(8), departamento)
+    .input("placa1", sql.NVarChar(20), placa1)
+    .input("placa2", sql.NVarChar(20), placa2)
+    .input("placa3", sql.NVarChar(20), placa3)
+    .input("placa4", sql.NVarChar(20), placa4)
+    .input("notificarCorreoAlterno", sql.NVarChar, notificarCorreoAlterno)
+    .input("esAdministrador", sql.Bit, esAdministrador)
+    .input("esJefatura", sql.Bit, esJefatura)
+    .input("esDiscapacitado", sql.Bit, esDiscapacitado)
+    .input("esOperador", sql.Bit, esOperador)
+    .execute("sp_registrarUsuarioTotalF2");
+
+  if (!result.returnValue || result.returnValue < 0) {
+    return "-1"
+  }
+
+  let idUSer = result.returnValue
+
+  //llamar al segundo
+
+  for (const horario of horarios) {
+    let ds: string = horario['diaSemana' as keyof JSON].toString();
+    let hi: string = horario['horaInicio' as keyof JSON].toString();
+    let hf: string = horario['horaFinal' as keyof JSON].toString();
+
+    result = await pool
+    .request()
+    .input("usuarioId", sql.NVarChar, idUSer)
+    .input("diaSemana", sql.NVarChar, ds)
+    .input("horaInicio", sql.NVarChar, hi)
+    .input("horaFinal", sql.NVarChar, hf)
+    .execute("sp_registrarHorario");
+    
+  }
+
+  return idUSer;
+}
 
 async function estacionamientosUsuario(
   objetivo: string, usuario: string

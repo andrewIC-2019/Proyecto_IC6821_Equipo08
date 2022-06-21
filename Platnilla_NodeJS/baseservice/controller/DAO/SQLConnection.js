@@ -145,9 +145,73 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.estacionamientosUsuario = function (objetivo, usuario) {
         return estacionamientosUsuario(objetivo, usuario);
     };
+    SQLConnection.prototype.registrarUsuarioTotalF2 = function (correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios) {
+        return registrarUsuarioTotalF2(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+function registrarUsuarioTotalF2(correoInstitucional, identificacion, correo, password, telefono, nombre, apellido1, apellido2, departamento, placa1, placa2, placa3, placa4, notificarCorreoAlterno, esAdministrador, esJefatura, esDiscapacitado, esOperador, horarios) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result, idUSer, _i, horarios_1, horario, ds, hi, hf;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("correoInstitucional", sql.NVarChar(200), correoInstitucional)
+                            .input("identificacion", sql.NVarChar(60), identificacion)
+                            .input("correo", sql.NVarChar(200), correo)
+                            .input("password", sql.NVarChar(200), password)
+                            .input("telefono", sql.NVarChar(40), telefono)
+                            .input("nombre", sql.NVarChar(200), nombre)
+                            .input("apellido1", sql.NVarChar(200), apellido1)
+                            .input("apellido2", sql.NVarChar(40), apellido2)
+                            .input("departamento", sql.NVarChar(8), departamento)
+                            .input("placa1", sql.NVarChar(20), placa1)
+                            .input("placa2", sql.NVarChar(20), placa2)
+                            .input("placa3", sql.NVarChar(20), placa3)
+                            .input("placa4", sql.NVarChar(20), placa4)
+                            .input("notificarCorreoAlterno", sql.NVarChar, notificarCorreoAlterno)
+                            .input("esAdministrador", sql.Bit, esAdministrador)
+                            .input("esJefatura", sql.Bit, esJefatura)
+                            .input("esDiscapacitado", sql.Bit, esDiscapacitado)
+                            .input("esOperador", sql.Bit, esOperador)
+                            .execute("sp_registrarUsuarioTotalF2")];
+                case 2:
+                    result = _a.sent();
+                    if (!result.returnValue || result.returnValue < 0) {
+                        return [2 /*return*/, "-1"];
+                    }
+                    idUSer = result.returnValue;
+                    _i = 0, horarios_1 = horarios;
+                    _a.label = 3;
+                case 3:
+                    if (!(_i < horarios_1.length)) return [3 /*break*/, 6];
+                    horario = horarios_1[_i];
+                    ds = horario['diaSemana'].toString();
+                    hi = horario['horaInicio'].toString();
+                    hf = horario['horaFinal'].toString();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("usuarioId", sql.NVarChar, idUSer)
+                            .input("diaSemana", sql.NVarChar, ds)
+                            .input("horaInicio", sql.NVarChar, hi)
+                            .input("horaFinal", sql.NVarChar, hf)
+                            .execute("sp_registrarHorario")];
+                case 4:
+                    result = _a.sent();
+                    _a.label = 5;
+                case 5:
+                    _i++;
+                    return [3 /*break*/, 3];
+                case 6: return [2 /*return*/, idUSer];
+            }
+        });
+    });
+}
 function estacionamientosUsuario(objetivo, usuario) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result, str, i, key, tmpStr;
