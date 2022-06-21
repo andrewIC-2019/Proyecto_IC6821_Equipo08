@@ -108,6 +108,9 @@ var GestorUsuario = /** @class */ (function () {
     GestorUsuario.prototype.ocupacionXTipoJefe = function (estacionamiento, departamento) {
         return this.daoUsuario.ocupacionXTipoJefe(estacionamiento, departamento);
     };
+    GestorUsuario.prototype.ocupacionXDepartamentoJefe = function (estacionamiento, departamento) {
+        return this.daoUsuario.ocupacionXDepartamentoJefe(estacionamiento, departamento);
+    };
     return GestorUsuario;
 }());
 exports.GestorUsuario = GestorUsuario;

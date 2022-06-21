@@ -28,10 +28,33 @@ app.get("/estacionamientosUsuario", estacionamientosUsuario);
 app.post("/guardarEditarUsuarioF2", guardarEditarUsuarioF2);
 app.post("/registrarUsuarioTotalF2", registrarUsuarioTotalF2);
 app.get("/ocupacionXTipoJefe", ocupacionXTipoJefe);
+app.get("/ocupacionXDepartamentoJefe", ocupacionXDepartamentoJefe);
 
 
 
 
+async function ocupacionXDepartamentoJefe(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+
+  let estacionamiento: string = req.query.estacionamiento as string;
+  let departamento: string = req.query.departamento as string;
+
+  await Control.getInstance()
+    .$gestorUsuario.ocupacionXDepartamentoJefe(estacionamiento, departamento)
+    .then((data) => {
+      if (!data) {
+        data = '{"response": false}';
+      }
+      res.json(JSON.parse(data));
+    })
+    .catch((err) => {
+      log.error(err);
+      return "";
+    });
+}
 
 async function ocupacionXTipoJefe(
   req: express.Request,

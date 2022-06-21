@@ -314,5 +314,10 @@ export class GestorUsuario {
   }
 
 
+  public ocupacionXDepartamentoJefe(estacionamiento: string, departamento: string): Promise<string> {
+    return this.daoUsuario.ocupacionXDepartamentoJefe(estacionamiento, departamento);
+  }
+
+
 
 }

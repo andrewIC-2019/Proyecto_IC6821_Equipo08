@@ -154,9 +154,44 @@ var SQLConnection = /** @class */ (function () {
     SQLConnection.prototype.ocupacionXTipoJefe = function (estacionamiento, departamento) {
         return ocupacionXTipoJefe(estacionamiento, departamento);
     };
+    SQLConnection.prototype.ocupacionXDepartamentoJefe = function (estacionamiento, departamento) {
+        return ocupacionXDepartamentoJefe(estacionamiento, departamento);
+    };
     return SQLConnection;
 }());
 exports.SQLConnection = SQLConnection;
+function ocupacionXDepartamentoJefe(estacionamiento, departamento) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pool, result, str, i, key, tmpStr;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new sql.connect(config)];
+                case 1:
+                    pool = _a.sent();
+                    return [4 /*yield*/, pool
+                            .request()
+                            .input("estacionamiento", sql.NVarChar, estacionamiento)
+                            .input("departamento", sql.NVarChar, departamento)
+                            .execute("sp_ocupacionXDepartamentoJefe")];
+                case 2:
+                    result = _a.sent();
+                    if (result.recordsets) {
+                        str = "{";
+                        for (i in result.recordsets) {
+                            for (key in result.recordsets[i][0]) {
+                                tmpStr = result.recordsets[i][0][key];
+                                tmpStr = tmpStr.replace(new RegExp('"', "g"), '\\"');
+                                str += '"' + i + '": "' + tmpStr + '",';
+                            }
+                        }
+                        str = str.slice(0, -1);
+                        str += "}";
+                    }
+                    return [2 /*return*/, str];
+            }
+        });
+    });
+}
 function ocupacionXTipoJefe(estacionamiento, departamento) {
     return __awaiter(this, void 0, void 0, function () {
         var pool, result, str, i, key, tmpStr;
@@ -172,7 +207,6 @@ function ocupacionXTipoJefe(estacionamiento, departamento) {
                             .execute("sp_ocupacionXTipoJefe")];
                 case 2:
                     result = _a.sent();
-                    console.log(result);
                     if (result.recordsets) {
                         str = "{";
                         for (i in result.recordsets) {
@@ -281,10 +315,7 @@ function registrarUsuarioTotalF2(correoInstitucional, identificacion, correo, pa
                     if (!result.returnValue || result.returnValue < 0) {
                         return [2 /*return*/, "-1"];
                     }
-                    console.log("paso");
                     idUSer = result.returnValue;
-                    console.log(idUSer);
-                    console.log("paso**************");
                     _i = 0, horarios_2 = horarios;
                     _a.label = 3;
                 case 3:
@@ -326,7 +357,6 @@ function estacionamientosUsuario(objetivo, usuario) {
                             .execute("sp_estacionamientosUsuario")];
                 case 2:
                     result = _a.sent();
-                    console.log(result);
                     if (result.recordsets) {
                         str = "{";
                         for (i in result.recordsets) {

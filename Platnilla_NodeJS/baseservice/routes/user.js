@@ -65,6 +65,34 @@ app.get("/estacionamientosUsuario", estacionamientosUsuario);
 app.post("/guardarEditarUsuarioF2", guardarEditarUsuarioF2);
 app.post("/registrarUsuarioTotalF2", registrarUsuarioTotalF2);
 app.get("/ocupacionXTipoJefe", ocupacionXTipoJefe);
+app.get("/ocupacionXDepartamentoJefe", ocupacionXDepartamentoJefe);
+function ocupacionXDepartamentoJefe(req, res, next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var estacionamiento, departamento;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    estacionamiento = req.query.estacionamiento;
+                    departamento = req.query.departamento;
+                    return [4 /*yield*/, controller_1.Control.getInstance()
+                            .$gestorUsuario.ocupacionXDepartamentoJefe(estacionamiento, departamento)
+                            .then(function (data) {
+                            if (!data) {
+                                data = '{"response": false}';
+                            }
+                            res.json(JSON.parse(data));
+                        })
+                            .catch(function (err) {
+                            log.error(err);
+                            return "";
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 function ocupacionXTipoJefe(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var estacionamiento, departamento;

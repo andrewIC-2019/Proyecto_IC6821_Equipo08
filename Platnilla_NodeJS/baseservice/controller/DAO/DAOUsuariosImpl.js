@@ -80,6 +80,9 @@ var DAOUsuariosImpl = /** @class */ (function () {
     DAOUsuariosImpl.prototype.ocupacionXTipoJefe = function (estacionamiento, departamento) {
         return SQLConnection_1.SQLConnection.getInstance().ocupacionXTipoJefe(estacionamiento, departamento);
     };
+    DAOUsuariosImpl.prototype.ocupacionXDepartamentoJefe = function (estacionamiento, departamento) {
+        return SQLConnection_1.SQLConnection.getInstance().ocupacionXDepartamentoJefe(estacionamiento, departamento);
+    };
     return DAOUsuariosImpl;
 }());
 exports.DAOUsuariosImpl = DAOUsuariosImpl;
